@@ -1,0 +1,13 @@
+.clock-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.clock {
+  font-size: 30px;
+  font-weight: bold;
+  color: limegreen;
+  /* font-family: "Courier New", monospace; */
+  text-shadow: 0 0 10px limegreen;
+}

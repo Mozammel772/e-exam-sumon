@@ -1,0 +1,218 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary-color: #6c3bff;
+  --secondary-color: #fcfffd;
+  --dark-color: #22c55e;
+  --light-color: #ffffff;
+  --accent-color: #ff6b6b;
+  --navbar-gradient: linear-gradient(90deg, #6c3bff, #00c9b1);
+}
+
+
+
+.montsar {
+  font-family: "Montserrat", serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.pil {
+  font-family: "Philosopher", sans-serif;
+}
+
+
+.inter {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+}
+
+@font-face {
+  font-family: "SolaimanLipi";
+  src: url("./fonts/SolaimanLipi.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.solaimanlipi {
+  font-family: "SolaimanLipi", "Noto Sans", sans-serif !important;
+}
+
+.sqrt {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.root {
+  font-size: 0.8em;
+  border-top: 1px solid currentColor;
+  padding: 0 1px;
+  margin-left: 1px;
+}
+
+.math-symbol {
+  font-style: italic;
+  font-family: "Times New Roman", serif;
+}
+
+.tex-process {
+  line-height: 1.6;
+}
+
+/* KaTeX Print Fixes */
+.katex {
+  font: normal 1.21em KaTeX_Main, Times New Roman, serif;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.katex-display {
+  display: inline-block;
+  margin: 0.5em 0;
+  text-align: center;
+}
+
+.katex-display>.katex {
+  display: inline-block;
+  text-align: left;
+}
+
+.katex-html {
+  display: inline-block;
+}
+
+/* Print-specific fixes */
+@media print {
+  .katex {
+    font-size: 1em !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+    line-height: 1.1 !important;
+  }
+
+  .katex-display {
+    display: inline !important;
+    margin: 0.2em 0 !important;
+    text-align: left !important;
+  }
+
+  .katex-html {
+    display: inline !important;
+    white-space: normal !important;
+    overflow: visible !important;
+  }
+
+  .katex .sqrt {
+    display: inline !important;
+  }
+
+  .katex .mord {
+    display: inline !important;
+  }
+
+  /* Ensure square roots don't break */
+  .katex .sqrt>.root {
+    margin-right: 0.1em !important;
+  }
+
+  /* Prevent content from being cut off */
+  .katex * {
+    max-width: none !important;
+    overflow: visible !important;
+  }
+}
+
+/* Force inline display for all math in print */
+@media print {
+  math[display="block"] {
+    display: inline !important;
+  }
+
+  .MathJax_Display {
+    display: inline !important;
+    text-align: left !important;
+    margin: 0.2em 0 !important;
+  }
+}
+
+.swiper-button-prev::after {
+  color: #e26062;
+}
+
+.swiper-button-next::after {
+  color: #e26062;
+}
+
+.swiper-pagination-bullet-active {
+  color: #e26062;
+}
+
+.container_main {
+  margin-top: 100px;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+.ant-card-body {
+  width: 100%;
+}
+
+.-m-2 {
+  margin: -0rem;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+@media print {
+  .print\:\!bg-black {
+    background-color: black !important;
+  }
+
+  .print\:\!block {
+    display: block !important;
+  }
+
+  .print\:\!border-black {
+    border-color: black !important;
+  }
+
+  img {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  * {
+    overflow: visible !important;
+  }
+
+  .question-container {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .print-safe {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+}
+
+@media print {
+  .print-colored {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    background-color: var(--bg-color, transparent) !important;
+    color: var(--text-color, #000000) !important;
+  }
+}

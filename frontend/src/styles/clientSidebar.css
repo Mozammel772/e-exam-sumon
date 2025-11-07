@@ -1,0 +1,20 @@
+.client_sidebar_wrapper {
+  padding: 10px 10px 10px 10px;
+}
+.sidebar_options_wrapper {
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15);
+}
+.sidebar_list:hover {
+  background-color: #024645;
+  color: white;
+  border-radius: 5px;
+  padding-left: 10px;
+  margin-top: 2px;
+}
+.sidebar_list:hover svg {
+  fill: white;
+}
+.sidebar_text {
+  margin-left: 10px;
+  margin-top: 2px;
+}
