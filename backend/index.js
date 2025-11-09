@@ -16,6 +16,7 @@ app.use(cookieParser());
 const corsOptions = {
   origin: [
     "https://www.eexamapp.com",
+    "https://e-exam-bc5y.vercel.app",
     "https://eexamapp.com",
     "https://e-exam-frontend-1.vercel.app",
     "http://localhost:5173",
