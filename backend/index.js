@@ -118,7 +118,8 @@ app.use(cookieParser());
 const allowedOrigins = [
   "https://e-exam-bc5y.vercel.app",
   "https://e-exam-bc5y.vercel.app",
-  "https://e-exam-eight.vercel.app", // Google OAuth frontend
+  "https://e-exam-eight.vercel.app",
+  "https://e-exam-qam4.vercel.app",
   "http://localhost:5173",
 ];
 
