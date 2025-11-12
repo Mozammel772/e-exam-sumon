@@ -8,9 +8,6 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
-
 // Middleware
 
 app.use(express.json());
@@ -29,6 +26,9 @@ const corsOptions = {
   credentials: true,
   optionsSuccessStatus: 200,
 };
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use((err, req, res, next) => {
   console.error("Full error object:", {

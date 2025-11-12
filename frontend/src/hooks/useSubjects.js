@@ -1,8 +1,8 @@
 // hooks/useSubjects.js
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
-const BASE_URL = "https://e-question-server.vercel.app/api";
+const BASE_URL = "https://e-exam-eight.vercel.app/api";
 
 export const useGetSubjects = () => {
   return useQuery({
