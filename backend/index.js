@@ -16,8 +16,6 @@ app.use(express.static("public"));
 
 const corsOptions = {
   origin: [
-    "https://e-exam-one.vercel.app",
-    "https://e-exam-5d66.vercel.app",
     "http://localhost:5173",
   ],
   // methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
@@ -72,7 +70,7 @@ app.use("/api/chapter", require("./routers/chapterRoutes"));
 app.use("/api/exam", require("./routers/examRoutes"));
 app.use("/api/subscription", require("./routers/subscriptionRoutes"));
 app.use("/api/reports", require("./routers/reportRoutes"));
-// app.use("/api/announcements", require("./routers/announcementRoutes"));
+
 app.use(
   "/api/question",
   require("./routers/questionCreationSubscriptionRoutes")
