@@ -658,23 +658,10 @@ export default function CqQuestionView() {
                                     )}
                                   </div>
                                 </div>
-                                <div className="flex flex-wrap gap-1 sm:gap-2">
-                                  {question?.searchType?.map((search) => (
-                                    <Chip
-                                      key={search}
-                                      className=""
-                                      color="secondary"
-                                      variant="bordered"
-                                      size="sm"
-                                    >
-                                      {search}
-                                    </Chip>
-                                  ))}
-                                </div>
                               </div>
 
                               {/* Questions Section */}
-                              <div className="space-y-3 mr-1">
+                              <div className="space-y-3 mr-1 mt-3">
                                 {/* Question ক */}
                                 <div className="">
                                   <h3 className="flex flex-row items-start gap-1">
@@ -732,6 +719,20 @@ export default function CqQuestionView() {
                                 )}
                               </div>
                             </div>
+                          </div>
+
+                          <div className="flex flex-wrap gap-1 sm:gap-2 mt-2">
+                            {question?.searchType?.map((search) => (
+                              <Chip
+                                key={search}
+                                className=""
+                                color="black"
+                                variant="bordered"
+                                size="sm"
+                              >
+                                {search}
+                              </Chip>
+                            ))}
                           </div>
                           <div className="absolute right-4 bottom-4 flex items-end justify-end">
                             {question?.boardExamList?.map((entry) => {
