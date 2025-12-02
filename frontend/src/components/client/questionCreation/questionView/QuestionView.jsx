@@ -177,8 +177,8 @@ export default function QuestionView() {
     // subscription: getUserCredentialsProfile?.userProfile?.subscription,
     chapterId: Array.isArray(getUserCredentialsProfile?.examSet?.chapterId)
       ? getUserCredentialsProfile?.examSet?.chapterId?.flatMap((item) =>
-          item.split(",")
-        )
+        item.split(",")
+      )
       : [],
   });
 
@@ -272,77 +272,77 @@ export default function QuestionView() {
           qt === "demo"
             ? chapterQuestions
             : chapterQuestions?.filter((question) => {
-                const isInSelectedExamSet = selectedExamSets?.some((set) =>
-                  set.questionIds.includes(question._id)
+              const isInSelectedExamSet = selectedExamSets?.some((set) =>
+                set.questionIds.includes(question._id)
+              );
+
+              // MODIFIED: Allow both MCQ and CQ types
+              const typeMatch =
+                selectedTypes.length === 0 ||
+                selectedTypes.some(
+                  (type) =>
+                    question.searchType?.includes(type) ||
+                    question.type?.includes(type)
                 );
 
-                // MODIFIED: Allow both MCQ and CQ types
-                const typeMatch =
-                  selectedTypes.length === 0 ||
-                  selectedTypes.some(
-                    (type) =>
-                      question.searchType?.includes(type) ||
-                      question.type?.includes(type)
-                  );
+              const levelMatch =
+                selectedLevels.length === 0 ||
+                selectedLevels.includes(question.questionLevel);
 
-                const levelMatch =
-                  selectedLevels.length === 0 ||
-                  selectedLevels.includes(question.questionLevel);
+              const matchesSearch = [
+                question.type,
+                question.questionName,
+                question.option1,
+                question.option2,
+                question.option3,
+                question.option4,
+                question.boardExamList,
+                question.schoolExamInfo,
+                question.correctAnswer,
+              ].some((field) =>
+                field?.toLowerCase?.().includes(searchKeyword?.toLowerCase())
+              );
 
-                const matchesSearch = [
-                  question.type,
-                  question.questionName,
-                  question.option1,
-                  question.option2,
-                  question.option3,
-                  question.option4,
-                  question.boardExamList,
-                  question.schoolExamInfo,
-                  question.correctAnswer,
-                ].some((field) =>
-                  field?.toLowerCase?.().includes(searchKeyword?.toLowerCase())
-                );
+              const schoolMatch =
+                selectedSchools.length === 0 ||
+                selectedSchools.some((selectedSchool) => {
+                  const questionSchool = question.schoolExamInfo
+                    ?.trim()
+                    .replace(/\s+/g, " ");
+                  return questionSchool === selectedSchool;
+                });
 
-                const schoolMatch =
-                  selectedSchools.length === 0 ||
-                  selectedSchools.some((selectedSchool) => {
-                    const questionSchool = question.schoolExamInfo
-                      ?.trim()
-                      .replace(/\s+/g, " ");
-                    return questionSchool === selectedSchool;
-                  });
+              const boardYearMatches = (question.boardExamList || []).some(
+                (entry) => {
+                  const [board, year] = entry
+                    .split("-")
+                    .map((str) => str?.trim());
+                  const boardOk =
+                    selectedBoards.length === 0 ||
+                    selectedBoards.includes(board);
+                  const yearOk =
+                    selectedYears.length === 0 ||
+                    selectedYears.includes(year);
+                  return boardOk && yearOk;
+                }
+              );
 
-                const boardYearMatches = (question.boardExamList || []).some(
-                  (entry) => {
-                    const [board, year] = entry
-                      .split("-")
-                      .map((str) => str?.trim());
-                    const boardOk =
-                      selectedBoards.length === 0 ||
-                      selectedBoards.includes(board);
-                    const yearOk =
-                      selectedYears.length === 0 ||
-                      selectedYears.includes(year);
-                    return boardOk && yearOk;
-                  }
-                );
+              // Exclude if matches selected topics
+              const shouldExcludeByTopic =
+                selectedTopics.length > 0 &&
+                question.topic &&
+                selectedTopics.some((t) => norm(t) === norm(question.topic));
 
-                // Exclude if matches selected topics
-                const shouldExcludeByTopic =
-                  selectedTopics.length > 0 &&
-                  question.topic &&
-                  selectedTopics.some((t) => norm(t) === norm(question.topic));
-
-                return (
-                  !isInSelectedExamSet &&
-                  typeMatch &&
-                  levelMatch &&
-                  matchesSearch &&
-                  schoolMatch &&
-                  boardYearMatches &&
-                  !shouldExcludeByTopic
-                );
-              });
+              return (
+                !isInSelectedExamSet &&
+                typeMatch &&
+                levelMatch &&
+                matchesSearch &&
+                schoolMatch &&
+                boardYearMatches &&
+                !shouldExcludeByTopic
+              );
+            });
 
         return {
           ...chapter,
@@ -704,11 +704,10 @@ export default function QuestionView() {
 
   return (
     <div
-      className={`me-3 ${
-        size?.width <= 600
-          ? "solaimanlipi flex flex-col md:flex-row mt-[120px] me-[20px] p-5 gap-5"
-          : "solaimanlipi flex flex-col md:flex-row ms-[255px] mt-[85px] me-[20px] p-5 gap-5"
-      }`}
+      className={`me-3 ${size?.width <= 600
+        ? "solaimanlipi flex flex-col md:flex-row mt-[120px] me-[20px] p-5 gap-5"
+        : "solaimanlipi flex flex-col md:flex-row ms-[255px] mt-[85px] me-[20px] p-5 gap-5"
+        }`}
     >
       {/* Main content (left side) */}
       <Card className="flex-1 max-h-[100vh] overflow-y-auto relative p-4">
@@ -816,21 +815,20 @@ export default function QuestionView() {
                         return (
                           <div
                             key={question._id}
-                            className={`mb-6 relative p-6 border-2 rounded-xl cursor-pointer transition-all duration-300 overflow-hidden ${
-                              isSelected
-                                ? "border-green-600 bg-green-50 shadow-lg"
-                                : "border-gray-200 bg-white shadow-md hover:shadow-lg"
-                            }`}
+                            className={`mb-6 relative p-6 border-2 rounded-xl cursor-pointer transition-all duration-300 overflow-hidden ${isSelected
+                              ? "border-green-600 bg-green-50 shadow-lg"
+                              : "border-gray-200 bg-white shadow-md hover:shadow-lg"
+                              }`}
                             onClick={() => handleOptionClick(question?._id)}
                           >
                             {/* Question Number and Main Content */}
                             <div className="flex items-start gap-4">
                               {/* Question Number Circle */}
-                              <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-black font-bold text-lg shadow-lg">
+                              <div className="">
                                 {toBanglaNumber(
                                   (currentPage - 1) * questionsPerPage +
-                                    index +
-                                    1
+                                  index +
+                                  1
                                 )}
                               </div>
 
@@ -876,7 +874,7 @@ export default function QuestionView() {
                                 </div>
 
                                 {/* MCQ Options - Without Answers */}
-                                <div className="grid lg:grid-cols-2 gap-4 mt-4">
+                                <div className="grid lg:grid-cols-2 gap-1 mt-4">
                                   {[
                                     "option1",
                                     "option2",
@@ -895,7 +893,7 @@ export default function QuestionView() {
                                                 <p className="w-6 h-6 bg-gray-600 text-white rounded-full flex items-center justify-center text-xl font-medium">
                                                   {
                                                     ["ক", "খ", "গ", "ঘ"][
-                                                      optIndex
+                                                    optIndex
                                                     ]
                                                   }
                                                 </p>
@@ -1088,22 +1086,21 @@ export default function QuestionView() {
                         return (
                           <div
                             key={question._id}
-                            className={`mb-6 relative p-6 border-2 rounded-xl cursor-pointer transition-all duration-300 overflow-hidden ${
-                              isSelected
-                                ? "border-green-600 bg-green-50 shadow-lg"
-                                : "border-gray-200 bg-white shadow-md hover:shadow-lg"
-                            }`}
+                            className={`mb-6 relative p-6 border-2 rounded-xl cursor-pointer transition-all duration-300 overflow-hidden ${isSelected
+                              ? "border-green-600 bg-green-50 shadow-lg"
+                              : "border-gray-200 bg-white shadow-md hover:shadow-lg"
+                              }`}
                             onClick={() => handleOptionClick(question?._id)}
                           >
                             {/* Question Number and Main Content */}
-                            <div className="flex items-start gap-4">
+                            <div className="flex items-start gap-1">
                               {/* Question Number Circle */}
-                              <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-black font-bold text-lg shadow-lg">
+                              <div className="text-xl">
                                 {toBanglaNumber(
                                   (currentPage - 1) * questionsPerPage +
-                                    index +
-                                    1
-                                )}
+                                  index +
+                                  1
+                                )}.
                               </div>
 
                               {/* Main Question Content */}
@@ -1127,13 +1124,15 @@ export default function QuestionView() {
 
                                   {/* Badges */}
                                   <div className="flex flex-col items-end gap-2">
-                                    <Chip
-                                      color="warning"
-                                      variant="shadow"
-                                      className="text-sm font-medium"
-                                    >
-                                      {question?.questionLevel}
-                                    </Chip>
+                                    {question?.questionLevel && (
+                                      <Chip
+                                        color="success"
+                                        variant="shadow"
+                                        className="text-sm font-medium"
+                                      >
+                                        {question?.questionLevel}
+                                      </Chip>
+                                    )}
                                     {question.topic && (
                                       <Chip
                                         color="primary"
@@ -1148,7 +1147,7 @@ export default function QuestionView() {
                                 </div>
 
                                 {/* MCQ Options - Without Answers */}
-                                <div className="grid lg:grid-cols-2 gap-4 mt-4">
+                                <div className="grid lg:grid-cols-2 gap-1 mt-4">
                                   {[
                                     "option1",
                                     "option2",
@@ -1161,13 +1160,13 @@ export default function QuestionView() {
                                           <Alert
                                             variant="bordered"
                                             color="default"
-                                            className="border-gray-300 bg-gray-50 hover:bg-gray-100 transition-colors"
+                                            className="bg-gray-100 transition-colors p-0 border-none"
                                             title={
                                               <div className="flex items-center gap-3">
-                                                <p className="w-6 h-6 bg-gray-600 text-white rounded-full flex items-center justify-center text-xl font-medium">
+                                                <p className="size-6 border border-gray-600 rounded-full flex items-center justify-center text-xl font-medium">
                                                   {
                                                     ["ক", "খ", "গ", "ঘ"][
-                                                      optIndex
+                                                    optIndex
                                                     ]
                                                   }
                                                 </p>
@@ -1176,7 +1175,7 @@ export default function QuestionView() {
                                                 >
                                                   <MathJax dynamic>
                                                     <div
-                                                      className="text-gray-700 text-xl"
+                                                      className="text-gray-800 text-xl"
                                                       dangerouslySetInnerHTML={{
                                                         __html: sanitizeHtml(
                                                           question[optKey],
@@ -1198,28 +1197,6 @@ export default function QuestionView() {
                                 {/* Action Buttons */}
                                 <div className="mt-6 flex flex-wrap gap-3 justify-between items-center">
                                   <div className="flex flex-wrap gap-2">
-                                    {/* Board Exam Info */}
-                                    {question?.boardExamList?.length > 0 && (
-                                      <Tooltip
-                                        content="বোর্ড প্রশ্ন"
-                                        showArrow={true}
-                                      >
-                                        <Button
-                                          startContent={
-                                            <QuestionIcon
-                                              size="18px"
-                                              color="#ffffff"
-                                            />
-                                          }
-                                          size="sm"
-                                          className="px-4 py-2 rounded-full text-black text-sm font-medium shadow-md hover:shadow-lg transition-all"
-                                        >
-                                          <span className="text-xl">
-                                            {question.boardExamList.join(", ")}
-                                          </span>
-                                        </Button>
-                                      </Tooltip>
-                                    )}
 
                                     {/* Explanation Button */}
                                     <Tooltip
@@ -1285,6 +1262,10 @@ export default function QuestionView() {
                                           {type}
                                         </Chip>
                                       )
+                                    )}
+                                    {/* Board Exam Info */}
+                                    {question?.boardExamList?.length > 0 && (
+                                      <small>{question.boardExamList.join(", ")}</small>
                                     )}
                                   </div>
                                 </div>
