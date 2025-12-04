@@ -220,8 +220,8 @@ export default function CqQuestionView() {
     examType: filterExamType?.[0]?.examIdentifier || "",
     chapterId: Array.isArray(getUserCredentialsProfile?.examSet?.chapterId)
       ? getUserCredentialsProfile?.examSet?.chapterId?.flatMap((item) =>
-          item.split(",")
-        )
+        item.split(",")
+      )
       : [],
   });
 
@@ -274,8 +274,8 @@ export default function CqQuestionView() {
     const chaptersToShow =
       selectedChapters.length > 0
         ? getDesireQuestionsData.chapters.filter((chapter) =>
-            selectedChapters.includes(chapter._id.toString())
-          )
+          selectedChapters.includes(chapter._id.toString())
+        )
         : getDesireQuestionsData.chapters;
 
     // Then, filter questions within each chapter
@@ -308,23 +308,23 @@ export default function CqQuestionView() {
           // Check search keyword match
           const matchesSearch = searchKeyword
             ? [
-                question.type,
-                question.questionName,
-                question.option1,
-                question.option2,
-                question.option3,
-                question.option4,
-                question.boardExamList,
-                question.schoolExamInfo,
-                question.correctAnswer,
-                question?.cqDetails?.mainQuestion || null,
-                question?.cqDetails?.question1 || null,
-                question?.cqDetails?.question2 || null,
-                question?.cqDetails?.question3 || null,
-                question?.cqDetails?.question4 || null,
-              ].some((field) =>
-                field?.toLowerCase?.().includes(searchKeyword?.toLowerCase())
-              )
+              question.type,
+              question.questionName,
+              question.option1,
+              question.option2,
+              question.option3,
+              question.option4,
+              question.boardExamList,
+              question.schoolExamInfo,
+              question.correctAnswer,
+              question?.cqDetails?.mainQuestion || null,
+              question?.cqDetails?.question1 || null,
+              question?.cqDetails?.question2 || null,
+              question?.cqDetails?.question3 || null,
+              question?.cqDetails?.question4 || null,
+            ].some((field) =>
+              field?.toLowerCase?.().includes(searchKeyword?.toLowerCase())
+            )
             : true;
 
           // Check school match
@@ -518,12 +518,11 @@ export default function CqQuestionView() {
     <div className="solaimanlipi flex flex-col md:flex-row ms-0 md:ms-[255px] mt-[85px] me-0 md:me-[20px] p-4 md:p-5 gap-4 md:gap-5">
       {/* Main content (left side) */}
       <Card
-        className={`flex-1 max-h-[100vh] overflow-y-auto relative p-4 transition-all duration-300 ${
-          isSidebarVisible ? "md:me-[350px]" : "md:me-0"
-        }`}
+        className={`flex-1 max-h-[100vh] overflow-y-auto relative p-4 transition-all duration-300 bg-transparent shadow-none ${isSidebarVisible ? "md:me-[350px]" : "md:me-0"
+          }`}
       >
         {/* FIXED: Button alignment - all buttons in same row */}
-        <div className="sticky top-0 z-20 bg-white p-3 flex flex-row justify-between items-center gap-3 shadow-md rounded-xl">
+        <div className="sticky top-0 z-20 p-3 flex flex-row justify-between items-center gap-3 shadow-md rounded-xl">
           <div className="flex items-center gap-3">
             <Chip className="bg-[#024645] text-white" variant="shadow">
               <h3 className="text-sm sm:text-base">
@@ -543,7 +542,17 @@ export default function CqQuestionView() {
             </Button>
           </div>
 
+
           <div className="flex items-center gap-2">
+            {/* Filter button for desktop */}
+            <Button
+              size="sm"
+              onClick={() => setShouldShowSidebar(!shouldShowSidebar)}
+              startContent={<FilterIcon className="size-4" />}
+              className="bg-[#024645] text-white"
+            >
+              Filter
+            </Button>
             <Button
               size="sm"
               onPress={handleMakeQuestion}
@@ -573,20 +582,11 @@ export default function CqQuestionView() {
           </div>
         </div>
 
-        {/* Filter button for desktop */}
-        <Button
-          isIconOnly
-          onClick={() => setShouldShowSidebar(!shouldShowSidebar)}
-          className="bg-[#024645] text-white px-4 py-1 rounded mt-3 hidden sm:flex"
-        >
-          <FilterIcon />
-        </Button>
-
         <p className="mt-3 mb-2 text-xl sm:text-2xl font-bold">
           টাইটেল: {getUserCredentialsProfile?.examSet?.title}
         </p>
 
-        <div className="bg-gray-200 p-3 sm:p-5 rounded-lg">
+        <div className="">
           <div className="flex flex-col overflow-hidden">
             {(!filteredChapters || filteredChapters.length === 0) && (
               <div className="flex justify-center items-center py-20">
@@ -605,7 +605,7 @@ export default function CqQuestionView() {
 
               return (
                 <div key={chapter._id} className="mb-6 sm:mb-10">
-                  <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-[#024645]">
+                  <h2 className="text-base sm:text-xl mb-3 sm:mb-4">
                     অধ্যায়: {chapter?.chapterName}
                   </h2>
 
@@ -634,117 +634,128 @@ export default function CqQuestionView() {
                       return (
                         <div
                           key={question._id}
-                          className={`mb-4 sm:mb-6 relative p-4 sm:p-6 border-2 rounded-xl cursor-pointer transition-all duration-300 overflow-hidden ${
-                            isSelected
-                              ? "border-green-600 bg-green-50 shadow-lg"
-                              : "border-gray-200 bg-white shadow-md hover:shadow-lg"
-                          }`}
+                          className={`relative p-4 sm:p-6 rounded-md border mb-2 cursor-pointer transition-all duration-300 overflow-hidden shadow-md ${isSelected
+                            ? "border-green-600 bg-green-50 shadow-lg"
+                            : "border-gray-200 bg-white"
+                            }`}
                           onClick={() => handleOptionClick(question?._id)}
                         >
                           {/* Question Number and Main Content */}
-                          <div className="flex items-start gap-3 sm:gap-4">
+                          <div className="flex items-start">
                             {/* Question Number Circle */}
-                            <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-base sm:text-lg shadow-lg">
-                              {toBanglaNumber(index + 1)}
+                            <div className="text-[1.25em]">
+                              {toBanglaNumber(index + 1)}.
                             </div>
 
-                            <div className="bg-gray-100 flex items-center justify-center p-3 sm:p-4 w-full">
-                              <div className="bg-white rounded-lg p-3 sm:p-4 w-full">
-                                {/* Header Section */}
-                                <div className="flex flex-col justify-between items-start mb-4 sm:mb-6 border-b pb-3 sm:pb-4">
-                                  <div className="flex flex-col mb-3 sm:mb-0 w-full">
-                                    <div className="text-gray-700 leading-relaxed text-base sm:text-xl font-semibold">
-                                      {renderLatexContent(
-                                        question?.cqDetails?.mainQuestion ||
-                                          null
-                                      )}
-                                    </div>
+                            <div className="w-full text-xl ms-1">
+                              {/* Header Section */}
+                              <div className="flex flex-col justify-between items-start">
+                                <div className="flex flex-col w-full">
+                                  <div className="leading-relaxed text-xl">
+                                    {renderLatexContent(
+                                      question?.cqDetails?.mainQuestion ||
+                                      null
+                                    )}
                                   </div>
-                                  <div className="flex flex-col gap-1 sm:gap-2 w-full mt-2">
-                                    {question?.boardExamList?.map((board) => (
-                                      <p
-                                        key={board}
-                                        className="text-gray-600 text-sm sm:text-base md:text-lg font-medium"
-                                      >
-                                        {board}
-                                      </p>
-                                    ))}
-                                    <div className="flex flex-wrap gap-1 sm:gap-2">
-                                      {question?.searchType?.map((search) => (
-                                        <Chip
-                                          key={search}
-                                          className="text-gray-600 text-sm sm:text-base md:text-lg font-medium"
-                                          color="secondary"
-                                          variant="bordered"
-                                          size="sm"
-                                        >
-                                          {search}
-                                        </Chip>
-                                      ))}
-                                    </div>
-                                  </div>
-                                </div>
-
-                                {/* Questions Section */}
-                                <div className="space-y-4 sm:space-y-6">
-                                  {/* Question ক */}
-                                  <div className="text-gray-800">
-                                    <h3 className="text-base sm:text-lg mb-2 flex flex-row items-start gap-1">
-                                      <span className="flex-shrink-0">ক.</span>
-                                      <span className="text-gray-700 leading-relaxed flex-1 text-sm sm:text-base">
-                                        {renderLatexContent(
-                                          question?.cqDetails?.question1 || null
-                                        )}
-                                      </span>
-                                    </h3>
-                                  </div>
-
-                                  {/* Question খ */}
-                                  <div className="text-gray-800">
-                                    <h3 className="text-base sm:text-lg mb-2 flex flex-row items-start gap-1">
-                                      <span className="flex-shrink-0">খ.</span>
-                                      <span className="text-gray-700 leading-relaxed flex-1 text-sm sm:text-base">
-                                        {renderLatexContent(
-                                          question?.cqDetails?.question2 || null
-                                        )}
-                                      </span>
-                                    </h3>
-                                  </div>
-
-                                  {question?.cqDetails?.question3 && (
-                                    <div className="text-gray-800">
-                                      <h3 className="text-base sm:text-lg mb-2 flex flex-row items-start gap-1">
-                                        <span className="flex-shrink-0">
-                                          গ.
-                                        </span>
-                                        <span className="text-gray-700 leading-relaxed flex-1 text-sm sm:text-base">
-                                          {renderLatexContent(
-                                            question?.cqDetails?.question3 ||
-                                              null
-                                          )}
-                                        </span>
-                                      </h3>
-                                    </div>
-                                  )}
-
-                                  {question?.cqDetails?.question4 && (
-                                    <div className="text-gray-800">
-                                      <h3 className="text-base sm:text-lg mb-2 flex flex-row items-start gap-1">
-                                        <span className="flex-shrink-0">
-                                          ঘ.
-                                        </span>
-                                        <span className="text-gray-700 leading-relaxed flex-1 text-sm sm:text-base">
-                                          {renderLatexContent(
-                                            question?.cqDetails?.question4 ||
-                                              null
-                                          )}
-                                        </span>
-                                      </h3>
-                                    </div>
-                                  )}
                                 </div>
                               </div>
+
+                              {/* Questions Section */}
+                              <div className="space-y-3 mr-1 mt-3">
+                                {/* Question ক */}
+                                <div className="">
+                                  <h3 className="flex flex-row items-start gap-1">
+                                    <span className="flex-shrink-0">ক.</span>
+                                    <span className="flex-1">
+                                      {renderLatexContent(
+                                        question?.cqDetails?.question1 || null
+                                      )}
+                                    </span>
+                                  </h3>
+                                </div>
+
+                                {/* Question খ */}
+                                <div className="">
+                                  <h3 className="flex flex-row items-start gap-1">
+                                    <span className="flex-shrink-0">খ.</span>
+                                    <span className="flex-1">
+                                      {renderLatexContent(
+                                        question?.cqDetails?.question2 || null
+                                      )}
+                                    </span>
+                                  </h3>
+                                </div>
+
+                                {question?.cqDetails?.question3 && (
+                                  <div className="">
+                                    <h3 className="flex flex-row items-start gap-1">
+                                      <span className="flex-shrink-0">
+                                        গ.
+                                      </span>
+                                      <span className="flex-1">
+                                        {renderLatexContent(
+                                          question?.cqDetails?.question3 ||
+                                          null
+                                        )}
+                                      </span>
+                                    </h3>
+                                  </div>
+                                )}
+
+                                {question?.cqDetails?.question4 && (
+                                  <div className="">
+                                    <h3 className="flex flex-row items-start gap-1">
+                                      <span className="flex-shrink-0">
+                                        ঘ.
+                                      </span>
+                                      <span className="flex-1">
+                                        {renderLatexContent(
+                                          question?.cqDetails?.question4 ||
+                                          null
+                                        )}
+                                      </span>
+                                    </h3>
+                                  </div>
+                                )}
+                              </div>
                             </div>
+                          </div>
+
+                          <div className="flex flex-wrap gap-1 sm:gap-2 mt-2">
+                            {question?.searchType?.map((search) => (
+                              <Chip
+                                key={search}
+                                className=""
+                                color="black"
+                                variant="bordered"
+                                size="sm"
+                              >
+                                {search}
+                              </Chip>
+                            ))}
+                          </div>
+                          <div className="absolute right-4 bottom-4 flex items-end justify-end">
+                            {question?.boardExamList?.map((entry) => {
+                              // entry like "ঢাকা বোর্ড-২০২৪"
+                              const [boardPart = "", yearPart = ""] = entry
+                                .split("-")
+                                .map((s) => s.trim());
+                              const abbreviatedBoard = boardPart
+                                .split(/\s+/)
+                                .filter(Boolean)
+                                .map((word) => {
+                                  // take first two unicode characters safely
+                                  const chars = Array.from(word);
+                                  return chars.slice(0, 2).join("") + ".";
+                                })
+                                .join(" ");
+                              return (
+                                <span key={entry} className="mr-2 text-sm">
+                                  {abbreviatedBoard}
+                                  {yearPart ? " " + yearPart : ""}
+                                </span>
+                              );
+                            })}
                           </div>
 
                           {/* Selection Indicator */}
@@ -778,15 +789,13 @@ export default function CqQuestionView() {
           {/* Sidebar */}
           <div
             ref={sidebarRef}
-            className={`fixed right-0 top-0 h-full bg-white border-l border-gray-300 shadow-lg p-4 z-50 overflow-y-auto transition-transform duration-300 ${
-              windowSize.width <= 768
-                ? "w-full sm:w-[350px] transform translate-x-0"
-                : "w-[350px]"
-            } ${
-              windowSize.width > 768 && !shouldShowSidebar
+            className={`fixed right-0 top-0 h-full bg-white border-l border-gray-300 shadow-lg p-4 z-50 overflow-y-auto transition-transform duration-300 ${windowSize.width <= 768
+              ? "w-full sm:w-[350px] transform translate-x-0"
+              : "w-[350px]"
+              } ${windowSize.width > 768 && !shouldShowSidebar
                 ? "translate-x-full"
                 : "translate-x-0"
-            }`}
+              }`}
           >
             {/* Close button */}
             <div className="flex justify-between items-center mb-4">

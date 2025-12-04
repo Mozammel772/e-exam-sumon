@@ -8,21 +8,13 @@ dotenv.config();
 
 const app = express();
 
+
 // Middleware
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static("public"));
 
-const corsOptions = {
-  origin: [
-    "http://localhost:5173",
-  ],
-  // methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-  // allowedHeaders: ["Content-Type", "Authorization", "x-requested-with"],
-  credentials: true,
-  // optionsSuccessStatus: 200,
-};
 
 app.use(cors(corsOptions));
 // app.options("*", cors(corsOptions));
@@ -91,7 +83,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Internal Server Error" });
 });
 
-// === Port listener ===
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
