@@ -522,7 +522,7 @@ export default function CqQuestionView() {
           }`}
       >
         {/* FIXED: Button alignment - all buttons in same row */}
-        <div className="sticky top-0 z-20 p-3 flex flex-row justify-between items-center gap-3 shadow-md rounded-xl">
+        <div className="sticky top-0 z-20 p-3 flex flex-row justify-between items-center gap-3 shadow-md rounded-xl backdrop-blur-lg">
           <div className="flex items-center gap-3">
             <Chip className="bg-[#024645] text-white" variant="shadow">
               <h3 className="text-sm sm:text-base">

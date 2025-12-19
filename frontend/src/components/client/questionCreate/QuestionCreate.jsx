@@ -17,12 +17,12 @@ import ClientLoader from "../../../utils/loader/ClientLoader";
 export const examType = [
   { key: "সাপ্তাহিক পরীক্ষা", label: "সাপ্তাহিক পরীক্ষা" },
   { key: "মডেল টেস্ট", label: "মডেল টেস্ট" },
-  { key: "প্রি-টেস্ট", label: "প্রি-টেস্ট" },
-  { key: "টেস্ট-এক্সাম", label: "টেস্ট-এক্সাম" },
-  { key: "ক্লাস-টেস্ট", label: "ক্লাস-টেস্ট" },
-  { key: "বিষয় ভিত্তিক", label: "বিষয় ভিত্তিক" },
-  { key: "অধ্যায় ভিত্তিক", label: "অধ্যায় ভিত্তিক" },
-  { key: "মাসিক পরীক্ষা", label: "মাসিক পরীক্ষা" },
+  // { key: "প্রি-টেস্ট", label: "প্রি-টেস্ট" },
+  // { key: "টেস্ট-এক্সাম", label: "টেস্ট-এক্সাম" },
+  // { key: "ক্লাস-টেস্ট", label: "ক্লাস-টেস্ট" },
+  // { key: "বিষয় ভিত্তিক", label: "বিষয় ভিত্তিক" },
+  // { key: "অধ্যায় ভিত্তিক", label: "অধ্যায় ভিত্তিক" },
+  // { key: "মাসিক পরীক্ষা", label: "মাসিক পরীক্ষা" },
   { key: "অর্ধ-বার্ষিক পরীক্ষা", label: "অর্ধ-বার্ষিক পরীক্ষা" },
   { key: "বার্ষিক পরীক্ষা", label: "বার্ষিক পরীক্ষা" },
 ];
@@ -106,8 +106,8 @@ export default function QuestionCreate() {
         typeof value === "string"
           ? value.split(",")
           : Array.isArray(value)
-          ? value
-          : [value];
+            ? value
+            : [value];
       setFormData((prev) => ({
         ...prev,
         [field]: chaptersArray,
@@ -207,14 +207,14 @@ export default function QuestionCreate() {
 
           <div className="text-center space-y-2 bg-[#024645] min-h-56 p-5">
             <div className="mb-10">
-              <p className="solaimanlipi text-4xl font-bold text-white drop-shadow-sm">
+              <p className="solaimanlipi text-4xl text-white drop-shadow-sm">
                 ১ ক্লিকে আপনার প্রশ্ন তৈরি করুন!
               </p>
-              <p className="solaimanlipi font-thin text-2xl text-white ">
+              <p className="solaimanlipi font-thin text-xl text-white ">
                 নিচের তথ্যগুলো দিয়ে আপনার প্রশ্ন তৈরি করুন
               </p>
             </div>
-            <button className="bg-white text-gray-700 p-1.5  rounded-sm">
+            <button className="bg-white text-gray-700 px-3 cursor-pointer py-1 text-xl font-bold rounded-full hover:bg-gray-100">
               Subscribe Now!
             </button>
           </div>
@@ -237,7 +237,7 @@ export default function QuestionCreate() {
                   inputWrapper: "h-8",
                   label: "text-xl solaimanlipi",
                 }}
-                isDisabled={!isEligible}
+              // isDisabled={!isEligible}
               />
             </div>
 
@@ -247,24 +247,20 @@ export default function QuestionCreate() {
               <Select
                 className="max-w-full"
                 isRequired
-                placeholder={
-                  isEligible ? "শ্রেণী সিলেক্ট করুন" : getErrorMessage()
-                }
+                placeholder="শ্রেণী সিলেক্ট করুন"
                 onChange={(e) => handleChange("className", e.target.value)}
                 classNames={{
-                  trigger: `min-h-8 text-xl solaimanlipi border-2 rounded-xl px-4 ${
-                    isEligible ? "border-gray-200" : "border-red-200 bg-red-50"
-                  }`,
+                  trigger: `min-h-8 text-xl solaimanlipi border-2 rounded-xl px-4`,
                   value: "text-xl solaimanlipi",
                   listboxWrapper: "max-h-[400px]",
                   popoverContent: "text-xl solaimanlipi",
                   label: "text-xl solaimanlipi",
                 }}
-                isDisabled={!isEligible}
-                variant={isEligible ? "bordered" : "flat"}
-                color={isEligible ? "default" : "danger"}
+              // isDisabled={!isEligible}
+              // variant={isEligible ? "bordered" : "flat"}
+              // color={isEligible ? "default" : "danger"}
               >
-                {isEligible ? (
+                {/* {isEligible ? (
                   classFilteredPackages?.map((item) => (
                     <SelectItem
                       key={item?._id}
@@ -282,32 +278,42 @@ export default function QuestionCreate() {
                     className="text-red-600"
                   >
                     <span className="text-xl">{getErrorMessage()}</span>
+
                   </SelectItem>
-                )}
+                )} */}
+                {
+                  classFilteredPackages?.map((item) => (
+                    <SelectItem
+                      key={item?._id}
+                      className="text-xl solaimanlipi px-4 py-2 hover:bg-green-200"
+                      textValue={item.className}
+                    >
+                      <span className="text-xl">{item?.className}</span>
+                    </SelectItem>
+                  ))
+                }
               </Select>
 
               {/* Subject Select */}
               <Select
                 className="max-w-full"
                 isRequired
-                variant={isEligible ? "bordered" : "flat"}
-                color={isEligible ? "default" : "danger"}
+                variant="bordered"
+                // color={isEligible ? "default" : "danger"}
                 placeholder={
-                  isEligible ? "বিষয় নির্বাচন করুন" : getErrorMessage()
+                  "বিষয় নির্বাচন করুন"
                 }
                 onChange={(e) => handleChange("subjectName", e.target.value)}
                 classNames={{
                   label: "text-xl solaimanlipi",
-                  trigger: `min-h-8 text-xl solaimanlipi ${
-                    isEligible ? "" : "border-red-200 bg-red-50"
-                  }`,
+                  trigger: `min-h-8 text-xl solaimanlipi`,
                   value: "text-xl solaimanlipi",
                   listboxWrapper: "max-h-[400px]",
                   popoverContent: "text-xl solaimanlipi",
                 }}
-                isDisabled={!isEligible || !formData.className}
+              //isDisabled={!isEligible || !formData.className}
               >
-                {isEligible ? (
+                {/* {isEligible ? (
                   formData.className ? (
                     getSubscriptionInfoData?.packages
                       ?.filter(
@@ -341,7 +347,33 @@ export default function QuestionCreate() {
                   >
                     <span className="text-xl">{getErrorMessage()}</span>
                   </SelectItem>
-                )}
+                )} */}
+                {
+                  formData.className ? (
+                    getSubscriptionInfoData?.packages
+                      ?.filter(
+                        (subject) =>
+                          subject.subjectClassName?._id === formData?.className
+                      )
+                      ?.map((subject) => (
+                        <SelectItem
+                          key={subject?._id}
+                          onClick={() => setChangeSubjectId(subject?._id)}
+                          textValue={subject?.subjectName}
+                        >
+                          <p className="text-xl">{subject.subjectName}</p>
+                        </SelectItem>
+                      ))
+                  ) : (
+                    <SelectItem
+                      key="select-class-first"
+                      isDisabled
+                      textValue="প্রথমে শ্রেণী নির্বাচন করুন"
+                    >
+                      <p className="text-xl">প্রথমে শ্রেণী নির্বাচন করুন</p>
+                    </SelectItem>
+                  )
+                }
               </Select>
             </div>
 
@@ -350,11 +382,11 @@ export default function QuestionCreate() {
               <Select
                 className="w-full"
                 isRequired
-                variant={isEligible ? "bordered" : "flat"}
-                color={isEligible ? "default" : "danger"}
+                variant="bordered"
+                // color={isEligible ? "default" : "danger"}
                 selectionMode="multiple"
                 placeholder={
-                  isEligible ? "অধ্যায় সিলেক্ট করুন" : getErrorMessage()
+                  "অধ্যায় সিলেক্ট করুন"
                 }
                 onChange={(e) => {
                   const value = e.target.value;
@@ -369,16 +401,14 @@ export default function QuestionCreate() {
                 value={formData?.chapterId}
                 classNames={{
                   label: "text-xl solaimanlipi",
-                  trigger: `min-h-8 text-xl solaimanlipi ${
-                    isEligible ? "" : "border-red-200 bg-red-50"
-                  }`,
+                  trigger: `min-h-8 text-xl solaimanlipi`,
                   value: "text-xl solaimanlipi",
                   listboxWrapper: "max-h-[400px]",
                   popoverContent: "text-xl solaimanlipi",
                 }}
-                isDisabled={!isEligible || !changeSubjectId || subjectLoader}
+              // isDisabled={!isEligible || !changeSubjectId || subjectLoader}
               >
-                {isEligible ? (
+                {/* {isEligible ? (
                   changeSubjectId ? (
                     subjectLoader ? (
                       <SelectItem key="loading" value="loading" isDisabled>
@@ -426,7 +456,49 @@ export default function QuestionCreate() {
                   >
                     <span className="text-xl">{getErrorMessage()}</span>
                   </SelectItem>
-                )}
+                )} */}
+
+                {
+                  changeSubjectId ? (
+                    subjectLoader ? (
+                      <SelectItem key="loading" value="loading" isDisabled>
+                        <span className="text-xl solaimanlipi text-blue-600">
+                          loading...
+                        </span>
+                      </SelectItem>
+                    ) : (
+                      <>
+                        <SelectItem
+                          key="select-all"
+                          value="select-all"
+                          className="text-xl solaimanlipi px-4 py-2 font-semibold text-blue-600"
+                          textValue="✅ সবগুলো অধ্যায় নির্বাচন করুন"
+                        >
+                          <span className="text-xl">
+                            ✅ সবগুলো অধ্যায় নির্বাচন করুন
+                          </span>
+                        </SelectItem>
+                        {getASubjectData?.chapters?.map((item) => (
+                          <SelectItem
+                            key={item?._id}
+                            value={item?._id}
+                            className="text-xl solaimanlipi px-4 py-2"
+                            textValue={item?.chapterName}
+                          >
+                            <span className="text-xl">{item?.chapterName}</span>
+                          </SelectItem>
+                        ))}
+                      </>
+                    )
+                  ) : (
+                    <SelectItem
+                      key="select-subject-first"
+                      textValue="প্রথমে বিষয় নির্বাচন করুন"
+                    >
+                      <p className="text-xl">প্রথমে বিষয় নির্বাচন করুন</p>
+                    </SelectItem>
+                  )
+                }
               </Select>
             </div>
 
@@ -436,22 +508,20 @@ export default function QuestionCreate() {
               <Select
                 className="max-w-full"
                 isRequired
-                variant={isEligible ? "bordered" : "flat"}
-                color={isEligible ? "default" : "danger"}
-                placeholder={isEligible ? "পরীক্ষার ধরণ" : getErrorMessage()}
+                variant="bordered"
+                // color={isEligible ? "default" : "danger"}
+                placeholder="পরীক্ষার ধরণ"
                 onChange={(e) => handleChange("examType", e.target.value)}
                 classNames={{
                   label: "text-xl solaimanlipi",
-                  trigger: `min-h-8 text-xl solaimanlipi ${
-                    isEligible ? "" : "border-red-200 bg-red-50"
-                  }`,
+                  trigger: `min-h-8 text-xl solaimanlipi`,
                   value: "text-xl solaimanlipi",
                   listboxWrapper: "max-h-[400px]",
                   popoverContent: "text-xl solaimanlipi",
                 }}
-                isDisabled={!isEligible}
+              // isDisabled={!isEligible}
               >
-                {isEligible ? (
+                {/* {isEligible ? (
                   examType?.map((item) => (
                     <SelectItem
                       key={item?.key}
@@ -470,31 +540,41 @@ export default function QuestionCreate() {
                   >
                     <span className="text-xl">{getErrorMessage()}</span>
                   </SelectItem>
-                )}
+                )} */}
+
+                {
+                  examType?.map((item) => (
+                    <SelectItem
+                      key={item?.key}
+                      className="text-xl solaimanlipi px-4 py-2"
+                      textValue={item?.label}
+                    >
+                      <span className="text-xl">{item?.label}</span>
+                    </SelectItem>
+                  ))
+                }
               </Select>
 
               {/* Exam Category */}
               <Select
                 className="max-w-full"
                 isRequired
-                variant={isEligible ? "bordered" : "flat"}
-                color={isEligible ? "default" : "danger"}
+                variant="bordered"
+                // color={isEligible ? "default" : "danger"}
                 placeholder={
-                  isEligible ? "টাইপ সিলেক্ট করুন" : getErrorMessage()
+                  "টাইপ সিলেক্ট করুন"
                 }
                 onChange={(e) => handleChange("examCategory", e.target.value)}
                 classNames={{
                   label: "text-xl solaimanlipi",
-                  trigger: `min-h-8 text-xl solaimanlipi ${
-                    isEligible ? "" : "border-red-200 bg-red-50"
-                  }`,
+                  trigger: `min-h-8 text-xl solaimanlipi`,
                   value: "text-xl solaimanlipi",
                   listboxWrapper: "max-h-[400px]",
                   popoverContent: "text-xl solaimanlipi",
                 }}
-                isDisabled={!isEligible}
+              // isDisabled={!isEligible}
               >
-                {isEligible ? (
+                {/* {isEligible ? (
                   getAllExam?.map((item) => {
                     const displayName =
                       item?.examName === "সংক্ষিপ্ত প্রশ্ন"
@@ -519,45 +599,58 @@ export default function QuestionCreate() {
                   >
                     <span className="text-xl">{getErrorMessage()}</span>
                   </SelectItem>
-                )}
+                )} */}
+
+                {
+                  getAllExam?.map((item) => {
+                    const displayName =
+                      item?.examName === "সংক্ষিপ্ত প্রশ্ন"
+                        ? "সমন্বিত প্রশ্ন (সং. প্রশ্ন + সৃ. প্রশ্ন + বহু. প্রশ্ন)"
+                        : item?.examName;
+                    return (
+                      <SelectItem
+                        key={item?._id}
+                        className="text-xl solaimanlipi px-4 py-2"
+                        textValue={displayName}
+                      >
+                        <span className="text-xl">{displayName}</span>
+                      </SelectItem>
+                    );
+                  })
+                }
               </Select>
 
               {/* Marks */}
               <Input
                 size="md"
-                className={`solaimanlipi w-full ${
-                  !isEligible ? "bg-red-50 border-red-200" : ""
-                }`}
-                variant={isEligible ? "bordered" : "flat"}
-                color={isEligible ? "default" : "danger"}
+                className="solaimanlipi w-full"
+                variant="bordered"
+                // color={isEligible ? "default" : "danger"}
                 value={formData.marks}
                 onChange={(e) =>
                   handleChange("marks", e.target.value.replace(/[^0-9]/g, ""))
                 }
                 placeholder={
-                  isEligible
-                    ? "পূর্ণ মান দিন (যেমন: ১০, ২০, বা ৩০)"
-                    : getErrorMessage()
+                  "পূর্ণ মান দিন (যেমন: ১০, ২০, বা ৩০)"
                 }
                 isRequired
                 type="text"
                 classNames={{
-                  input: "text-xl solaimanlipi h-16",
+                  input: "solaimanlipi",
                   inputWrapper: "h-8",
-                  label: "text-xl solaimanlipi",
+                  label: "solaimanlipi",
                 }}
-                isDisabled={!isEligible}
+              // isDisabled={!isEligible}
               />
             </div>
 
             {/* ✅ Submit button */}
             <div className="pb-5">
               <Button
-                className={`mt-5 p-3 solaimanlipi w-full text-white text-xl  font-bold ${
-                  isEligible
-                    ? "bg-[#024645] hover:bg-[#003338]"
-                    : "bg-red-500 cursor-not-allowed"
-                }`}
+                className={`mt-5 p-3 solaimanlipi w-full text-white text-xl ${isEligible
+                  ? "bg-[#024645] hover:bg-[#003338]"
+                  : "bg-red-500 cursor-not-allowed"
+                  }`}
                 radius="lg"
                 size="lg"
                 type="submit"
@@ -570,7 +663,7 @@ export default function QuestionCreate() {
               </Button>
             </div>
 
-            {!isEligible && (
+            {/* {!isEligible && (
               <div className="mt-4 text-center">
                 <Link to="/">
                   <Button className="p-3 solaimanlipi bg-[#024645] text-white text-xl font-bold hover:bg-[#003338]">
@@ -578,7 +671,7 @@ export default function QuestionCreate() {
                   </Button>
                 </Link>
               </div>
-            )}
+            )} */}
           </form>
         </Card>
       </div>
