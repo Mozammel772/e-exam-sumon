@@ -8,27 +8,16 @@ dotenv.config();
 
 const app = express();
 
-const corsOptions = {
-  origin: [
-    "https://e-exam-bc5y.vercel.app",
-    "https://e-exam-qam4.vercel.app/",
-    "https://e-exam-bc5y.vercel.app",
-    "http://localhost:5173",
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-  allowedHeaders: ["Content-Type", "Authorization", "x-requested-with"],
-  credentials: true,
-  optionsSuccessStatus: 200,
-};
-
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
 
 // Middleware
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static("public"));
+
+
+app.use(cors(corsOptions));
+// app.options("*", cors(corsOptions));
 
 app.use((err, req, res, next) => {
   console.error("Full error object:", {
@@ -73,7 +62,7 @@ app.use("/api/chapter", require("./routers/chapterRoutes"));
 app.use("/api/exam", require("./routers/examRoutes"));
 app.use("/api/subscription", require("./routers/subscriptionRoutes"));
 app.use("/api/reports", require("./routers/reportRoutes"));
-app.use("/api/announcements", require("./routers/announcementRoutes"));
+
 app.use(
   "/api/question",
   require("./routers/questionCreationSubscriptionRoutes")
@@ -94,7 +83,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Internal Server Error" });
 });
 
-// === Port listener ===
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
