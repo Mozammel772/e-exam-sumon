@@ -147,11 +147,10 @@ const OptionStyleButtons = ({ options, currentStyle, onChange }) => (
     {options?.map((option, index) => (
       <button
         key={index}
-        className={`w-12 h-12 flex items-center justify-center border border-gray-300 rounded-lg text-xl font-bold transition-all ${
-          currentStyle === option
-            ? "bg-green-700 text-white border-green-700"
-            : "bg-white hover:bg-gray-200"
-        }`}
+        className={`w-12 h-12 flex items-center justify-center border border-gray-300 rounded-lg text-xl font-bold transition-all ${currentStyle === option
+          ? "bg-green-700 text-white border-green-700"
+          : "bg-white hover:bg-gray-200"
+          }`}
         onClick={() => onChange(option)}
       >
         {option}
@@ -639,17 +638,16 @@ export default function CqQuestionPaper() {
         </div>
         {/* Header Information */}
         <div
-          className={`text-center p-2 print-colored ${
-            sheetMode ? "mb-2" : "mb-3"
-          }`}
+          className={`text-center p-2 print-colored ${sheetMode ? "mb-2" : "mb-3"
+            }`}
           style={
             sheetMode
               ? {
-                  backgroundColor: bgColor || "transparent",
-                  color: textColor || "#000000",
-                  ["--bg-color"]: bgColor,
-                  ["--text-color"]: textColor,
-                }
+                backgroundColor: bgColor || "transparent",
+                color: textColor || "#000000",
+                ["--bg-color"]: bgColor,
+                ["--text-color"]: textColor,
+              }
               : {}
           }
         >
@@ -814,13 +812,12 @@ export default function CqQuestionPaper() {
         <div className="solaimanlipi" contentEditable={editingMode}>
           {[1, 2, 3].includes(columnNumber) && (
             <div
-              className={`${
-                columnNumber === 1
-                  ? "columns-1"
-                  : columnNumber === 2
+              className={`${columnNumber === 1
+                ? "columns-1"
+                : columnNumber === 2
                   ? "columns-2"
                   : "columns-3"
-              } gap-4 relative`}
+                } gap-4 relative`}
             >
               {isWaterMark && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
@@ -853,14 +850,12 @@ export default function CqQuestionPaper() {
                     className="relative z-10 w-full h-full ps-2 solaimanlipi question-container print-safe"
                   >
                     {/* Question Text */}
-                    <div className="text-xl font-light flex items-baseline gap-0 mb-3">
+                    <div className="font-light flex items-baseline gap-0">
                       <span className="shrink-0 me-3">
                         {toBanglaNumber(index + 1)}.
                       </span>
                       <div
-                        className="text-black leading-relaxed"
-                        style={{ fontSize: "1.1rem", lineHeight: "1.6" }}
-                      >
+                        className="text-black leading-none"                      >
                         {renderLatexContent(question.cqDetails.mainQuestion)}
                       </div>
                     </div>
@@ -868,50 +863,50 @@ export default function CqQuestionPaper() {
                     {/* Options */}
                     <div className="" contentEditable={editingMode}>
                       {/* Question a */}
-                      <div className="flex justify-between items-start text-gray-800 mb-2 ms-6">
+                      <div className="flex justify-between items-start text-gray-800 ms-6">
                         <div className="flex items-start flex-1">
-                          <span className="shrink-0 me-1 text-lg">ক.</span>
+                          <span className="shrink-0 me-1 leading-none">ক.</span>
                           <div
-                            className="text-black leading-relaxed flex-1"
-                            style={{ fontSize: "1rem", lineHeight: "1.5" }}
+                            className="text-black leading-none flex-1"
+
                           >
                             {renderLatexContent(question.cqDetails.question1)}
                           </div>
                         </div>
-                        <span className="text-lg font-medium ml-4 shrink-0">
+                        <span className="font-medium ml-4 shrink-0 leading-none">
                           {question.cqDetails.question4 ? "১" : "২"}
                         </span>
                       </div>
 
                       {/* Question b */}
-                      <div className="flex justify-between items-start text-gray-800 mb-2 ms-6">
+                      <div className="flex justify-between items-start text-gray-800 ms-6">
                         <div className="flex items-start flex-1">
-                          <span className="shrink-0 me-1 text-lg">খ.</span>
+                          <span className="shrink-0 me-1 leading-none">খ.</span>
                           <div
-                            className="text-black"
-                            style={{ fontSize: "1rem", lineHeight: "1.5" }}
+                            className="text-black leading-none"
+
                           >
                             {renderLatexContent(question.cqDetails.question2)}
                           </div>
                         </div>
-                        <span className="text-lg font-medium ml-4 shrink-0">
+                        <span className="font-medium ml-4 shrink-0 leading-none">
                           {question.cqDetails.question4 ? "২" : "৪"}
                         </span>
                       </div>
 
                       {/* Question c */}
                       {question.cqDetails.question3 && (
-                        <div className="flex justify-between items-start text-gray-800 mb-2 ms-6">
+                        <div className="flex justify-between items-start text-gray-800 ms-6">
                           <div className="flex items-start flex-1">
-                            <span className="shrink-0 me-1 text-lg">গ.</span>
+                            <span className="shrink-0 me-1 leading-none">গ.</span>
                             <div
-                              className="text-black leading-relaxed flex-1"
-                              style={{ fontSize: "1rem", lineHeight: "1.5" }}
+                              className="text-black leading-none flex-1"
+
                             >
                               {renderLatexContent(question.cqDetails.question3)}
                             </div>
                           </div>
-                          <span className="text-lg font-medium ml-4 shrink-0">
+                          <span className="font-medium ml-4 shrink-0 leading-none">
                             {question.cqDetails.question4 ? "৩" : "৪"}
                           </span>
                         </div>
@@ -919,17 +914,17 @@ export default function CqQuestionPaper() {
 
                       {/* Question d */}
                       {question.cqDetails.question4 && (
-                        <div className="flex justify-between items-start text-gray-800 mb-2 ms-6">
+                        <div className="flex justify-between items-start text-gray-800 ms-6">
                           <div className="flex items-start flex-1">
-                            <span className="shrink-0 me-1 text-lg">ঘ.</span>
+                            <span className="shrink-0 me-1 leading-none">ঘ.</span>
                             <div
-                              className="text-black leading-relaxed flex-1"
-                              style={{ fontSize: "1rem", lineHeight: "1.5" }}
+                              className="text-black leading-none flex-1"
+
                             >
                               {renderLatexContent(question.cqDetails.question4)}
                             </div>
                           </div>
-                          <span className="text-lg font-medium ml-4 shrink-0">
+                          <span className="font-medium ml-4 shrink-0 leading-none">
                             ৪
                           </span>
                         </div>
