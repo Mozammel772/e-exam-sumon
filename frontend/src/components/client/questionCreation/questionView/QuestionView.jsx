@@ -86,6 +86,12 @@ export const allBoard = [
   { key: "সিলেট বোর্ড", label: "সিলেট বোর্ড" },
   { key: "যশোর বোর্ড", label: "যশোর বোর্ড" },
 ];
+
+export const questionTypes = [
+  { key: "বহুনির্বাচনী", label: "বহুনির্বাচনী" },
+  { key: "সৃজনশীল", label: "সৃজনশীল" },
+  { key: "সংক্ষিপ্ত প্রশ্ন", label: "সংক্ষিপ্ত প্রশ্ন" },
+]
 // Configure MathJax
 const mathjaxConfig = {
   loader: { load: ["input/tex", "output/chtml"] },
@@ -1316,6 +1322,7 @@ export default function QuestionView() {
 
       {/* Right Sidebar (sticky) */}
       <FilterCard
+        questionTypes={questionTypes}
         searchKeyword={searchKeyword}
         setSearchKeyword={setSearchKeyword}
         getAnUserExamSets={getAnUserExamSets}

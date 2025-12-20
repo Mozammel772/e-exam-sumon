@@ -44,6 +44,11 @@ export const searchType = [
   { key: "তত্ত্বীয়", label: "তত্ত্বীয়" },
   { key: "গাণিতিক", label: "গাণিতিক" },
 ];
+export const questionTypes = [
+  { key: "বহুনির্বাচনী", label: "বহুনির্বাচনী" },
+  { key: "সৃজনশীল", label: "সৃজনশীল" },
+  { key: "সংক্ষিপ্ত প্রশ্ন", label: "সংক্ষিপ্ত প্রশ্ন" },
+];
 export const questionLevel = [
   { key: "জ্ঞান", label: "জ্ঞান" },
   { key: "অনুধাবন", label: "অনুধাবন" },
@@ -144,6 +149,7 @@ export default function CqQuestionView() {
   const [selectedBoards, setSelectedBoards] = useState([]);
   const [selectedYears, setSelectedYears] = useState([]);
   const [selectedSchools, setSelectedSchools] = useState([]);
+  const [selectedQuestionTypes, setSelectedQuestionTypes] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [shouldShowSidebar, setShouldShowSidebar] = useState(true); // Desktop state
   const sidebarRef = useRef(null);
@@ -234,6 +240,13 @@ export default function CqQuestionView() {
     );
   };
 
+  const handleQuestionTypeChange = (typeKey) => {
+    setSelectedQuestionTypes((prev) =>
+      prev.includes(typeKey)
+        ? prev.filter((t) => t !== typeKey)
+        : [...prev, typeKey]
+    );
+  };
   const allTopics = useMemo(() => {
     if (!getDesireQuestionsData?.chapters) return [];
 
@@ -789,7 +802,7 @@ export default function CqQuestionView() {
           {/* Sidebar */}
           <div
             ref={sidebarRef}
-            className={`fixed right-0 top-0 h-full bg-white border-l border-gray-300 shadow-lg p-4 z-50 overflow-y-auto transition-transform duration-300 ${windowSize.width <= 768
+            className={`fixed right-0 top-[79px] h-full pb-28 bg-white border-l border-gray-300 shadow-lg p-4 z-50 overflow-y-auto transition-transform duration-300 ${windowSize.width <= 768
               ? "w-full sm:w-[350px] transform translate-x-0"
               : "w-[350px]"
               } ${windowSize.width > 768 && !shouldShowSidebar
@@ -925,6 +938,18 @@ export default function CqQuestionView() {
                   </div>
                 );
               })}
+            </div>
+
+
+            <p className="text-xl font-bold">প্রশ্নের ধরন</p>
+            <div className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
+              {questionTypes.map((type) => (
+                <div key={type.key}>
+                  <Checkbox color="success" isSelected={selectedQuestionTypes?.includes(type.key)} onChange={() => handleQuestionTypeChange(type.key)}>
+                    <p className="text-xl">{type.label}</p>
+                  </Checkbox>
+                </div>
+              ))}
             </div>
 
             {/* FIXED: Chapter filtering section */}

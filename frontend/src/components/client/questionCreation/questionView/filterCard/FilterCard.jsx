@@ -30,6 +30,7 @@ export default function FilterCard({
   SCHOOL_OPTIONS,
   selectedSchools,
   setSelectedSchools,
+  questionTypes,
 }) {
   const [width, setWidth] = useState(0);
   const [open, setOpen] = useState(false);
@@ -40,6 +41,8 @@ export default function FilterCard({
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  console.log("questionTypes", questionTypes);
 
   const cardContent = (
     <Card className="w-full md:w-[300px] lg:w-[350px] bg-white shadow-lg p-5 h-[calc(100vh-40px)] overflow-y-auto scrollbar-hide hover:scrollbar-thin hover:scrollbar-thumb-gray-500 hover:scrollbar-track-gray-200">
