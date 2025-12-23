@@ -16,7 +16,7 @@ app.use(cookieParser());
 app.use(express.static("public"));
 
 
-app.use(cors(corsOptions));
+app.use(cors());
 // app.options("*", cors(corsOptions));
 
 app.use((err, req, res, next) => {
@@ -76,7 +76,7 @@ app.use(
 app.use("/api/lecture-shit-packages", require("./routers/lectureShitRoutes"));
 app.use("/api/cq-questions", require("./routers/cqRoutes"));
 app.use("/api/topics", require("./routers/topicsRoutes"));
-
+app.use("/api/announcements", require("./routers/announcementRoutes"));
 // Error handler
 app.use((err, req, res, next) => {
   console.error("Unhandled error:", err.stack);
