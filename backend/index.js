@@ -8,16 +8,18 @@ dotenv.config();
 
 const app = express();
 
-
 // Middleware
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static("public"));
 
+const corsOptions = {
+  origin: "*",
+};
 
 app.use(cors(corsOptions));
-// app.options("*", cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use((err, req, res, next) => {
   console.error("Full error object:", {
@@ -77,6 +79,7 @@ app.use("/api/lecture-shit-packages", require("./routers/lectureShitRoutes"));
 app.use("/api/cq-questions", require("./routers/cqRoutes"));
 app.use("/api/topics", require("./routers/topicsRoutes"));
 
+app.use("/api/announcements", require("./routers/announcementRoutes"));
 // Error handler
 app.use((err, req, res, next) => {
   console.error("Unhandled error:", err.stack);
