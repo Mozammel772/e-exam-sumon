@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useLoginMutation } from "../../redux/api/slices/authSlice";
-import Swal from "sweetalert2";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { authSlice } from "../../redux/api/slices/authSlice";
+import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { authSlice, useLoginMutation } from "../../redux/api/slices/authSlice";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -38,6 +37,7 @@ export default function Login() {
   const handleGoogleResponse = async (response) => {
     try {
       const res = await fetch(`${import.meta.env.VITE_main_url}/auth/google`, {
+      // const res = await fetch(`https://www.eexamapp.com/auth/google`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

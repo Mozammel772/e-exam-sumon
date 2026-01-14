@@ -33,5 +33,9 @@ router.delete(
   adminMiddleware,
   subscriptionController.deleteSubscription
 );
-
+router.patch(
+  "/:subscriptionId/approve-payment/:paymentId",
+  authMiddleware,
+  subscriptionController.approveSinglePayment
+);
 module.exports = router;
