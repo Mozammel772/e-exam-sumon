@@ -1,24 +1,24 @@
-import { useEffect, useMemo, useState } from "react";
-import { MathJaxContext, MathJax } from "better-react-mathjax";
 import {
   Alert,
   Button,
   Card,
+  Chip,
+  Pagination,
   Tooltip,
   useDisclosure,
-  Pagination,
-  Chip,
 } from "@heroui/react";
-import SaveIcon from "../../../../assets/SaveIcon";
-import ReportIcon from "../../../../assets/ReportIcon";
-import IdeaIcon from "../../../../assets/IdeaIcon";
-import QuestionIcon from "../../../../assets/QuestionIcon";
-import { useNavigate } from "react-router-dom";
-import { useGetAllExamsQuery } from "../../../../redux/api/slices/examSlice";
-import { useGetAllDesireQuestionsQuery } from "../../../../redux/api/slices/chapterSlice";
 import { useWindowSize } from "@uidotdev/usehooks";
+import { MathJax, MathJaxContext } from "better-react-mathjax";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import sanitizeHtml from "sanitize-html";
 import Swal from "sweetalert2";
+import IdeaIcon from "../../../../assets/IdeaIcon";
+import QuestionIcon from "../../../../assets/QuestionIcon";
+import ReportIcon from "../../../../assets/ReportIcon";
+import SaveIcon from "../../../../assets/SaveIcon";
+import { useGetAllDesireQuestionsQuery } from "../../../../redux/api/slices/chapterSlice";
+import { useGetAllExamsQuery } from "../../../../redux/api/slices/examSlice";
 
 import {
   useDemoQuestionsUpdateMutation,
@@ -27,9 +27,9 @@ import {
   useQuestionsUpdateMutation,
 } from "../../../../redux/api/slices/examSetSlice";
 
+import { CheckIcon } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import EyeOpenIcon from "../../../../assets/EyeOpenIcon";
-import { CheckIcon } from "lucide-react";
 import FilterCard from "./filterCard/FilterCard";
 
 import ExplainModal from "../questionView/explainModal/ExplainModal";
@@ -711,13 +711,13 @@ export default function QuestionView() {
   return (
     <div
       className={`me-3 ${size?.width <= 600
-        ? "solaimanlipi flex flex-col md:flex-row mt-[120px] me-[20px] p-5 gap-5"
+        ? "solaimanlipi flex flex-col md:flex-row mt-[120px] me-[5px] p-1 gap-1"
         : "solaimanlipi flex flex-col md:flex-row ms-[255px] mt-[85px] me-[20px] p-5 gap-5"
         }`}
     >
       {/* Main content (left side) */}
-      <Card className="flex-1 max-h-[100vh] overflow-y-auto relative p-4">
-        <div className="sticky top-0 z-20 bg-white p-3 flex justify-between items-center shadow-md rounded-xl">
+      <Card className="flex-1 max-h-[100vh] overflow-y-auto relative p-2">
+        <div className="sticky top-0 z-20 bg-white p-2 flex justify-between items-center shadow-md rounded-xl">
           <div>
             <Chip className="bg-[#024645] text-white" variant="shadow">
               <h3>

@@ -220,48 +220,48 @@ exports.deleteSubscription = async (req, res) => {
 
 
 // Get user subscription and user info by email
-exports.getUserSubscriptionAndInfo = async (req, res) => {
-  try {
-    const { email } = req.params;
+// exports.getUserSubscriptionAndInfo = async (req, res) => {
+//   try {
+//     const { email } = req.params;
 
-    // 1. Fetch user by email (case-insensitive), exclude password
-    const user = await User.findOne({
-      email: new RegExp(`^${email}$`, "i"),
-    }).select("-password");
+//     // 1. Fetch user by email (case-insensitive), exclude password
+//     const user = await User.findOne({
+//       email: new RegExp(`^${email}$`, "i"),
+//     }).select("-password");
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
 
-    // 2. Fetch all subscriptions for the user
-    const subscriptions = await Subscription.find({ email }).sort({
-      createdAt: -1,
-    });
+//     // 2. Fetch all subscriptions for the user
+//     const subscriptions = await Subscription.find({ email }).sort({
+//       createdAt: -1,
+//     });
 
-    // 3. Extract all package IDs from all subscriptions
-    const allPackageIds = subscriptions.flatMap((sub) =>
-      sub.packages.map((pkgId) => new mongoose.Types.ObjectId(pkgId))
-    );
+//     // 3. Extract all package IDs from all subscriptions
+//     const allPackageIds = subscriptions.flatMap((sub) =>
+//       sub.packages.map((pkgId) => new mongoose.Types.ObjectId(pkgId))
+//     );
 
-    // 4. Fetch all matching subject details
-    const subjects = await Subject.find({
-      _id: { $in: allPackageIds },
-    }).populate("subjectClassName");
+//     // 4. Fetch all matching subject details
+//     const subjects = await Subject.find({
+//       _id: { $in: allPackageIds },
+//     }).populate("subjectClassName");
 
-    // 5. Return everything
-    res.status(200).json({
-      user,
-      subscriptions,
-      packages: subjects,
-      totalSubscriptions: subscriptions.length,
-    });
-  } catch (err) {
-    res.status(500).json({
-      message: "Error fetching user subscription info",
-      error: err.message,
-    });
-  }
-};
+//     // 5. Return everything
+//     res.status(200).json({
+//       user,
+//       subscriptions,
+//       packages: subjects,
+//       totalSubscriptions: subscriptions.length,
+//     });
+//   } catch (err) {
+//     res.status(500).json({
+//       message: "Error fetching user subscription info",
+//       error: err.message,
+//     });
+//   }
+// };
 // Approve a single payment
 // exports.approveSinglePayment = async (req, res) => {
 //   try {
@@ -310,6 +310,72 @@ exports.getUserSubscriptionAndInfo = async (req, res) => {
 //     res.status(500).json({ message: "Error approving payment", error: err.message });
 //   }
 // };
+exports.getUserSubscriptionAndInfo = async (req, res) => {
+  try {
+    const { email } = req.params;
+
+    // 1️⃣ Find user
+    const user = await User.findOne({
+      email: new RegExp(`^${email}$`, "i"),
+    }).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // 2️⃣ Fetch subscriptions
+    const subscriptions = await Subscription.find({ email }).sort({
+      createdAt: -1,
+    });
+
+    const now = new Date();
+
+    // 3️⃣ Collect valid (approved + not expired) package IDs
+    const validPackageIds = [];
+
+    subscriptions.forEach((sub) => {
+      sub.purchases.forEach((purchase) => {
+        if (
+          purchase.isApproved === true &&
+          purchase.expiredAt &&
+          purchase.expiredAt > now
+        ) {
+          purchase.packages.forEach((pkgId) => {
+            validPackageIds.push(new mongoose.Types.ObjectId(pkgId));
+          });
+        }
+      });
+    });
+
+    // ❌ no valid payment
+    if (validPackageIds.length === 0) {
+      return res.status(200).json({
+        user,
+        subscriptions,
+        packages: [],
+        hasActiveSubscription: false,
+      });
+    }
+
+    // 4️⃣ Fetch subjects
+    const subjects = await Subject.find({
+      _id: { $in: [...new Set(validPackageIds.map(String))] },
+    }).populate("subjectClassName");
+
+    // 5️⃣ Response
+    res.status(200).json({
+      user,
+      subscriptions,
+      packages: subjects,
+      hasActiveSubscription: true,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Error fetching user subscription info",
+      error: err.message,
+    });
+  }
+};
 
 
 // Create Multi-Payment Subscription
