@@ -1,5 +1,5 @@
-import Latex from "react-latex-next";
 import "katex/dist/katex.min.css";
+import Latex from "react-latex-next";
 
 const LatexRenderer = ({ content, className = "" }) => {
   if (!content) return null;
@@ -63,3 +63,4 @@ const LatexRenderer = ({ content, className = "" }) => {
 };
 
 export default LatexRenderer;
+

@@ -1,31 +1,31 @@
-import { useEffect, useState } from "react";
 import {
   Button,
   Card,
   cn,
-  Switch,
-  Tooltip,
-  Textarea,
-  RadioGroup,
   Radio,
+  RadioGroup,
+  Switch,
+  Textarea,
+  Tooltip,
 } from "@heroui/react";
-import SettingsIcon from "../../../../assets/SettingsIcon";
-import ChangeIcon from "../../../../assets/ChangeIcon";
+import { useWindowSize } from "@uidotdev/usehooks";
+import axios from "axios";
+import "katex/dist/katex.min.css";
+import { useEffect, useState } from "react";
+import Latex from "react-latex";
+import { useNavigate } from "react-router";
 import AddIcon from "../../../../assets/AddIcon";
-import { useGetAnExamSetsQuery } from "../../../../redux/api/slices/examSetSlice";
-import ClientLoader from "../../../../utils/loader/ClientLoader";
+import ChangeIcon from "../../../../assets/ChangeIcon";
+import SettingsIcon from "../../../../assets/SettingsIcon";
 import {
   useGetAUserProfileByEmailQuery,
   useGetAUserProfileQuery,
 } from "../../../../redux/api/slices/authSlice";
 import { useGetAllClassesQuery } from "../../../../redux/api/slices/classSlice";
-import { useGetAllSubjectsQuery } from "../../../../redux/api/slices/subjectSlice";
+import { useGetAnExamSetsQuery } from "../../../../redux/api/slices/examSetSlice";
 import { useGetAllExamsQuery } from "../../../../redux/api/slices/examSlice";
-import { useNavigate } from "react-router";
-import Latex from "react-latex";
-import "katex/dist/katex.min.css";
-import { useWindowSize } from "@uidotdev/usehooks";
-import axios from "axios";
+import { useGetAllSubjectsQuery } from "../../../../redux/api/slices/subjectSlice";
+import ClientLoader from "../../../../utils/loader/ClientLoader";
 
 const toBanglaNumber = (number) => {
   const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
@@ -364,7 +364,6 @@ export default function CqQuestionPaper() {
 
   const cqTypeQuestions = shuffledQuestions?.filter((t) => t?.type === "CQ");
 
-  console.log("cqTypeQuestions", cqTypeQuestions);
 
   return (
     <div

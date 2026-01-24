@@ -1,21 +1,21 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
 import { Button, Tooltip } from "@heroui/react";
-import SettingsIcon from "../../../../assets/SettingsIcon";
+import axios from "axios";
+import { MathJax, MathJaxContext } from "better-react-mathjax";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import sanitizeHtml from "sanitize-html";
+import LatexRenderer from "../../../../../utils/LatexRenderer";
 import AddIcon from "../../../../assets/AddIcon";
-import { useGetAnExamSetsQuery } from "../../../../redux/api/slices/examSetSlice";
-import ClientLoader from "../../../../utils/loader/ClientLoader";
+import SettingsIcon from "../../../../assets/SettingsIcon";
 import {
   useGetAUserProfileByEmailQuery,
   useGetAUserProfileQuery,
 } from "../../../../redux/api/slices/authSlice";
 import { useGetAllClassesQuery } from "../../../../redux/api/slices/classSlice";
-import { useGetAllSubjectsQuery } from "../../../../redux/api/slices/subjectSlice";
+import { useGetAnExamSetsQuery } from "../../../../redux/api/slices/examSetSlice";
 import { useGetAllExamsQuery } from "../../../../redux/api/slices/examSlice";
-import { useNavigate } from "react-router";
-import sanitizeHtml from "sanitize-html";
-import LatexRenderer from "../../../../../utils/LatexRenderer";
-import { MathJaxContext, MathJax } from "better-react-mathjax";
+import { useGetAllSubjectsQuery } from "../../../../redux/api/slices/subjectSlice";
+import ClientLoader from "../../../../utils/loader/ClientLoader";
 import RightSidebar from "./utils/rightSidebar/RightSidebar";
 
 const toBanglaNumber = (number) => {
@@ -24,6 +24,30 @@ const toBanglaNumber = (number) => {
 };
 
 // Configure MathJax
+// const mathjaxConfig = {
+//   loader: { load: ["input/tex", "output/chtml"] },
+//   tex: {
+//     inlineMath: [
+//       ["$", "$"],
+//       ["\\(", "\\)"],
+//     ],
+//     displayMath: [
+//       ["$$", "$$"],
+//       ["\\[", "\\]"],
+//     ],
+//     processEscapes: true,
+//   },
+//   asciimath: {
+//     delimiters: [["`", "`"]],
+//   },
+//   options: {
+//     enableMenu: false,
+//   },
+//   chtml: {
+//     scale: 1.1,
+//   },
+// };
+
 const mathjaxConfig = {
   loader: { load: ["input/tex", "output/chtml"] },
   tex: {
@@ -35,16 +59,9 @@ const mathjaxConfig = {
       ["$$", "$$"],
       ["\\[", "\\]"],
     ],
-    processEscapes: true,
-  },
-  asciimath: {
-    delimiters: [["`", "`"]],
-  },
-  options: {
-    enableMenu: false,
   },
   chtml: {
-    scale: 1.1,
+    scale: 1, // 🔴 MUST be 1
   },
 };
 
@@ -142,7 +159,7 @@ export default function QuestionPaper() {
   const [size, setSize] = useState(50);
   const [opacity, setOpacity] = useState(0.5);
   const [imageUrl, setImageUrl] = useState(
-    localStorage.getItem("waterMarkImage") || ""
+    localStorage.getItem("waterMarkImage") || "",
   );
   const [uploading, setUploading] = useState(false);
 
@@ -157,25 +174,25 @@ export default function QuestionPaper() {
   };
 
   const [instructorNameToggle, setInstructorNameToggole] = useState(() =>
-    getInitialSetting("instructorNameToggle", false)
+    getInitialSetting("instructorNameToggle", false),
   );
   const [instructorProfileToggle, setInstructorProfileToggole] = useState(() =>
-    getInitialSetting("instructorProfileToggle", false)
+    getInitialSetting("instructorProfileToggle", false),
   );
   const [lectureNumberToggle, setLectureNumberToggle] = useState(() =>
-    getInitialSetting("lectureNumberToggle", 1)
+    getInitialSetting("lectureNumberToggle", 1),
   );
   const [lectureTopicToggle, setLectureTopicToggle] = useState(() =>
-    getInitialSetting("lectureTopicToggle", false)
+    getInitialSetting("lectureTopicToggle", false),
   );
   const [dataToggle, setDataToggle] = useState(() =>
-    getInitialSetting("dataToggle", true)
+    getInitialSetting("dataToggle", true),
   );
   const [bgColor, setBgColor] = useState(() =>
-    getInitialSetting("bgColor", "#ffffff")
+    getInitialSetting("bgColor", "#ffffff"),
   );
   const [textColor, setTextColor] = useState(() =>
-    getInitialSetting("textColor", "#000000")
+    getInitialSetting("textColor", "#000000"),
   );
 
   // Handle window resize
@@ -210,7 +227,7 @@ export default function QuestionPaper() {
     try {
       const res = await axios.post(
         `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-        formData
+        formData,
       );
 
       const uploadedUrl = res.data.secure_url;
@@ -277,19 +294,19 @@ export default function QuestionPaper() {
 
   // Derived data
   const getClass = getAllClasses?.filter(
-    (cls) => cls?._id === getASingleAllQuestionSets?.className
+    (cls) => cls?._id === getASingleAllQuestionSets?.className,
   );
 
   const getSubject = getAllSubjects?.filter(
-    (sub) => sub?._id === getASingleAllQuestionSets?.subjectName
+    (sub) => sub?._id === getASingleAllQuestionSets?.subjectName,
   );
 
   const getExam = getAllExamData?.filter(
-    (sub) => sub?._id === getASingleAllQuestionSets?.examCategory
+    (sub) => sub?._id === getASingleAllQuestionSets?.examCategory,
   );
 
   const findExam = getAllExamData?.find(
-    (sub) => sub?._id === getASingleAllQuestionSets?.examCategory
+    (sub) => sub?._id === getASingleAllQuestionSets?.examCategory,
   );
 
   // Handlers
@@ -322,7 +339,7 @@ export default function QuestionPaper() {
   const mcqTypeQuestions = shuffledQuestions?.filter((t) => t?.type === "MCQ");
 
   return (
-    <div className="solaimanlipi flex flex-col md:flex-row print:ms-0 mt-[85px] print:mt-0 print:me-0 gap-5 relative">
+    <div className="solaimanlipi flex flex-col md:flex-row print:items-center print:justify-center print:mx-auto mt-[85px] print:mt-0  gap-5 relative px-2">
       {/* Settings Toggle Button for Mobile */}
       {isMobile && (
         <Button
@@ -335,11 +352,13 @@ export default function QuestionPaper() {
       )}
 
       {/* Main content */}
+
       <div
         id="question-paper"
-        className={`w-full transition-all duration-300 ${
-          isMobile ? "" : "ms-[255px]"
-        }`}
+        className={`w-full transition-all duration-300
+    ${isMobile ? "" : "ms-[255px]"}
+    print:ms-0 print:mx-auto print:block
+  `}
       >
         {/* Add Question Button */}
         <div className="print:hidden">
@@ -386,7 +405,7 @@ export default function QuestionPaper() {
           }
         >
           {sheetMode ? (
-            <div className="relative w-full h-[25px]">
+            <div className="relative w-full h-[25px] ">
               {lectureNumberToggle && (
                 <p className="absolute left-0 top-0 text-xl">লেকচার: ১</p>
               )}
@@ -542,8 +561,8 @@ export default function QuestionPaper() {
                 columnNumber === 1
                   ? "columns-1"
                   : columnNumber === 2
-                  ? "columns-2"
-                  : "columns-3"
+                    ? "columns-2"
+                    : "columns-3"
               } gap-4 relative`}
             >
               {/* Watermark Text */}
@@ -573,6 +592,7 @@ export default function QuestionPaper() {
               )}
 
               {/* Questions */}
+
               <div className="w-full divide-x-1.5 solaimanlipi ps-2">
                 {mcqTypeQuestions?.map((question, index) => (
                   <div
@@ -607,7 +627,7 @@ export default function QuestionPaper() {
                     </div>
 
                     {/* Options */}
-                    <div className="grid grid-cols-2 gap-y-2 mt-2 text-md">
+                    <div className="grid grid-cols-2 gap-y-1 mt-2 text-md">
                       {[
                         { label: "ক", text: question?.option1 },
                         { label: "খ", text: question?.option2 },
@@ -641,9 +661,9 @@ export default function QuestionPaper() {
                                     __html: sanitizeHtml(
                                       (option.text || "").replace(
                                         /\n/g,
-                                        "<br/>"
+                                        "<br/>",
                                       ),
-                                      sanitizeConfig
+                                      sanitizeConfig,
                                     ),
                                   }}
                                 />
@@ -687,7 +707,7 @@ export default function QuestionPaper() {
                                       ],
                                       "*": ["style"],
                                     },
-                                  }
+                                  },
                                 ),
                               }}
                             />
@@ -725,7 +745,7 @@ export default function QuestionPaper() {
                                       ],
                                       "*": ["style"],
                                     },
-                                  }
+                                  },
                                 ),
                               }}
                             />

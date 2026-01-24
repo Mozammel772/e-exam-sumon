@@ -188,7 +188,7 @@ export default function QuestionView() {
       : [],
   });
 
-  console.log("getDesireQuestionsData", getDesireQuestionsData);
+
 
   // ==============================================
   //                 EVENT HANDLERS
@@ -955,7 +955,7 @@ export default function QuestionView() {
 
                                     {/* Explanation Button */}
                                     <Tooltip
-                                      content="প্রশ্নের ব্যাখ্যা দেখতে ক্লিক করুন"
+                                      content="প্রশ্নের ব্যাখ্যা দেখতে ক্লিক করুন "
                                       showArrow={true}
                                     >
                                       <Button

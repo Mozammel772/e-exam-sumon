@@ -1,10 +1,10 @@
 import { Card, CardBody } from "@heroui/card";
 import { Divider } from "@heroui/divider";
 import { Button } from "@heroui/react";
-import ClientLoader from "../../../utils/loader/ClientLoader";
-import { useGetAllSubjectsQuery } from "../../../redux/api/slices/subjectSlice";
 import { useGetAllClassesQuery } from "../../../redux/api/slices/classSlice";
 import { useGetAllExamsQuery } from "../../../redux/api/slices/examSlice";
+import { useGetAllSubjectsQuery } from "../../../redux/api/slices/subjectSlice";
+import ClientLoader from "../../../utils/loader/ClientLoader";
 
 import { useNavigate, useSearchParams } from "react-router-dom";
 
@@ -64,8 +64,8 @@ export default function QuestionCreation() {
     return <ClientLoader />;
   }
   return (
-    <div className="solaimanlipi ms-[265px] me-[20px] flex justify-center items-center h-screen">
-      <Card className="w-3/4">
+    <div className="solaimanlipi md:ms-[265px] md:me-[20px] flex justify-center items-center h-screen">
+      <Card className="w-[480px] md:w-3/4">
         <CardBody className="flex justify-center items-center pt-5 ps-3 pe-3 pb-5">
           <p className="text-2xl font-bold">
             {
