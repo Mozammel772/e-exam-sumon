@@ -466,48 +466,100 @@ exports.deleteQuestion = async (req, res) => {
 
 // Get questions based on filters
 
+// exports.getChaptersById = async (req, res) => {
+//   try {
+//     const { ids, email } = req.query;
+
+//     // Input validation
+//     if (!email) {
+//       return res.status(400).json({ message: "Email is required" });
+//     }
+
+//     if (!ids) {
+//       return res.status(400).json({ message: "Chapter IDs required" });
+//     }
+
+//     // Parallel execution of user lookup and chapter processing
+//     const [user, chapterIds] = await Promise.all([
+//       User.findOne({ email }).select("_id").lean(),
+//       Promise.resolve(ids.split(",")),
+//     ]);
+
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     // Validate ObjectId format to prevent unnecessary database queries
+//     const validChapterIds = chapterIds.filter((id) =>
+//       mongoose.Types.ObjectId.isValid(id)
+//     );
+
+//     if (validChapterIds.length === 0) {
+//       return res.status(400).json({ message: "No valid chapter IDs provided" });
+//     }
+
+//     // Use lean() for better performance and select only needed fields
+//     const chapters = await Chapter.find({
+//       _id: { $in: validChapterIds },
+//     })
+//       .select("chapterName questions topic") // Select only necessary fields
+//       .lean();
+
+//     if (!chapters.length) {
+//       return res.status(404).json({ message: "No chapters found" });
+//     }
+
+//     res.status(200).json({
+//       success: true,
+//       count: chapters.length,
+//       chapters,
+//     });
+//   } catch (error) {
+//     console.error("Error in getChaptersById:", error);
+//     res.status(500).json({
+//       message: "Server error",
+//       error:
+//         process.env.NODE_ENV === "development"
+//           ? error.message
+//           : "Internal server error",
+//     });
+//   }
+// };
 exports.getChaptersById = async (req, res) => {
   try {
     const { ids, email } = req.query;
 
-    // Input validation
     if (!email) {
       return res.status(400).json({ message: "Email is required" });
     }
 
-    if (!ids) {
-      return res.status(400).json({ message: "Chapter IDs required" });
-    }
-
-    // Parallel execution of user lookup and chapter processing
-    const [user, chapterIds] = await Promise.all([
-      User.findOne({ email }).select("_id").lean(),
-      Promise.resolve(ids.split(",")),
-    ]);
-
+    const user = await User.findOne({ email }).select("_id").lean();
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Validate ObjectId format to prevent unnecessary database queries
-    const validChapterIds = chapterIds.filter((id) =>
-      mongoose.Types.ObjectId.isValid(id)
-    );
-
-    if (validChapterIds.length === 0) {
-      return res.status(400).json({ message: "No valid chapter IDs provided" });
+    // 👉 ids না থাকলে empty response
+    if (!ids) {
+      return res.status(200).json({
+        success: true,
+        count: 0,
+        chapters: [],
+      });
     }
 
-    // Use lean() for better performance and select only needed fields
+    const chapterIds = ids
+      .split(",")
+      .filter((id) => mongoose.Types.ObjectId.isValid(id));
+
+    if (!chapterIds.length) {
+      return res.status(400).json({ message: "Invalid chapter IDs" });
+    }
+
     const chapters = await Chapter.find({
-      _id: { $in: validChapterIds },
+      _id: { $in: chapterIds },
     })
-      .select("chapterName questions topic") // Select only necessary fields
+      .select("chapterName questions topic")
       .lean();
-
-    if (!chapters.length) {
-      return res.status(404).json({ message: "No chapters found" });
-    }
 
     res.status(200).json({
       success: true,
@@ -515,13 +567,7 @@ exports.getChaptersById = async (req, res) => {
       chapters,
     });
   } catch (error) {
-    console.error("Error in getChaptersById:", error);
-    res.status(500).json({
-      message: "Server error",
-      error:
-        process.env.NODE_ENV === "development"
-          ? error.message
-          : "Internal server error",
-    });
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
 };

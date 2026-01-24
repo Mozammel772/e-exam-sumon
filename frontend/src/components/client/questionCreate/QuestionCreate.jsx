@@ -1493,9 +1493,9 @@ export default function QuestionCreate() {
             </div>
           </div>
 
-          <div className="text-center space-y-2 bg-[#024645] min-h-56 p-5">
-            <div className="mb-10">
-              <p className="solaimanlipi text-4xl text-white drop-shadow-sm">
+          <div className="text-center space-y-2 bg-[#024645] h-42 md:min-h-56 p-5">
+            <div className="mb-5 md:mb-10">
+              <p className="solaimanlipi text-2xl md:text-4xl text-white drop-shadow-sm">
                 ১ ক্লিকে আপনার প্রশ্ন তৈরি করুন!
               </p>
               <p className="solaimanlipi font-thin text-xl text-white ">
@@ -1546,12 +1546,12 @@ export default function QuestionCreate() {
             {!isEligible ? (
               <a 
                 href="/" 
-                className="inline-block bg-white text-gray-700 px-6 py-2 text-xl font-bold rounded-full hover:bg-gray-100 transition-colors"
+                className="inline-block bg-white text-gray-700 px-6 py-2 text-lg md:text-xl  font-bold rounded-full hover:bg-gray-100 transition-colors"
               >
                 Subscribe Now!
               </a>
             ) : (
-              <div className="inline-block bg-green-500 text-white px-6 py-2 text-xl font-bold rounded-full">
+              <div className="inline-block bg-green-500 text-white px-6 py-2 text-base md:text-xl font-bold rounded-full">
                 সাবস্ক্রাইবড
               </div>
             )}
@@ -1560,7 +1560,7 @@ export default function QuestionCreate() {
           {/* FORM */}
           <form
             onSubmit={handleSubmit}
-            className="space-y-4 mt-10 w-[350px] md:w-[550px] mx-auto pb-8"
+            className="space-y-4 mt-10 w-[400px] md:w-[550px] mx-auto pb-8"
           >
             {/* Title */}
             <div>
@@ -1580,7 +1580,7 @@ export default function QuestionCreate() {
             </div>
 
             {/* Class & Subject */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2  gap-4">
               {/* Class Select */}
               <Select
                 className="solaimanlipi"
@@ -1703,7 +1703,7 @@ export default function QuestionCreate() {
             </div>
 
             {/* Exam Type, Category, Marks */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {/* Exam Type */}
               <Select
                 className="solaimanlipi"
@@ -1791,7 +1791,7 @@ export default function QuestionCreate() {
             <div className="pt-4">
               <Button
                 type="submit"
-                className={`w-full solaimanlipi text-lg h-14 ${
+                className={`w-full solaimanlipi text-lg h-12 ${
                   isEligible 
                     ? "bg-[#024645] hover:bg-[#003338] text-white" 
                     : "bg-gray-300 text-gray-500 cursor-not-allowed"

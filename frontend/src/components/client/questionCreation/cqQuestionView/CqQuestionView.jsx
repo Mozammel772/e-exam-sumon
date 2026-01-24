@@ -1,34 +1,34 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Input } from "@heroui/input";
 import {
   Button,
   Card,
   Checkbox,
   Chip,
   cn,
-  Tooltip,
   Select,
   SelectItem,
+  Tooltip,
 } from "@heroui/react";
-import SaveIcon from "../../../../assets/SaveIcon";
-import ClearIcon from "../../../../assets/ClearIcon";
-import { Input } from "@heroui/input";
-import SearchIcon from "../../../../assets/SearchIcon";
-import { useNavigate } from "react-router-dom";
-import { useGetAllExamsQuery } from "../../../../redux/api/slices/examSlice";
-import { useGetAllDesireQuestionsQuery } from "../../../../redux/api/slices/chapterSlice";
-import Swal from "sweetalert2";
-import Latex from "react-latex";
 import "katex/dist/katex.min.css";
+import { useEffect, useMemo, useRef, useState } from "react";
+import Latex from "react-latex";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import ClearIcon from "../../../../assets/ClearIcon";
+import SaveIcon from "../../../../assets/SaveIcon";
+import SearchIcon from "../../../../assets/SearchIcon";
+import { useGetAllDesireQuestionsQuery } from "../../../../redux/api/slices/chapterSlice";
 import {
   useDemoQuestionsUpdateMutation,
   useGetExamSetsAnUserQuery,
   useGetExamSetWithCredentialsQuery,
   useQuestionsUpdateMutation,
 } from "../../../../redux/api/slices/examSetSlice";
+import { useGetAllExamsQuery } from "../../../../redux/api/slices/examSlice";
 
+import { CheckIcon, FilterIcon, X } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import EyeOpenIcon from "../../../../assets/EyeOpenIcon";
-import { CheckIcon, FilterIcon, X } from "lucide-react";
 
 const toBanglaNumber = (number) => {
   const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
@@ -117,7 +117,7 @@ const renderLatexContent = (content) => {
   const cleanContent = decodedContent
     .replace(
       new RegExp(`<(?!/?(${allowedTags.join("|")})(\\s|>|/))[^>]*>`, "gi"),
-      " "
+      " ",
     )
     .replace(/\s+/g, " ") // collapse extra spaces
     .trim();
@@ -211,11 +211,11 @@ export default function CqQuestionView() {
 
   const { data: getAllExamData } = useGetAllExamsQuery();
   const { data: getUserCredentialsProfile } = useGetExamSetWithCredentialsQuery(
-    { email, examSetId }
+    { email, examSetId },
   );
 
   const filterExamType = getAllExamData?.filter(
-    (exam) => exam?._id === getUserCredentialsProfile?.examSet?.examCategory
+    (exam) => exam?._id === getUserCredentialsProfile?.examSet?.examCategory,
   );
 
   // Question operations
@@ -226,8 +226,8 @@ export default function CqQuestionView() {
     examType: filterExamType?.[0]?.examIdentifier || "",
     chapterId: Array.isArray(getUserCredentialsProfile?.examSet?.chapterId)
       ? getUserCredentialsProfile?.examSet?.chapterId?.flatMap((item) =>
-        item.split(",")
-      )
+          item.split(","),
+        )
       : [],
   });
 
@@ -236,7 +236,7 @@ export default function CqQuestionView() {
     setSelectedTypes((prev) =>
       prev.includes(typeKey)
         ? prev.filter((t) => t !== typeKey)
-        : [...prev, typeKey]
+        : [...prev, typeKey],
     );
   };
 
@@ -244,7 +244,7 @@ export default function CqQuestionView() {
     setSelectedQuestionTypes((prev) =>
       prev.includes(typeKey)
         ? prev.filter((t) => t !== typeKey)
-        : [...prev, typeKey]
+        : [...prev, typeKey],
     );
   };
   const allTopics = useMemo(() => {
@@ -254,8 +254,8 @@ export default function CqQuestionView() {
       chapter.questions
         ?.filter((q) => q.type === "CQ" && (q.cqDetails?.topic || q.topic))
         ?.map((q) =>
-          q.type === "CQ" ? q.cqDetails?.topic?.trim() : q.topic?.trim()
-        )
+          q.type === "CQ" ? q.cqDetails?.topic?.trim() : q.topic?.trim(),
+        ),
     );
 
     return [...new Set(topics.filter(Boolean))];
@@ -265,7 +265,7 @@ export default function CqQuestionView() {
     setSelectedExamSets((prev) =>
       prev.some((set) => set.examSetId === examSetId)
         ? prev.filter((set) => set.examSetId !== examSetId)
-        : [...prev, { examSetId, questionIds }]
+        : [...prev, { examSetId, questionIds }],
     );
   };
 
@@ -287,8 +287,8 @@ export default function CqQuestionView() {
     const chaptersToShow =
       selectedChapters.length > 0
         ? getDesireQuestionsData.chapters.filter((chapter) =>
-          selectedChapters.includes(chapter._id.toString())
-        )
+            selectedChapters.includes(chapter._id.toString()),
+          )
         : getDesireQuestionsData.chapters;
 
     // Then, filter questions within each chapter
@@ -297,7 +297,7 @@ export default function CqQuestionView() {
         chapter.questions?.filter((question) => {
           // Check if question is in selected exam sets
           const isInSelectedExamSet = selectedExamSets?.some((set) =>
-            set.questionIds.includes(question._id)
+            set.questionIds.includes(question._id),
           );
 
           // Check question type match
@@ -308,7 +308,7 @@ export default function CqQuestionView() {
               return (
                 question.type?.toLowerCase() === normalizedType ||
                 question.searchType?.some(
-                  (st) => st.toLowerCase() === normalizedType
+                  (st) => st.toLowerCase() === normalizedType,
                 )
               );
             });
@@ -321,23 +321,23 @@ export default function CqQuestionView() {
           // Check search keyword match
           const matchesSearch = searchKeyword
             ? [
-              question.type,
-              question.questionName,
-              question.option1,
-              question.option2,
-              question.option3,
-              question.option4,
-              question.boardExamList,
-              question.schoolExamInfo,
-              question.correctAnswer,
-              question?.cqDetails?.mainQuestion || null,
-              question?.cqDetails?.question1 || null,
-              question?.cqDetails?.question2 || null,
-              question?.cqDetails?.question3 || null,
-              question?.cqDetails?.question4 || null,
-            ].some((field) =>
-              field?.toLowerCase?.().includes(searchKeyword?.toLowerCase())
-            )
+                question.type,
+                question.questionName,
+                question.option1,
+                question.option2,
+                question.option3,
+                question.option4,
+                question.boardExamList,
+                question.schoolExamInfo,
+                question.correctAnswer,
+                question?.cqDetails?.mainQuestion || null,
+                question?.cqDetails?.question1 || null,
+                question?.cqDetails?.question2 || null,
+                question?.cqDetails?.question3 || null,
+                question?.cqDetails?.question4 || null,
+              ].some((field) =>
+                field?.toLowerCase?.().includes(searchKeyword?.toLowerCase()),
+              )
             : true;
 
           // Check school match
@@ -359,7 +359,7 @@ export default function CqQuestionView() {
               const yearOk =
                 selectedYears.length === 0 || selectedYears.includes(year);
               return boardOk && yearOk;
-            }
+            },
           );
 
           // Check topic match
@@ -403,7 +403,7 @@ export default function CqQuestionView() {
     const allFound = filteredChapters.flatMap((chapter) => {
       const displayQuestions = chapter.questions || [];
       return selectedOptions.filter((id) =>
-        displayQuestions?.some((q) => q._id === id)
+        displayQuestions?.some((q) => q._id === id),
       );
     });
 
@@ -528,15 +528,24 @@ export default function CqQuestionView() {
     (windowSize.width > 768 && shouldShowSidebar);
 
   return (
-    <div className="solaimanlipi flex flex-col md:flex-row ms-0 md:ms-[255px] mt-[85px] me-0 md:me-[20px] p-4 md:p-5 gap-4 md:gap-5">
+    <div className="solaimanlipi flex flex-col md:flex-row ms-0 md:ms-[255px] mt-[85px] me-0 md:me-[20px] p-2 md:p-5 gap-2 md:gap-5">
       {/* Main content (left side) */}
       <Card
-        className={`flex-1 max-h-[100vh] overflow-y-auto relative p-4 transition-all duration-300 bg-transparent shadow-none ${isSidebarVisible ? "md:me-[350px]" : "md:me-0"
-          }`}
+        className={`flex-1 max-h-[100vh] overflow-y-auto relative p-2 md:p-4 transition-all duration-300 bg-transparent shadow-none ${
+          isSidebarVisible ? "md:me-[350px]" : "md:me-0"
+        }`}
       >
         {/* FIXED: Button alignment - all buttons in same row */}
-        <div className="sticky top-0 z-20 p-3 flex flex-row justify-between items-center gap-3 shadow-md rounded-xl backdrop-blur-lg">
+        <div className="sticky top-0 z-20 p-2 flex flex-row justify-between items-center gap-3 shadow-md rounded-xl backdrop-blur-lg">
           <div className="flex items-center gap-3">
+            <Button
+              size="sm"
+              onClick={() => setIsSidebarOpen(true)}
+              startContent={<FilterIcon className="size-4" />}
+              className="bg-[#024645] text-white md:hidden"
+            >
+              Filter
+            </Button>
             <Chip className="bg-[#024645] text-white" variant="shadow">
               <h3 className="text-sm sm:text-base">
                 Selected: {foundIds?.length}/
@@ -545,27 +554,11 @@ export default function CqQuestionView() {
             </Chip>
 
             {/* Filter button for mobile */}
-            <Button
-              isIconOnly
-              onClick={() => setIsSidebarOpen(true)}
-              className="bg-[#024645] text-white sm:hidden"
-              size="sm"
-            >
-              <FilterIcon size={16} />
-            </Button>
           </div>
-
 
           <div className="flex items-center gap-2">
             {/* Filter button for desktop */}
-            <Button
-              size="sm"
-              onClick={() => setShouldShowSidebar(!shouldShowSidebar)}
-              startContent={<FilterIcon className="size-4" />}
-              className="bg-[#024645] text-white"
-            >
-              Filter
-            </Button>
+
             <Button
               size="sm"
               onPress={handleMakeQuestion}
@@ -613,7 +606,7 @@ export default function CqQuestionView() {
               const searchQuestion = displayQuestions?.filter((q) =>
                 stripHtml(q?.cqDetails?.mainQuestion || null)
                   .toLowerCase()
-                  .includes(searchKeyword?.toLowerCase())
+                  .includes(searchKeyword?.toLowerCase()),
               );
 
               return (
@@ -641,16 +634,17 @@ export default function CqQuestionView() {
                   ) : (
                     searchQuestion?.map((question, index) => {
                       const isSelected = selectedOptions.some(
-                        (id) => id.toString() === question?._id?.toString()
+                        (id) => id.toString() === question?._id?.toString(),
                       );
 
                       return (
                         <div
                           key={question._id}
-                          className={`relative p-4 sm:p-6 rounded-md border mb-2 cursor-pointer transition-all duration-300 overflow-hidden shadow-md ${isSelected
-                            ? "border-green-600 bg-green-50 shadow-lg"
-                            : "border-gray-200 bg-white"
-                            }`}
+                          className={`relative p-4 sm:p-6 rounded-md border mb-2 cursor-pointer transition-all duration-300 overflow-hidden shadow-md ${
+                            isSelected
+                              ? "border-green-600 bg-green-50 shadow-lg"
+                              : "border-gray-200 bg-white"
+                          }`}
                           onClick={() => handleOptionClick(question?._id)}
                         >
                           {/* Question Number and Main Content */}
@@ -666,8 +660,7 @@ export default function CqQuestionView() {
                                 <div className="flex flex-col w-full">
                                   <div className="leading-relaxed text-xl">
                                     {renderLatexContent(
-                                      question?.cqDetails?.mainQuestion ||
-                                      null
+                                      question?.cqDetails?.mainQuestion || null,
                                     )}
                                   </div>
                                 </div>
@@ -681,7 +674,7 @@ export default function CqQuestionView() {
                                     <span className="flex-shrink-0">ক.</span>
                                     <span className="flex-1">
                                       {renderLatexContent(
-                                        question?.cqDetails?.question1 || null
+                                        question?.cqDetails?.question1 || null,
                                       )}
                                     </span>
                                   </h3>
@@ -693,7 +686,7 @@ export default function CqQuestionView() {
                                     <span className="flex-shrink-0">খ.</span>
                                     <span className="flex-1">
                                       {renderLatexContent(
-                                        question?.cqDetails?.question2 || null
+                                        question?.cqDetails?.question2 || null,
                                       )}
                                     </span>
                                   </h3>
@@ -702,13 +695,11 @@ export default function CqQuestionView() {
                                 {question?.cqDetails?.question3 && (
                                   <div className="">
                                     <h3 className="flex flex-row items-start gap-1">
-                                      <span className="flex-shrink-0">
-                                        গ.
-                                      </span>
+                                      <span className="flex-shrink-0">গ.</span>
                                       <span className="flex-1">
                                         {renderLatexContent(
                                           question?.cqDetails?.question3 ||
-                                          null
+                                            null,
                                         )}
                                       </span>
                                     </h3>
@@ -718,13 +709,11 @@ export default function CqQuestionView() {
                                 {question?.cqDetails?.question4 && (
                                   <div className="">
                                     <h3 className="flex flex-row items-start gap-1">
-                                      <span className="flex-shrink-0">
-                                        ঘ.
-                                      </span>
+                                      <span className="flex-shrink-0">ঘ.</span>
                                       <span className="flex-1">
                                         {renderLatexContent(
                                           question?.cqDetails?.question4 ||
-                                          null
+                                            null,
                                         )}
                                       </span>
                                     </h3>
@@ -802,13 +791,15 @@ export default function CqQuestionView() {
           {/* Sidebar */}
           <div
             ref={sidebarRef}
-            className={`fixed right-0 top-[79px] h-full pb-28 bg-white border-l border-gray-300 shadow-lg p-4 z-50 overflow-y-auto transition-transform duration-300 ${windowSize.width <= 768
-              ? "w-full sm:w-[350px] transform translate-x-0"
-              : "w-[350px]"
-              } ${windowSize.width > 768 && !shouldShowSidebar
+            className={`fixed right-0 top-0 md:top-[75px] h-full pb-28 bg-white border-t-1 border-l border-gray-300 shadow-lg p-4 z-50 overflow-y-auto transition-transform duration-300 ${
+              windowSize.width <= 768
+                ? "w-[350px] sm:w-[250px] transform translate-x-0"
+                : "w-[370px]"
+            } ${
+              windowSize.width > 768 && !shouldShowSidebar
                 ? "translate-x-full"
                 : "translate-x-0"
-              }`}
+            }`}
           >
             {/* Close button */}
             <div className="flex justify-between items-center mb-4">
@@ -874,12 +865,12 @@ export default function CqQuestionView() {
                           "inline-flex w-full max-w-md bg-content1",
                           "hover:bg-content2 items-center justify-start",
                           "cursor-pointer rounded-lg gap-2 p-3 border-1 border-transparent",
-                          "data-[selected=true]:border-[#024645]"
+                          "data-[selected=true]:border-[#024645]",
                         ),
                         label: "w-full",
                       }}
                       isSelected={selectedExamSets.some(
-                        (set) => set.examSetId === examSet._id
+                        (set) => set.examSetId === examSet._id,
                       )}
                       onValueChange={() =>
                         handleExamSetToggle(examSet._id, examSet.questionIds)
@@ -895,32 +886,6 @@ export default function CqQuestionView() {
                     </Checkbox>
                   </div>
                 ))}
-            </div>
-
-            {/* Other filter sections */}
-            <p className="text-lg font-bold">টপিক অনুযায়ী ফিল্টার</p>
-            <div className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
-              {allTopics?.length > 0 ? (
-                <Select
-                  label="Select Topics"
-                  placeholder="Choose topics"
-                  selectionMode="multiple"
-                  selectedKeys={selectedTopics}
-                  onSelectionChange={(keys) => setSelectedTopics([...keys])}
-                  className="w-full"
-                  color="success"
-                >
-                  {allTopics.map((topic) => (
-                    <SelectItem key={topic} value={topic}>
-                      {topic}
-                    </SelectItem>
-                  ))}
-                </Select>
-              ) : (
-                <p className="p-2 text-gray-500 text-sm">
-                  কোন টপিক পাওয়া যায়নি
-                </p>
-              )}
             </div>
 
             <p className="text-lg font-bold">স্মার্ট অনুসন্ধান</p>
@@ -940,46 +905,21 @@ export default function CqQuestionView() {
               })}
             </div>
 
-
             <p className="text-xl font-bold">প্রশ্নের ধরন</p>
             <div className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
               {questionTypes.map((type) => (
                 <div key={type.key}>
-                  <Checkbox color="success" isSelected={selectedQuestionTypes?.includes(type.key)} onChange={() => handleQuestionTypeChange(type.key)}>
+                  <Checkbox
+                    color="success"
+                    isSelected={selectedQuestionTypes?.includes(type.key)}
+                    onChange={() => handleQuestionTypeChange(type.key)}
+                  >
                     <p className="text-xl">{type.label}</p>
                   </Checkbox>
                 </div>
               ))}
             </div>
-
-            {/* FIXED: Chapter filtering section */}
-            <div>
-              <p className="text-lg mt-3 font-bold">
-                অধ্যায় ভিত্তিক ফিল্টারিং প্রশ্ন
-              </p>
-              {getDesireQuestionsData?.chapters?.map((chapter) => (
-                <div
-                  key={chapter?._id}
-                  className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black"
-                >
-                  <div>
-                    <Checkbox
-                      color="success"
-                      isSelected={selectedChapters.includes(
-                        chapter._id.toString()
-                      )}
-                      onChange={() =>
-                        handleChapterToggle(chapter._id.toString())
-                      }
-                    >
-                      <p className="text-base">{chapter?.chapterName}</p>
-                    </Checkbox>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div>
+  <div>
               <p className="text-lg mt-3 font-bold">বোর্ড প্রশ্ন</p>
               <div className="ps-2 pe-2 mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
                 <Select
@@ -1018,7 +958,7 @@ export default function CqQuestionView() {
                           setSelectedBoards((prev) =>
                             prev.includes(board.key)
                               ? prev?.filter((b) => b !== board.key)
-                              : [...prev, board.key]
+                              : [...prev, board.key],
                           )
                         }
                       >
@@ -1029,6 +969,60 @@ export default function CqQuestionView() {
                 </div>
               </div>
             </div>
+            {/* Other filter sections */}
+            <p className="text-lg font-bold">টপিক অনুযায়ী ফিল্টার</p>
+            <div className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
+              {allTopics?.length > 0 ? (
+                <Select
+                  label="Select Topics"
+                  placeholder="Choose topics"
+                  selectionMode="multiple"
+                  selectedKeys={selectedTopics}
+                  onSelectionChange={(keys) => setSelectedTopics([...keys])}
+                  className="w-full"
+                  color="success"
+                >
+                  {allTopics.map((topic) => (
+                    <SelectItem key={topic} value={topic}>
+                      {topic}
+                    </SelectItem>
+                  ))}
+                </Select>
+              ) : (
+                <p className="p-2 text-gray-500 text-sm">
+                  কোন টপিক পাওয়া যায়নি
+                </p>
+              )}
+            </div>
+
+            {/* FIXED: Chapter filtering section */}
+            <div>
+              <p className="text-lg mt-3 font-bold">
+                অধ্যায় ভিত্তিক ফিল্টারিং প্রশ্ন
+              </p>
+              {getDesireQuestionsData?.chapters?.map((chapter) => (
+                <div
+                  key={chapter?._id}
+                  className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black"
+                >
+                  <div>
+                    <Checkbox
+                      color="success"
+                      isSelected={selectedChapters.includes(
+                        chapter._id.toString(),
+                      )}
+                      onChange={() =>
+                        handleChapterToggle(chapter._id.toString())
+                      }
+                    >
+                      <p className="text-base">{chapter?.chapterName}</p>
+                    </Checkbox>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+          
 
             <div>
               <p className="text-lg mt-3 font-bold">শীর্ষস্থানীয় স্কুল</p>
@@ -1042,7 +1036,7 @@ export default function CqQuestionView() {
                         setSelectedSchools((prev) =>
                           prev?.includes(school.key)
                             ? prev?.filter((s) => s !== school.key)
-                            : [...prev, school.key]
+                            : [...prev, school.key],
                         )
                       }
                     >

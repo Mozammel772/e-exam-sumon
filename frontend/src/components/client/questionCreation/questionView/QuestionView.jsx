@@ -27,7 +27,7 @@ import {
   useQuestionsUpdateMutation,
 } from "../../../../redux/api/slices/examSetSlice";
 
-import { CheckIcon } from "lucide-react";
+import { CheckIcon, Filter } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import EyeOpenIcon from "../../../../assets/EyeOpenIcon";
 import FilterCard from "./filterCard/FilterCard";
@@ -91,7 +91,7 @@ export const questionTypes = [
   { key: "বহুনির্বাচনী", label: "বহুনির্বাচনী" },
   { key: "সৃজনশীল", label: "সৃজনশীল" },
   { key: "সংক্ষিপ্ত প্রশ্ন", label: "সংক্ষিপ্ত প্রশ্ন" },
-]
+];
 // Configure MathJax
 const mathjaxConfig = {
   loader: { load: ["input/tex", "output/chtml"] },
@@ -148,6 +148,7 @@ export default function QuestionView() {
   const [questionAnswer, setQuestionAnswer] = useState("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [foundIds, setFoundIds] = useState([]);
+  const [open, setOpen] = useState(false);
 
   // ==============================================
   //               PAGINATION STATE
@@ -161,7 +162,7 @@ export default function QuestionView() {
 
   // Exam data queries
   const { data: getUserCredentialsProfile } = useGetExamSetWithCredentialsQuery(
-    { email, examSetId }
+    { email, examSetId },
   );
 
   const [questionsUpdate] = useQuestionsUpdateMutation();
@@ -171,7 +172,7 @@ export default function QuestionView() {
 
   const { data: getAllExamData } = useGetAllExamsQuery();
   const filterExamType = getAllExamData?.filter(
-    (exam) => exam?._id === getUserCredentialsProfile?.examSet?.examCategory
+    (exam) => exam?._id === getUserCredentialsProfile?.examSet?.examCategory,
   );
 
   // Question operations
@@ -183,12 +184,10 @@ export default function QuestionView() {
     // subscription: getUserCredentialsProfile?.userProfile?.subscription,
     chapterId: Array.isArray(getUserCredentialsProfile?.examSet?.chapterId)
       ? getUserCredentialsProfile?.examSet?.chapterId?.flatMap((item) =>
-        item.split(",")
-      )
+          item.split(","),
+        )
       : [],
   });
-
-
 
   // ==============================================
   //                 EVENT HANDLERS
@@ -198,7 +197,7 @@ export default function QuestionView() {
     setSelectedTypes((prev) =>
       prev.includes(typeKey)
         ? prev.filter((t) => t !== typeKey)
-        : [...prev, typeKey]
+        : [...prev, typeKey],
     );
   };
 
@@ -208,7 +207,7 @@ export default function QuestionView() {
     const topics = getDesireQuestionsData.chapters.flatMap((chapter) =>
       chapter.questions
         ?.filter((q) => q.type === "MCQ" && q.topic?.trim())
-        ?.map((q) => q.topic.trim())
+        ?.map((q) => q.topic.trim()),
     );
 
     return [...new Set(topics)];
@@ -218,7 +217,7 @@ export default function QuestionView() {
     setSelectedExamSets((prev) =>
       prev.some((set) => set.examSetId === examSetId)
         ? prev.filter((set) => set.examSetId !== examSetId)
-        : [...prev, { examSetId, questionIds }]
+        : [...prev, { examSetId, questionIds }],
     );
   };
 
@@ -243,7 +242,7 @@ export default function QuestionView() {
       ?.map((chapter) => {
         const chapterQuestions = chapter.questions || [];
         const isChapterSelected = selectedChapters.includes(
-          chapter._id.toString()
+          chapter._id.toString(),
         );
 
         // If chapter is selected, apply only search filtering to show all questions from that chapter
@@ -261,7 +260,7 @@ export default function QuestionView() {
               question.schoolExamInfo,
               question.correctAnswer,
             ].some((field) =>
-              field?.toLowerCase?.().includes(searchKeyword?.toLowerCase())
+              field?.toLowerCase?.().includes(searchKeyword?.toLowerCase()),
             );
 
             return matchesSearch;
@@ -278,77 +277,77 @@ export default function QuestionView() {
           qt === "demo"
             ? chapterQuestions
             : chapterQuestions?.filter((question) => {
-              const isInSelectedExamSet = selectedExamSets?.some((set) =>
-                set.questionIds.includes(question._id)
-              );
-
-              // MODIFIED: Allow both MCQ and CQ types
-              const typeMatch =
-                selectedTypes.length === 0 ||
-                selectedTypes.some(
-                  (type) =>
-                    question.searchType?.includes(type) ||
-                    question.type?.includes(type)
+                const isInSelectedExamSet = selectedExamSets?.some((set) =>
+                  set.questionIds.includes(question._id),
                 );
 
-              const levelMatch =
-                selectedLevels.length === 0 ||
-                selectedLevels.includes(question.questionLevel);
+                // MODIFIED: Allow both MCQ and CQ types
+                const typeMatch =
+                  selectedTypes.length === 0 ||
+                  selectedTypes.some(
+                    (type) =>
+                      question.searchType?.includes(type) ||
+                      question.type?.includes(type),
+                  );
 
-              const matchesSearch = [
-                question.type,
-                question.questionName,
-                question.option1,
-                question.option2,
-                question.option3,
-                question.option4,
-                question.boardExamList,
-                question.schoolExamInfo,
-                question.correctAnswer,
-              ].some((field) =>
-                field?.toLowerCase?.().includes(searchKeyword?.toLowerCase())
-              );
+                const levelMatch =
+                  selectedLevels.length === 0 ||
+                  selectedLevels.includes(question.questionLevel);
 
-              const schoolMatch =
-                selectedSchools.length === 0 ||
-                selectedSchools.some((selectedSchool) => {
-                  const questionSchool = question.schoolExamInfo
-                    ?.trim()
-                    .replace(/\s+/g, " ");
-                  return questionSchool === selectedSchool;
-                });
+                const matchesSearch = [
+                  question.type,
+                  question.questionName,
+                  question.option1,
+                  question.option2,
+                  question.option3,
+                  question.option4,
+                  question.boardExamList,
+                  question.schoolExamInfo,
+                  question.correctAnswer,
+                ].some((field) =>
+                  field?.toLowerCase?.().includes(searchKeyword?.toLowerCase()),
+                );
 
-              const boardYearMatches = (question.boardExamList || []).some(
-                (entry) => {
-                  const [board, year] = entry
-                    .split("-")
-                    .map((str) => str?.trim());
-                  const boardOk =
-                    selectedBoards.length === 0 ||
-                    selectedBoards.includes(board);
-                  const yearOk =
-                    selectedYears.length === 0 ||
-                    selectedYears.includes(year);
-                  return boardOk && yearOk;
-                }
-              );
+                const schoolMatch =
+                  selectedSchools.length === 0 ||
+                  selectedSchools.some((selectedSchool) => {
+                    const questionSchool = question.schoolExamInfo
+                      ?.trim()
+                      .replace(/\s+/g, " ");
+                    return questionSchool === selectedSchool;
+                  });
 
-              // Exclude if matches selected topics
-              const shouldExcludeByTopic =
-                selectedTopics.length > 0 &&
-                question.topic &&
-                selectedTopics.some((t) => norm(t) === norm(question.topic));
+                const boardYearMatches = (question.boardExamList || []).some(
+                  (entry) => {
+                    const [board, year] = entry
+                      .split("-")
+                      .map((str) => str?.trim());
+                    const boardOk =
+                      selectedBoards.length === 0 ||
+                      selectedBoards.includes(board);
+                    const yearOk =
+                      selectedYears.length === 0 ||
+                      selectedYears.includes(year);
+                    return boardOk && yearOk;
+                  },
+                );
 
-              return (
-                !isInSelectedExamSet &&
-                typeMatch &&
-                levelMatch &&
-                matchesSearch &&
-                schoolMatch &&
-                boardYearMatches &&
-                !shouldExcludeByTopic
-              );
-            });
+                // Exclude if matches selected topics
+                const shouldExcludeByTopic =
+                  selectedTopics.length > 0 &&
+                  question.topic &&
+                  selectedTopics.some((t) => norm(t) === norm(question.topic));
+
+                return (
+                  !isInSelectedExamSet &&
+                  typeMatch &&
+                  levelMatch &&
+                  matchesSearch &&
+                  schoolMatch &&
+                  boardYearMatches &&
+                  !shouldExcludeByTopic
+                );
+              });
 
         return {
           ...chapter,
@@ -358,7 +357,7 @@ export default function QuestionView() {
       ?.filter(
         (chapter) =>
           (chapter.questions?.length || 0) > 0 ||
-          selectedChapters.includes(chapter._id.toString())
+          selectedChapters.includes(chapter._id.toString()),
       );
   }, [
     qt,
@@ -402,8 +401,8 @@ export default function QuestionView() {
             selectedTopics.includes(
               question.type === "CQ"
                 ? question.cqDetails?.topic
-                : question.topic
-            )
+                : question.topic,
+            ),
         )
         ?.filter((question) => {
           if (!question.boardExamList || question.boardExamList.length === 0) {
@@ -420,18 +419,18 @@ export default function QuestionView() {
           });
         })
         ?.filter((question) =>
-          selectedTypes.every((type) => question.searchType?.includes(type))
+          selectedTypes.every((type) => question.searchType?.includes(type)),
         )
         ?.filter(
           (question) =>
             selectedLevels.length === 0 ||
-            selectedLevels.includes(question.questionLevel)
+            selectedLevels.includes(question.questionLevel),
         );
 
       const searchQuestion = displayQuestions?.filter((q) =>
         stripHtml(q?.questionName)
           .toLowerCase()
-          .includes(searchKeyword?.toLowerCase())
+          .includes(searchKeyword?.toLowerCase()),
       );
 
       if (searchQuestion && searchQuestion.length > 0) {
@@ -527,20 +526,20 @@ export default function QuestionView() {
         ?.filter(
           (question) =>
             selectedTopics.length === 0 ||
-            (question.topic && selectedTopics.includes(question.topic))
+            (question.topic && selectedTopics.includes(question.topic)),
         )
         ?.filter((question) =>
-          selectedTypes.every((type) => question.searchType?.includes(type))
+          selectedTypes.every((type) => question.searchType?.includes(type)),
         )
         ?.filter(
           (question) =>
             selectedLevels.length === 0 ||
-            selectedLevels.includes(question.questionLevel)
+            selectedLevels.includes(question.questionLevel),
         );
 
       // Return IDs that match in this chapter
       return selectedOptions.filter((id) =>
-        displayQuestions?.some((q) => q._id === id)
+        displayQuestions?.some((q) => q._id === id),
       );
     });
 
@@ -705,19 +704,31 @@ export default function QuestionView() {
   };
 
   const filteringChapters = filteredChapters?.filter((chapters) =>
-    selectedChapters?.includes(chapters?._id)
+    selectedChapters?.includes(chapters?._id),
   );
 
   return (
     <div
-      className={`me-3 ${size?.width <= 600
-        ? "solaimanlipi flex flex-col md:flex-row mt-[120px] me-[5px] p-1 gap-1"
-        : "solaimanlipi flex flex-col md:flex-row ms-[255px] mt-[85px] me-[20px] p-5 gap-5"
-        }`}
+      className={`me-3 ${
+        size?.width <= 600
+          ? "solaimanlipi flex flex-col md:flex-row mt-[120px] me-[5px] p-1 gap-1"
+          : "solaimanlipi flex flex-col md:flex-row ms-[255px] mt-[85px] me-[20px] p-5 gap-5"
+      }`}
     >
       {/* Main content (left side) */}
       <Card className="flex-1 max-h-[100vh] overflow-y-auto relative p-2">
         <div className="sticky top-0 z-20 bg-white p-2 flex justify-between items-center shadow-md rounded-xl">
+          <div className="md:hidden">
+            <Button
+              onClick={() => setOpen(true)}
+              className="bg-[#024645] text-white p-2 rounded-full shadow-lg mb-3 "
+              size="icon"
+              startContent={<Filter size={18} />}
+            >
+              <p className="ms-2 text-xs">Filter</p>
+            </Button>
+          </div>
+
           <div>
             <Chip className="bg-[#024645] text-white" variant="shadow">
               <h3>
@@ -762,20 +773,20 @@ export default function QuestionView() {
         <p className="mt-3 mb-2 text-2xl font-bold">
           টাইটেল: {getUserCredentialsProfile?.examSet?.title}
         </p>
-        {/* <p className=" mb-2 text-xl font-light text-center">
+        {/* <p className=" mb-2 text-base md:text-xl font-light text-center">
           অধ্যায়ভিত্তিক প্রশ্নসংখ্যা বাড়ানো হচ্ছে – ৫০০+ বহুনির্বাচনী ও ৫০+
           সৃজনশীল প্রশ্ন প্রতিটি অধ্যায়ে।
         </p> */}
 
         {/* Pagination Info */}
-        <div className="flex justify-between items-center mb-4 p-3 bg-gray-50 rounded-lg">
+        {/* <div className="flex justify-between items-center mb-4 p-3 bg-gray-50 rounded-lg">
           <div className="text-lg font-medium">
             মোট প্রশ্ন: {toBanglaNumber(totalQuestions)}
           </div>
           <div className="text-lg font-medium">
             পৃষ্ঠা {toBanglaNumber(currentPage)} এর {toBanglaNumber(totalPages)}
           </div>
-        </div>
+        </div> */}
 
         {filteringChapters?.length > 0 ? (
           <div className="bg-gray-200 p-5 rounded-lg">
@@ -796,7 +807,7 @@ export default function QuestionView() {
 
                     {chapterData.questions?.length === 0 ? (
                       <div className="text-center py-8 px-5 border rounded-lg bg-red-50 border-red-200 animate-fade-in">
-                        <h3 className="text-xl font-semibold text-red-700 mb-2">
+                        <h3 className="text-base md:text-xl font-semibold text-red-700 mb-2">
                           {selectedTopics.length > 0
                             ? "😔 মিলে এমন প্রশ্ন পাওয়া যায়নি"
                             : "😔 প্রশ্ন পাওয়া যায়নি"}
@@ -815,16 +826,17 @@ export default function QuestionView() {
                     ) : (
                       chapterData.questions?.map((question, index) => {
                         const isSelected = selectedOptions.some(
-                          (id) => id.toString() === question?._id?.toString()
+                          (id) => id.toString() === question?._id?.toString(),
                         );
 
                         return (
                           <div
                             key={question._id}
-                            className={`mb-6 relative p-6 border-2 rounded-xl cursor-pointer transition-all duration-300 overflow-hidden ${isSelected
-                              ? "border-green-600 bg-green-50 shadow-lg"
-                              : "border-gray-200 bg-white shadow-md hover:shadow-lg"
-                              }`}
+                            className={`mb-6 relative p-6 border-2 rounded-xl cursor-pointer transition-all duration-300 overflow-hidden ${
+                              isSelected
+                                ? "border-green-600 bg-green-50 shadow-lg"
+                                : "border-gray-200 bg-white shadow-md hover:shadow-lg"
+                            }`}
                             onClick={() => handleOptionClick(question?._id)}
                           >
                             {/* Question Number and Main Content */}
@@ -833,8 +845,8 @@ export default function QuestionView() {
                               <div className="">
                                 {toBanglaNumber(
                                   (currentPage - 1) * questionsPerPage +
-                                  index +
-                                  1
+                                    index +
+                                    1,
                                 )}
                               </div>
 
@@ -842,14 +854,14 @@ export default function QuestionView() {
                               <div className="flex-1">
                                 {/* Question Header */}
                                 <div className="flex justify-between items-start gap-4 mb-4">
-                                  <div className="text-xl text-gray-800">
+                                  <div className="text-base md:text-xl text-gray-800">
                                     <MathJaxContext config={mathjaxConfig}>
                                       <MathJax dynamic>
                                         <div
                                           dangerouslySetInnerHTML={{
                                             __html: sanitizeHtml(
                                               question?.questionName || "",
-                                              sanitizeConfig
+                                              sanitizeConfig,
                                             ),
                                           }}
                                         />
@@ -880,7 +892,7 @@ export default function QuestionView() {
                                 </div>
 
                                 {/* MCQ Options - Without Answers */}
-                                <div className="grid lg:grid-cols-2 gap-1 mt-4">
+                                <div className="grid grid-cols-2 gap-1 mt-4">
                                   {[
                                     "option1",
                                     "option2",
@@ -896,10 +908,10 @@ export default function QuestionView() {
                                             className="border-gray-300 bg-gray-50 hover:bg-gray-100 transition-colors"
                                             title={
                                               <div className="flex items-center gap-3">
-                                                <p className="w-6 h-6 bg-gray-600 text-white rounded-full flex items-center justify-center text-xl font-medium">
+                                                <p className="w-6 h-6 bg-gray-600 text-white rounded-full flex items-center justify-center text-base md:text-xl  font-medium">
                                                   {
                                                     ["ক", "খ", "গ", "ঘ"][
-                                                    optIndex
+                                                      optIndex
                                                     ]
                                                   }
                                                 </p>
@@ -908,11 +920,11 @@ export default function QuestionView() {
                                                 >
                                                   <MathJax dynamic>
                                                     <div
-                                                      className="text-gray-700 text-xl"
+                                                      className="text-gray-700 text-base md:text-xl"
                                                       dangerouslySetInnerHTML={{
                                                         __html: sanitizeHtml(
                                                           question[optKey],
-                                                          sanitizeConfig
+                                                          sanitizeConfig,
                                                         ),
                                                       }}
                                                     />
@@ -923,7 +935,7 @@ export default function QuestionView() {
                                             hideIcon
                                           />
                                         </div>
-                                      )
+                                      ),
                                   )}
                                 </div>
 
@@ -967,14 +979,14 @@ export default function QuestionView() {
                                           />
                                         }
                                         size="sm"
-                                        className="px-4 py-2 rounded-full text-black text-xl font-medium shadow-md hover:shadow-lg transition-all"
+                                        className="px-4 py-2 rounded-full text-black text-base md:text-xl font-medium shadow-md hover:shadow-lg transition-all"
                                         onClick={(e) => {
                                           e.stopPropagation();
                                           setQuestionExplanation(
-                                            question?.explanation
+                                            question?.explanation,
                                           );
                                           setQuestionAnswer(
-                                            question?.correctAnswer
+                                            question?.correctAnswer,
                                           );
                                         }}
                                       >
@@ -995,7 +1007,7 @@ export default function QuestionView() {
                                           />
                                         }
                                         size="sm"
-                                        className="px-4 py-2 rounded-full bg-red-600 text-white text-xl font-medium shadow-md hover:bg-red-700 transition-all"
+                                        className="px-4 py-2 rounded-full bg-red-600 text-white text-base md:text-xl font-medium shadow-md hover:bg-red-700 transition-all"
                                         onClick={(e) => e.stopPropagation()}
                                       >
                                         রিপোর্ট
@@ -1016,7 +1028,7 @@ export default function QuestionView() {
                                         >
                                           {type}
                                         </Chip>
-                                      )
+                                      ),
                                     )}
                                   </div>
                                 </div>
@@ -1067,7 +1079,7 @@ export default function QuestionView() {
 
                     {chapterData.questions?.length === 0 ? (
                       <div className="text-center py-8 px-5 border rounded-lg bg-red-50 border-red-200 animate-fade-in">
-                        <h3 className="text-xl font-semibold text-red-700 mb-2">
+                        <h3 className="text-base md:text-xl font-semibold text-red-700 mb-2">
                           {selectedTopics.length > 0
                             ? "😔 মিলে এমন প্রশ্ন পাওয়া যায়নি"
                             : "😔 প্রশ্ন পাওয়া যায়নি"}
@@ -1086,41 +1098,43 @@ export default function QuestionView() {
                     ) : (
                       chapterData.questions?.map((question, index) => {
                         const isSelected = selectedOptions.some(
-                          (id) => id.toString() === question?._id?.toString()
+                          (id) => id.toString() === question?._id?.toString(),
                         );
 
                         return (
                           <div
                             key={question._id}
-                            className={`mb-6 relative p-6 border-2 rounded-xl cursor-pointer transition-all duration-300 overflow-hidden ${isSelected
-                              ? "border-green-600 bg-green-50 shadow-lg"
-                              : "border-gray-200 bg-white shadow-md hover:shadow-lg"
-                              }`}
+                            className={`mb-6 relative p-3 md:p-6 border-2 rounded-xl cursor-pointer transition-all duration-300 overflow-hidden ${
+                              isSelected
+                                ? "border-green-600 bg-green-50 shadow-lg"
+                                : "border-gray-200 bg-white shadow-md hover:shadow-lg"
+                            }`}
                             onClick={() => handleOptionClick(question?._id)}
                           >
                             {/* Question Number and Main Content */}
                             <div className="flex items-start gap-1">
                               {/* Question Number Circle */}
-                              <div className="text-xl">
+                              <div className="text-base md:text-xl">
                                 {toBanglaNumber(
                                   (currentPage - 1) * questionsPerPage +
-                                  index +
-                                  1
-                                )}.
+                                    index +
+                                    1,
+                                )}
+                                .
                               </div>
 
                               {/* Main Question Content */}
                               <div className="flex-1">
                                 {/* Question Header */}
-                                <div className="flex justify-between items-start gap-4 mb-4">
-                                  <div className="text-xl text-gray-800">
+                                <div className="flex justify-between items-start gap-2 md:gap-4 mb-4">
+                                  <div className="text-base md:text-base md:text-xl text-gray-800">
                                     <MathJaxContext config={mathjaxConfig}>
                                       <MathJax dynamic>
                                         <div
                                           dangerouslySetInnerHTML={{
                                             __html: sanitizeHtml(
                                               question?.questionName || "",
-                                              sanitizeConfig
+                                              sanitizeConfig,
                                             ),
                                           }}
                                         />
@@ -1153,7 +1167,7 @@ export default function QuestionView() {
                                 </div>
 
                                 {/* MCQ Options - Without Answers */}
-                                <div className="grid lg:grid-cols-2 gap-1 mt-4">
+                                <div className="grid grid-cols-2 gap-1 mt-4">
                                   {[
                                     "option1",
                                     "option2",
@@ -1169,10 +1183,10 @@ export default function QuestionView() {
                                             className="bg-gray-100 transition-colors p-0 border-none"
                                             title={
                                               <div className="flex items-center gap-3">
-                                                <p className="size-6 border border-gray-600 rounded-full flex items-center justify-center text-xl font-medium">
+                                                <p className="size-6 border border-gray-600 rounded-full flex items-center justify-center text-base md:text-base md:text-xl font-medium">
                                                   {
                                                     ["ক", "খ", "গ", "ঘ"][
-                                                    optIndex
+                                                      optIndex
                                                     ]
                                                   }
                                                 </p>
@@ -1181,11 +1195,11 @@ export default function QuestionView() {
                                                 >
                                                   <MathJax dynamic>
                                                     <div
-                                                      className="text-gray-800 text-xl"
+                                                      className="text-gray-800 text-base md:text-base md:text-xl"
                                                       dangerouslySetInnerHTML={{
                                                         __html: sanitizeHtml(
                                                           question[optKey],
-                                                          sanitizeConfig
+                                                          sanitizeConfig,
                                                         ),
                                                       }}
                                                     />
@@ -1196,14 +1210,13 @@ export default function QuestionView() {
                                             hideIcon
                                           />
                                         </div>
-                                      )
+                                      ),
                                   )}
                                 </div>
 
                                 {/* Action Buttons */}
                                 <div className="mt-6 flex flex-wrap gap-3 justify-between items-center">
                                   <div className="flex flex-wrap gap-2">
-
                                     {/* Explanation Button */}
                                     <Tooltip
                                       content="প্রশ্নের ব্যাখ্যা দেখতে ক্লিক করুন"
@@ -1218,14 +1231,14 @@ export default function QuestionView() {
                                           />
                                         }
                                         size="sm"
-                                        className="px-4 py-2 rounded-full text-black text-xl font-medium shadow-md hover:shadow-lg transition-all"
+                                        className="px-4 py-2 rounded-full text-black text-base md:text-base md:text-xl font-medium shadow-md hover:shadow-lg transition-all"
                                         onClick={(e) => {
                                           e.stopPropagation();
                                           setQuestionExplanation(
-                                            question?.explanation
+                                            question?.explanation,
                                           );
                                           setQuestionAnswer(
-                                            question?.correctAnswer
+                                            question?.correctAnswer,
                                           );
                                         }}
                                       >
@@ -1246,7 +1259,7 @@ export default function QuestionView() {
                                           />
                                         }
                                         size="sm"
-                                        className="px-4 py-2 rounded-full bg-red-600 text-white text-xl font-medium shadow-md hover:bg-red-700 transition-all"
+                                        className="px-4 py-2 rounded-full bg-red-600 text-white text-base md:text-base md:text-xl font-medium shadow-md hover:bg-red-700 transition-all"
                                         onClick={(e) => e.stopPropagation()}
                                       >
                                         রিপোর্ট
@@ -1267,11 +1280,13 @@ export default function QuestionView() {
                                         >
                                           {type}
                                         </Chip>
-                                      )
+                                      ),
                                     )}
                                     {/* Board Exam Info */}
                                     {question?.boardExamList?.length > 0 && (
-                                      <small>{question.boardExamList.join(", ")}</small>
+                                      <small>
+                                        {question.boardExamList.join(", ")}
+                                      </small>
                                     )}
                                   </div>
                                 </div>
@@ -1346,6 +1361,8 @@ export default function QuestionView() {
         SCHOOL_OPTIONS={SCHOOL_OPTIONS}
         selectedSchools={selectedSchools}
         setSelectedSchools={setSelectedSchools}
+        open={open}
+        setOpen={setOpen}
       />
     </div>
   );

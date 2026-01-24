@@ -1,8 +1,14 @@
-import { useState, useEffect } from "react";
-import { Card, Checkbox, cn, Input, Select, SelectItem } from "@heroui/react";
-import { Button } from "@heroui/react";
-import { Filter } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  Button,
+  Card,
+  Checkbox,
+  cn,
+  Input,
+  Select,
+  SelectItem,
+} from "@heroui/react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import ClearIcon from "../../../../../assets/ClearIcon";
 import SearchIcon from "../../../../../assets/SearchIcon";
 
@@ -31,9 +37,11 @@ export default function FilterCard({
   selectedSchools,
   setSelectedSchools,
   questionTypes,
+  open,
+  setOpen,
 }) {
   const [width, setWidth] = useState(0);
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setWidth(window.innerWidth);
@@ -95,12 +103,12 @@ export default function FilterCard({
                     "inline-flex w-full max-w-md bg-content1",
                     "hover:bg-content2 items-center justify-start",
                     "cursor-pointer rounded-lg gap-2 p-4 border-1 border-transparent",
-                    "data-[selected=true]:border-[#024645]"
+                    "data-[selected=true]:border-[#024645]",
                   ),
                   label: "w-full",
                 }}
                 isSelected={selectedExamSets.some(
-                  (set) => set.examSetId === examSet._id
+                  (set) => set.examSetId === examSet._id,
                 )}
                 onValueChange={() =>
                   handleExamSetToggle(examSet._id, examSet.questionIds)
@@ -116,28 +124,6 @@ export default function FilterCard({
               </Checkbox>
             </div>
           ))}
-      </div>
-
-      <p className="text-xl font-bold">টপিক অনুযায়ী ফিল্টার</p>
-      <div className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
-        {allTopics?.length > 0 ? (
-          <Select
-            label={<p className="text-lg">একটি টপিকস নির্বাচন করুন</p>}
-            selectionMode="multiple" // allows multiple selections like your checkboxes
-            selectedKeys={selectedTopics}
-            onSelectionChange={(keys) => setSelectedTopics([...keys])}
-            className="w-full"
-            color="success"
-          >
-            {allTopics.map((topic) => (
-              <SelectItem key={topic} value={topic}>
-                {topic}
-              </SelectItem>
-            ))}
-          </Select>
-        ) : (
-          <p className="p-2 text-gray-500">কোন টপিক পাওয়া যায়নি</p>
-        )}
       </div>
 
       <p className="text-xl font-bold">স্মার্ট অনুসন্ধান</p>
@@ -156,30 +142,6 @@ export default function FilterCard({
           );
         })}
       </div>
-
-      <div>
-        <p className="text-xl mt-3 font-bold">
-          অধ্যায় ভিত্তিক ফিল্টারিং প্রশ্ন
-        </p>
-
-        {filteredChapters?.map((chapter) => (
-          <div
-            key={chapter?._id}
-            className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black"
-          >
-            <div>
-              <Checkbox
-                color="success"
-                isSelected={selectedChapters.includes(chapter._id.toString())}
-                onChange={() => handleChapterToggle(chapter._id.toString())}
-              >
-                <p className="text-xl">{chapter?.chapterName}</p>
-              </Checkbox>
-            </div>
-          </div>
-        ))}
-      </div>
-
       <div>
         <p className="text-xl mt-3 font-bold">বোর্ড প্রশ্ন</p>
         <div className="ps-3 pe-3 mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
@@ -217,7 +179,7 @@ export default function FilterCard({
                     setSelectedBoards((prev) =>
                       prev.includes(board.key)
                         ? prev?.filter((b) => b !== board.key)
-                        : [...prev, board.key]
+                        : [...prev, board.key],
                     )
                   }
                 >
@@ -227,6 +189,51 @@ export default function FilterCard({
             ))}
           </div>
         </div>
+      </div>
+
+      <p className="text-xl font-bold">টপিক অনুযায়ী ফিল্টার</p>
+      <div className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
+        {allTopics?.length > 0 ? (
+          <Select
+            label={<p className="text-lg">একটি টপিকস নির্বাচন করুন</p>}
+            selectionMode="multiple" // allows multiple selections like your checkboxes
+            selectedKeys={selectedTopics}
+            onSelectionChange={(keys) => setSelectedTopics([...keys])}
+            className="w-full"
+            color="success"
+          >
+            {allTopics.map((topic) => (
+              <SelectItem key={topic} value={topic}>
+                {topic}
+              </SelectItem>
+            ))}
+          </Select>
+        ) : (
+          <p className="p-2 text-gray-500">কোন টপিক পাওয়া যায়নি</p>
+        )}
+      </div>
+
+      <div>
+        <p className="text-xl mt-3 font-bold">
+          অধ্যায় ভিত্তিক ফিল্টারিং প্রশ্ন
+        </p>
+
+        {filteredChapters?.map((chapter) => (
+          <div
+            key={chapter?._id}
+            className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black"
+          >
+            <div>
+              <Checkbox
+                color="success"
+                isSelected={selectedChapters.includes(chapter._id.toString())}
+                onChange={() => handleChapterToggle(chapter._id.toString())}
+              >
+                <p className="text-xl">{chapter?.chapterName}</p>
+              </Checkbox>
+            </div>
+          </div>
+        ))}
       </div>
 
       <div>
@@ -241,7 +248,7 @@ export default function FilterCard({
                   setSelectedSchools((prev) =>
                     prev?.includes(school.key)
                       ? prev?.filter((s) => s !== school.key)
-                      : [...prev, school.key]
+                      : [...prev, school.key],
                   )
                 }
               >
@@ -266,7 +273,7 @@ export default function FilterCard({
       {width > 600 && <div className="sticky top-5">{cardContent}</div>}
 
       {/* Mobile button */}
-      {width <= 600 && (
+      {/* {width <= 600 && (
         <div className="fixed top-24 left-5 z-50 mb-3">
           <Button
             onClick={() => setOpen(true)}
@@ -274,10 +281,10 @@ export default function FilterCard({
             size="icon"
             startContent={<Filter size={24} />}
           >
-            {/* <p className="ms-2">Filter</p> */}
+            <p className="ms-2">Filter</p>
           </Button>
         </div>
-      )}
+      )} */}
 
       {/* Mobile panel */}
       <AnimatePresence>
@@ -290,14 +297,14 @@ export default function FilterCard({
             className="fixed top-0 right-0 h-full w-4/5 sm:w-[350px] bg-white shadow-2xl z-50 overflow-y-auto"
           >
             <div className="flex justify-end p-3">
-              <Button
-                onClick={() => setOpen(false)}
-                variant="ghost"
-                className="rounded-full"
-                size="icon"
-              >
-                ✕
-              </Button>
+            <Button
+  onClick={() => setOpen(false)}
+  variant="ghost"
+  size="icon"
+  className="!rounded-full bg-red-600 text-white p-2"
+>
+  ✕
+</Button>
             </div>
             {cardContent}
           </motion.div>
