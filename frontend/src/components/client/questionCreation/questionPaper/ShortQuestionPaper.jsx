@@ -89,7 +89,7 @@ const renderLatexContent = (content) => {
   // Enhanced LaTeX detection
   const hasLatex =
     /\\\(.*?\\\)|\$.*?\$|\\\[.*?\\\]|`.*?`|\\sqrt|\\frac|\\sum|\\int|\\alpha|\\beta|\\gamma|\\delta/.test(
-      safeHTML
+      safeHTML,
     );
 
   if (hasLatex) {
@@ -137,7 +137,7 @@ const CustomSwitch = ({ label, isSelected, onValueChange }) => (
       base: cn(
         "inline-flex flex-row-reverse w-full max-w-md bg-[#dbfce7] hover:bg-content2 items-center",
         "justify-between cursor-pointer rounded-lg gap-2 p-2 border-2 border-transparent",
-        "data-[selected=true]:border-[#024645]"
+        "data-[selected=true]:border-[#024645]",
       ),
       wrapper: "p-0 h-4 overflow-visible",
       thumb: cn(
@@ -145,7 +145,7 @@ const CustomSwitch = ({ label, isSelected, onValueChange }) => (
         "group-data-[hover=true]:border-[#024645]",
         "group-data-[selected=true]:ms-6",
         "group-data-[pressed=true]:w-7",
-        "group-data-[selected]:group-data-[pressed]:ms-4"
+        "group-data-[selected]:group-data-[pressed]:ms-4",
       ),
     }}
   >
@@ -154,6 +154,24 @@ const CustomSwitch = ({ label, isSelected, onValueChange }) => (
     </div>
   </Switch>
 );
+
+// const OptionStyleButtons = ({ options, currentStyle, onChange }) => (
+//   <div className="flex gap-2">
+//     {options?.map((option, index) => (
+//       <button
+//         key={index}
+//         className={`w-12 h-12 flex items-center justify-center border border-gray-300 rounded-lg text-xl font-bold transition-all ${
+//           currentStyle === option
+//             ? "bg-green-700 text-white border-green-700"
+//             : "bg-white hover:bg-gray-200"
+//         }`}
+//         onClick={() => onChange(option)}
+//       >
+//         {option}
+//       </button>
+//     ))}
+//   </div>
+// );
 
 const OptionStyleButtons = ({ options, currentStyle, onChange }) => (
   <div className="flex gap-2">
@@ -172,6 +190,7 @@ const OptionStyleButtons = ({ options, currentStyle, onChange }) => (
     ))}
   </div>
 );
+
 export default function ShortQuestionPaper() {
   const navigate = useNavigate();
   const size = useWindowSize();
@@ -199,7 +218,7 @@ export default function ShortQuestionPaper() {
   const [imageSize, setImageSize] = useState(50);
   const [opacity, setOpacity] = useState(0.5);
   const [imageUrl, setImageUrl] = useState(
-    localStorage.getItem("waterMarkImage") || ""
+    localStorage.getItem("waterMarkImage") || "",
   );
   const [uploading, setUploading] = useState(false);
 
@@ -218,7 +237,7 @@ export default function ShortQuestionPaper() {
     try {
       const res = await axios.post(
         `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-        formData
+        formData,
       );
 
       const uploadedUrl = res.data.secure_url;
@@ -244,25 +263,25 @@ export default function ShortQuestionPaper() {
   };
 
   const [instructorNameToggle, setInstructorNameToggole] = useState(() =>
-    getInitialSetting("instructorNameToggle", false)
+    getInitialSetting("instructorNameToggle", false),
   );
   const [instructorProfileToggle, setInstructorProfileToggole] = useState(() =>
-    getInitialSetting("instructorProfileToggle", false)
+    getInitialSetting("instructorProfileToggle", false),
   );
   const [lectureNumberToggle, setLectureNumberToggle] = useState(() =>
-    getInitialSetting("lectureNumberToggle", 1)
+    getInitialSetting("lectureNumberToggle", 1),
   );
   const [lectureTopicToggle, setLectureTopicToggle] = useState(() =>
-    getInitialSetting("lectureTopicToggle", false)
+    getInitialSetting("lectureTopicToggle", false),
   );
   const [dataToggle, setDataToggle] = useState(() =>
-    getInitialSetting("dataToggle", true)
+    getInitialSetting("dataToggle", true),
   );
   const [bgColor, setBgColor] = useState(() =>
-    getInitialSetting("bgColor", "#ffffff")
+    getInitialSetting("bgColor", "#ffffff"),
   );
   const [textColor, setTextColor] = useState(() =>
-    getInitialSetting("textColor", "#000000")
+    getInitialSetting("textColor", "#000000"),
   );
 
   useEffect(() => {
@@ -320,19 +339,19 @@ export default function ShortQuestionPaper() {
 
   // Derived data
   const getClass = getAllClasses?.filter(
-    (cls) => cls?._id === getASingleAllQuestionSets?.className
+    (cls) => cls?._id === getASingleAllQuestionSets?.className,
   );
 
   const getSubject = getAllSubjects?.filter(
-    (sub) => sub?._id === getASingleAllQuestionSets?.subjectName
+    (sub) => sub?._id === getASingleAllQuestionSets?.subjectName,
   );
 
   const getExam = getAllExamData?.filter(
-    (sub) => sub?._id === getASingleAllQuestionSets?.examCategory
+    (sub) => sub?._id === getASingleAllQuestionSets?.examCategory,
   );
 
   const findExam = getAllExamData?.find(
-    (sub) => sub?._id === getASingleAllQuestionSets?.examCategory
+    (sub) => sub?._id === getASingleAllQuestionSets?.examCategory,
   );
 
   // Handlers
@@ -874,7 +893,13 @@ export default function ShortQuestionPaper() {
         )}
 
         {/* Questions Section */}
-        <div className="relative  ps-3 pt-3">
+        {/* Questions Section */}
+        <div
+          className="relative grid gap-4 px-2"
+          style={{
+            gridTemplateColumns: `repeat(${columnNumber}, minmax(0, 1fr))`,
+          }}
+        >
           {isWaterMark && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
               <h1 className="text-7xl font-bold text-gray-300 opacity-100 select-none">
@@ -897,349 +922,331 @@ export default function ShortQuestionPaper() {
               />
             </div>
           )}
-          <div>
-            {mcqQuestions?.length > 0 && (
-              <p className="font-semibold text-md flex flex-row justify-between">
-                <span>বহুনির্বাচনি প্রশ্ন: মান - </span>
-                <span>
-                  {toBanglaNumber(mcqQuestions?.length)} x ১ ={" "}
-                  {toBanglaNumber(mcqQuestions?.length * 1)}
+
+          {mcqQuestions?.length > 0 && (
+           <p className="col-span-full font-semibold text-md flex justify-between">
+              <span>বহুনির্বাচনি প্রশ্ন: মান - </span>
+              <span>
+                {toBanglaNumber(mcqQuestions?.length)} x ১ ={" "}
+                {toBanglaNumber(mcqQuestions?.length * 1)}
+              </span>
+            </p>
+          )}
+
+          {mcqQuestions?.map((question, index) => (
+            <div
+              key={question._id}
+              className="relative z-10 w-full h-full ps-2 solaimanlipi question-container print-safe break-inside-avoid"
+            >
+              {/* Question Text */}
+              <div className="text-md font-light flex items-baseline gap-0">
+                <span className="shrink-0 me-3">
+                  {toBanglaNumber(index + 1)}.
                 </span>
-              </p>
-            )}
 
-            <div>
-              {mcqQuestions?.map((question, index) => (
-                <div
-                  key={question._id}
-                  className="relative z-10 w-full h-full ps-2 solaimanlipi question-container print-safe"
-                >
-                  {/* Question Text */}
-                  <div className="text-md font-light flex items-baseline gap-0">
-                    <span className="shrink-0 me-3">
-                      {toBanglaNumber(index + 1)}.
-                    </span>
+                {renderLatexContent(
+                  sanitizeHtml(question?.questionName || "", {
+                    allowedTags: [
+                      "p",
+                      "img",
+                      "span",
+                      "b",
+                      "i",
+                      "u",
+                      "strong",
+                      "em",
+                    ],
+                    allowedAttributes: {
+                      img: ["src", "alt", "width", "height", "loading"],
+                      "*": ["style"],
+                    },
+                  }),
+                )}
+              </div>
 
-                    {renderLatexContent(
-                      sanitizeHtml(question?.questionName || "", {
-                        allowedTags: [
-                          "p",
-                          "img",
-                          "span",
-                          "b",
-                          "i",
-                          "u",
-                          "strong",
-                          "em",
-                        ],
-                        allowedAttributes: {
-                          img: ["src", "alt", "width", "height", "loading"],
-                          "*": ["style"],
-                        },
-                      })
-                    )}
-                  </div>
-
-                  {/* Options */}
-                  <div className="grid grid-cols-2 gap-y-2 mt-2 text-md ms-5">
-                    {[
-                      { label: "ক", text: question?.option1 },
-                      { label: "খ", text: question?.option2 },
-                      { label: "গ", text: question?.option3 },
-                      { label: "ঘ", text: question?.option4 },
-                    ].map((option, i) => (
-                      <div key={i} className="break-inside-avoid text-md">
-                        <p className="flex items-center">
-                          <span className="flex items-center justify-center w-4 h-4 me-2 border border-black rounded-full">
-                            {option.label}
-                          </span>
-                          {renderLatexContent(
-                            sanitizeHtml(
-                              (option.text || "").replace(/\n/g, "<br/>"),
-                              {
-                                allowedTags: [
-                                  "p",
-                                  "img",
-                                  "span",
-                                  "b",
-                                  "i",
-                                  "u",
-                                  "strong",
-                                  "em",
-                                ],
-                                allowedAttributes: {
-                                  img: [
-                                    "src",
-                                    "alt",
-                                    "width",
-                                    "height",
-                                    "loading",
-                                    "style",
-                                  ],
-                                  "*": ["style"],
-                                },
-                              }
-                            )
-                          )}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Answer and Explanation */}
-                  {(isAnserShow || isDetailsShow) && (
-                    <div className="space-y-1 mt-1">
-                      {isAnserShow && (
-                        <div className="flex items-baseline gap-0">
-                          <span className="solaimanlipi text-xl font-semibold shrink-0 me-1.5">
-                            উত্তরঃ
-                          </span>
-                          {renderLatexContent(
-                            sanitizeHtml(question.correctAnswer || "", {
-                              allowedTags: [
-                                "p",
-                                "img",
-                                "span",
-                                "b",
-                                "i",
-                                "u",
-                                "strong",
-                                "em",
-                              ],
-                              allowedAttributes: {
-                                img: [
-                                  "src",
-                                  "alt",
-                                  "width",
-                                  "height",
-                                  "loading",
-                                  "style",
-                                ],
-                                "*": ["style"],
-                              },
-                            })
-                          )}
-                        </div>
-                      )}
-
-                      {isDetailsShow && (
-                        <div className="flex items-baseline gap-0">
-                          <span className="solaimanlipi text-xl font-semibold shrink-0">
-                            ব্যাখ্যা:
-                          </span>
-                          <span className="ms-2">
-                            {renderLatexContent(
-                              sanitizeHtml(question.explanation || "", {
-                                allowedTags: [
-                                  "p",
-                                  "img",
-                                  "span",
-                                  "b",
-                                  "i",
-                                  "u",
-                                  "strong",
-                                  "em",
-                                ],
-                                allowedAttributes: {
-                                  img: [
-                                    "src",
-                                    "alt",
-                                    "width",
-                                    "height",
-                                    "loading",
-                                    "style",
-                                  ],
-                                  "*": ["style"],
-                                },
-                              })
-                            )}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="mt-4 mb-4">
-            {shortQuestions?.length > 0 && (
-              <p className="font-semibold text-md flex flex-row justify-between">
-                <span>সংক্ষিপ্ত প্রশ্ন: মান - </span>
-                <span>
-                  {toBanglaNumber(shortQuestions?.length)} x ২ ={" "}
-                  {toBanglaNumber(shortQuestions?.length * 2)}
-                </span>
-              </p>
-            )}
-
-            <div>
-              {shortQuestions?.map((short, id) => (
-                <div key={short?._id}>
-                  <p className="text-lg flex flex-row items-center gap-2">
-                    {toBanglaNumber(++id)}.
-                    {renderLatexContent(short.shortQusDetails.shortQuestion)}
-                  </p>
-
-                  {isAnserShow && (
-                    <p className="flex flex-row gap-2">
-                      <span className="font-semibold">উত্তর:</span>
+              {/* Options */}
+              <div className="grid grid-cols-2 gap-y-2 mt-2 text-md ms-5">
+                {[
+                  { label: "ক", text: question?.option1 },
+                  { label: "খ", text: question?.option2 },
+                  { label: "গ", text: question?.option3 },
+                  { label: "ঘ", text: question?.option4 },
+                ].map((option, i) => (
+                  <div key={i} className="break-inside-avoid text-md">
+                    <p className="flex items-center">
+                      <span className="flex items-center justify-center w-4 h-4 me-2 border border-black rounded-full">
+                        {option.label}
+                      </span>
                       {renderLatexContent(
-                        short.shortQusDetails.shortQuestionAnswer
+                        sanitizeHtml(
+                          (option.text || "").replace(/\n/g, "<br/>"),
+                          {
+                            allowedTags: [
+                              "p",
+                              "img",
+                              "span",
+                              "b",
+                              "i",
+                              "u",
+                              "strong",
+                              "em",
+                            ],
+                            allowedAttributes: {
+                              img: [
+                                "src",
+                                "alt",
+                                "width",
+                                "height",
+                                "loading",
+                                "style",
+                              ],
+                              "*": ["style"],
+                            },
+                          },
+                        ),
                       )}
                     </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="mt-4 mb-4">
-            {cqQuestions?.length > 0 && (
-              <p className="font-semibold text-md flex flex-row justify-between">
-                সৃজনশীল প্রশ্ন: মান -{" "}
-                <span>
-                  {toBanglaNumber(cqQuestions?.length)} x ১০ ={" "}
-                  {toBanglaNumber(cqQuestions?.length * 10)}
-                </span>
-              </p>
-            )}
-
-            <div>
-              {cqQuestions?.map((question, index) => (
-                <div
-                  key={question._id}
-                  className="relative z-10 w-full h-full ps-2 solaimanlipi question-container print-safe"
-                >
-                  {/* Question Text */}
-                  <div className="text-xl font-light flex items-baseline gap-0">
-                    <span className="shrink-0">
-                      {toBanglaNumber(index + 1)}.
-                    </span>
-                    <span className="ms-2">
-                      {renderLatexContent(question.cqDetails.mainQuestion)}
-                    </span>
                   </div>
+                ))}
+              </div>
 
-                  {/* Sub-questions */}
-                  <div className="space-y-4" contentEditable={editingMode}>
-                    {/* Question 1 */}
-                    {question.cqDetails.question1 && (
-                      <div className="flex justify-between items-start text-gray-800 ms-5">
-                        <span className="text-lg sm:text-xl flex flex-row items-center gap-1">
-                          ক. {renderLatexContent(question.cqDetails.question1)}
-                        </span>
-                        <span className="text-lg sm:text-xl font-medium ml-4">
-                          {question.cqDetails.question4
-                            ? toBanglaNumber(1)
-                            : toBanglaNumber(2)}
-                        </span>
-                      </div>
-                    )}
-
-                    {/* Question 2 */}
-                    {question.cqDetails.question2 && (
-                      <div className="flex justify-between items-start text-gray-800 ms-5">
-                        <span className="text-lg sm:text-xl flex flex-row items-center gap-1">
-                          খ.{" "}
-                          <span className="">
-                            {renderLatexContent(question.cqDetails.question2)}
-                          </span>
-                        </span>
-                        <span className="text-lg sm:text-xl font-medium ml-4">
-                          {question.cqDetails.question4
-                            ? toBanglaNumber(2)
-                            : toBanglaNumber(4)}
-                        </span>
-                      </div>
-                    )}
-
-                    {/* Question 3 */}
-                    {question.cqDetails.question3 && (
-                      <div className="flex justify-between items-start text-gray-800 ms-5">
-                        <span className="text-lg sm:text-xl flex flex-row items-center gap-1">
-                          গ. {renderLatexContent(question.cqDetails.question3)}
-                        </span>
-                        <span className="text-lg sm:text-xl font-medium ml-4">
-                          {question.cqDetails.question4
-                            ? toBanglaNumber(3)
-                            : toBanglaNumber(4)}
-                        </span>
-                      </div>
-                    )}
-
-                    {/* Question 4 */}
-                    {question.cqDetails.question4 && (
-                      <div className="flex justify-between items-start text-gray-800 ms-5">
-                        <span className="text-lg sm:text-xl flex flex-row items-center gap-1">
-                          ঘ. {renderLatexContent(question.cqDetails.question4)}
-                        </span>
-                        <span className="text-lg sm:text-xl font-medium ml-4">
-                          {toBanglaNumber(4)}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Answers */}
-                  {(isAnserShow || isDetailsShow) && (
-                    <div
-                      className="space-y-1 mt-1"
-                      contentEditable={editingMode}
-                    >
-                      {isAnserShow && (
-                        <div
-                          className="flex flex-col items-baseline gap-0"
-                          contentEditable={editingMode}
-                        >
-                          <p className="text-xl font-bold underline underline-offset-1">
-                            উত্তরপত্র ({toBanglaNumber(index + 1)}নং প্রশ্ন: উ:)
-                          </p>
-
-                          {["answer1", "answer2", "answer3", "answer4"].map(
-                            (ansKey, i) =>
-                              question.cqDetails[ansKey] && (
-                                <div
-                                  key={ansKey}
-                                  className="text-lg sm:text-xl flex flex-row gap-1 mt-3"
-                                  contentEditable={editingMode}
-                                >
-                                  <p className="border-1 rounded-full ps-2 pe-2 border-black bg-black text-white flex flex-col gap-2 items-center justify-center">
-                                    <span className="font-bold">
-                                      {["ক", "খ", "গ", "ঘ"][i]}
-                                    </span>
-                                    <span>নং</span>
-                                    <span>উ:</span>
-                                  </p>
-                                  <span className="text-black ms-1 text-wrap">
-                                    {renderLatexContent(
-                                      question.cqDetails[ansKey]
-                                    )}
-                                  </span>
-                                </div>
-                              )
-                          )}
-                        </div>
-                      )}
-
-                      {/* Explanation */}
-                      {isDetailsShow && (
-                        <div className="flex items-baseline gap-0">
-                          <span className="solaimanlipi text-xl font-semibold shrink-0">
-                            ব্যাখ্যা:
-                          </span>
-                          <span className="ms-2">
-                            {renderLatexContent(question.explanation || "")}
-                          </span>
-                        </div>
+              {/* Answer and Explanation */}
+              {(isAnserShow || isDetailsShow) && (
+                <div className="space-y-1 mt-1">
+                  {isAnserShow && (
+                    <div className="flex items-baseline gap-0">
+                      <span className="solaimanlipi text-xl font-semibold shrink-0 me-1.5">
+                        উত্তরঃ
+                      </span>
+                      {renderLatexContent(
+                        sanitizeHtml(question.correctAnswer || "", {
+                          allowedTags: [
+                            "p",
+                            "img",
+                            "span",
+                            "b",
+                            "i",
+                            "u",
+                            "strong",
+                            "em",
+                          ],
+                          allowedAttributes: {
+                            img: [
+                              "src",
+                              "alt",
+                              "width",
+                              "height",
+                              "loading",
+                              "style",
+                            ],
+                            "*": ["style"],
+                          },
+                        }),
                       )}
                     </div>
                   )}
+
+                  {isDetailsShow && (
+                    <div className="flex items-baseline gap-0">
+                      <span className="solaimanlipi text-xl font-semibold shrink-0">
+                        ব্যাখ্যা:
+                      </span>
+                      <span className="ms-2">
+                        {renderLatexContent(
+                          sanitizeHtml(question.explanation || "", {
+                            allowedTags: [
+                              "p",
+                              "img",
+                              "span",
+                              "b",
+                              "i",
+                              "u",
+                              "strong",
+                              "em",
+                            ],
+                            allowedAttributes: {
+                              img: [
+                                "src",
+                                "alt",
+                                "width",
+                                "height",
+                                "loading",
+                                "style",
+                              ],
+                              "*": ["style"],
+                            },
+                          }),
+                        )}
+                      </span>
+                    </div>
+                  )}
                 </div>
-              ))}
+              )}
             </div>
-          </div>
+          ))}
+
+          {shortQuestions?.length > 0 && (
+            <p className="font-semibold text-md flex flex-row justify-between">
+              <span>সংক্ষিপ্ত প্রশ্ন: মান - </span>
+              <span>
+                {toBanglaNumber(shortQuestions?.length)} x ২ ={" "}
+                {toBanglaNumber(shortQuestions?.length * 2)}
+              </span>
+            </p>
+          )}
+
+          {shortQuestions?.map((short, id) => (
+            <div key={short?._id}>
+              <p className="text-lg flex flex-row items-center gap-2">
+                {toBanglaNumber(++id)}.
+                {renderLatexContent(short.shortQusDetails.shortQuestion)}
+              </p>
+
+              {isAnserShow && (
+                <p className="flex flex-row gap-2">
+                  <span className="font-semibold">উত্তর:</span>
+                  {renderLatexContent(
+                    short.shortQusDetails.shortQuestionAnswer,
+                  )}
+                </p>
+              )}
+            </div>
+          ))}
+
+          {cqQuestions?.length > 0 && (
+            <p className="font-semibold text-md flex flex-row justify-between">
+              সৃজনশীল প্রশ্ন: মান -{" "}
+              <span>
+                {toBanglaNumber(cqQuestions?.length)} x ১০ ={" "}
+                {toBanglaNumber(cqQuestions?.length * 10)}
+              </span>
+            </p>
+          )}
+
+          {cqQuestions?.map((question, index) => (
+            <div
+              key={question._id}
+              className="relative z-10 w-full h-full ps-2 solaimanlipi question-container print-safe break-inside-avoid"
+            >
+              {/* Question Text */}
+              <div className="text-xl font-light flex items-baseline gap-0">
+                <span className="shrink-0">{toBanglaNumber(index + 1)}.</span>
+                <span className="ms-2">
+                  {renderLatexContent(question.cqDetails.mainQuestion)}
+                </span>
+              </div>
+
+              {/* Sub-questions */}
+              <div className="space-y-4" contentEditable={editingMode}>
+                {/* Question 1 */}
+                {question.cqDetails.question1 && (
+                  <div className="flex justify-between items-start text-gray-800 ms-5">
+                    <span className="text-lg sm:text-xl flex flex-row items-center gap-1">
+                      ক. {renderLatexContent(question.cqDetails.question1)}
+                    </span>
+                    <span className="text-lg sm:text-xl font-medium ml-4">
+                      {question.cqDetails.question4
+                        ? toBanglaNumber(1)
+                        : toBanglaNumber(2)}
+                    </span>
+                  </div>
+                )}
+
+                {/* Question 2 */}
+                {question.cqDetails.question2 && (
+                  <div className="flex justify-between items-start text-gray-800 ms-5">
+                    <span className="text-lg sm:text-xl flex flex-row items-center gap-1">
+                      খ.{" "}
+                      <span className="">
+                        {renderLatexContent(question.cqDetails.question2)}
+                      </span>
+                    </span>
+                    <span className="text-lg sm:text-xl font-medium ml-4">
+                      {question.cqDetails.question4
+                        ? toBanglaNumber(2)
+                        : toBanglaNumber(4)}
+                    </span>
+                  </div>
+                )}
+
+                {/* Question 3 */}
+                {question.cqDetails.question3 && (
+                  <div className="flex justify-between items-start text-gray-800 ms-5">
+                    <span className="text-lg sm:text-xl flex flex-row items-center gap-1">
+                      গ. {renderLatexContent(question.cqDetails.question3)}
+                    </span>
+                    <span className="text-lg sm:text-xl font-medium ml-4">
+                      {question.cqDetails.question4
+                        ? toBanglaNumber(3)
+                        : toBanglaNumber(4)}
+                    </span>
+                  </div>
+                )}
+
+                {/* Question 4 */}
+                {question.cqDetails.question4 && (
+                  <div className="flex justify-between items-start text-gray-800 ms-5">
+                    <span className="text-lg sm:text-xl flex flex-row items-center gap-1">
+                      ঘ. {renderLatexContent(question.cqDetails.question4)}
+                    </span>
+                    <span className="text-lg sm:text-xl font-medium ml-4">
+                      {toBanglaNumber(4)}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Answers */}
+              {(isAnserShow || isDetailsShow) && (
+                <div className="space-y-1 mt-1" contentEditable={editingMode}>
+                  {isAnserShow && (
+                    <div
+                      className="flex flex-col items-baseline gap-0"
+                      contentEditable={editingMode}
+                    >
+                      <p className="text-xl font-bold underline underline-offset-1">
+                        উত্তরপত্র ({toBanglaNumber(index + 1)}নং প্রশ্ন: উ:)
+                      </p>
+
+                      {["answer1", "answer2", "answer3", "answer4"].map(
+                        (ansKey, i) =>
+                          question.cqDetails[ansKey] && (
+                            <div
+                              key={ansKey}
+                              className="text-lg sm:text-xl flex flex-row gap-1 mt-3"
+                              contentEditable={editingMode}
+                            >
+                              <p className="border-1 rounded-full ps-2 pe-2 border-black bg-black text-white flex flex-col gap-2 items-center justify-center">
+                                <span className="font-bold">
+                                  {["ক", "খ", "গ", "ঘ"][i]}
+                                </span>
+                                <span>নং</span>
+                                <span>উ:</span>
+                              </p>
+                              <span className="text-black ms-1 text-wrap">
+                                {renderLatexContent(question.cqDetails[ansKey])}
+                              </span>
+                            </div>
+                          ),
+                      )}
+                    </div>
+                  )}
+
+                  {/* Explanation */}
+                  {isDetailsShow && (
+                    <div className="flex items-baseline gap-0">
+                      <span className="solaimanlipi text-xl font-semibold shrink-0">
+                        ব্যাখ্যা:
+                      </span>
+                      <span className="ms-2">
+                        {renderLatexContent(question.explanation || "")}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
 
@@ -1382,7 +1389,28 @@ export default function ShortQuestionPaper() {
             isSelected={isShowAddress}
             onValueChange={setIsShowAddress}
           />
+          <div
+            onClick={handleShuffleQuestions}
+            className="flex flex-row justify-between items-center bg-[#dbfce7] rounded-lg p-3 cursor-pointer"
+          >
+            <p className="solaimanlipi text-xl">শ্যাফেল</p>
+            <Button
+              isIconOnly
+              className="bg-[#024544]"
+              onPress={handleShuffleQuestions}
+            >
+              <ChangeIcon />
+            </Button>
+          </div>
 
+          <div className="bg-[#dbfce7] rounded-lg p-4">
+            <p className="text-xl font-light mb-2">কলাম সংখ্যা</p>
+            <OptionStyleButtons
+              options={columnOptions}
+              currentStyle={columnNumber}
+              onChange={setColumnNumber}
+            />
+          </div>
           <CustomSwitch
             label="জলছাপ"
             isSelected={isWaterMark}

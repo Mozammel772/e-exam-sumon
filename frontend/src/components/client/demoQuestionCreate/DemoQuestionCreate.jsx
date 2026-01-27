@@ -1,17 +1,17 @@
-import { useState } from "react";
 import { Button, Card, Input, Select, SelectItem } from "@heroui/react";
+import { useState } from "react";
 
+import { useWindowSize } from "@uidotdev/usehooks";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import { useGetAllClassesQuery } from "../../../redux/api/slices/classSlice";
-import ClientLoader from "../../../utils/loader/ClientLoader";
+import { useCreateAExamSetMutation } from "../../../redux/api/slices/examSetSlice";
+import { useGetAllExamsQuery } from "../../../redux/api/slices/examSlice";
 import {
   useGetAllSubjectsQuery,
   useGetASubjectQuery,
 } from "../../../redux/api/slices/subjectSlice";
-import { useNavigate } from "react-router-dom";
-import { useGetAllExamsQuery } from "../../../redux/api/slices/examSlice";
-import { useCreateAExamSetMutation } from "../../../redux/api/slices/examSetSlice";
-import Swal from "sweetalert2";
-import { useWindowSize } from "@uidotdev/usehooks";
+import ClientLoader from "../../../utils/loader/ClientLoader";
 
 export const examType = [
   { key: "সাপ্তাহিক পরীক্ষা", label: "সাপ্তাহিক পরীক্ষা" },
@@ -61,8 +61,8 @@ export default function DemoQuestionCreate() {
         typeof value === "string"
           ? value.split(",")
           : Array.isArray(value)
-          ? value
-          : [value];
+            ? value
+            : [value];
       setFormData((prev) => ({
         ...prev,
         [field]: chaptersArray,
@@ -129,22 +129,28 @@ export default function DemoQuestionCreate() {
     return <ClientLoader />;
   }
   return (
-    <div className={`me-3 ${size?.width <= 600 ? "ms-3 mt-20" : "ms-72 me-8"}`}>
-      <div className="flex justify-center items-center w-full h-screen flex-col space-y-4">
-        <div className="text-center space-y-2">
-          <p className="solaimanlipi text-4xl font-bold text-green-900 drop-shadow-sm">
-            📄 নমুনা প্রশ্ন তৈরি – এক ক্লিকে সহজে প্রশ্ন বানান
-          </p>
-          <p className="solaimanlipi font-thin text-2xl text-gray-600">
-            নিচের তথ্যগুলো দিয়ে আপনার প্রশ্ন তৈরি করুন
-          </p>
-        </div>
-        <Card className="w-full p-8 mt-10 mb-10 bg-white rounded-2xl shadow-lg border border-green-300">
-          <form onSubmit={handleSubmit}>
-            <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-5">
+    <div className={`me-3 ${size?.width <= 600 ? "ms-3 mt-5" : "ms-72 me-8"}`}>
+      <div className="flex justify-center items-center w-full min-h-screen flex-col space-y-4 max-w-3xl mx-auto">
+        <Card className="w-full mt-16 mb-10 bg-white">
+          <div className="text-center space-y-2 bg-[#024645] h-42 md:min-h-52 p-5">
+            <div className="mb-5 md:mb-10">
+              <p className="solaimanlipi text-2xl md:text-4xl text-white drop-shadow-sm">
+                ১ ক্লিকে আপনার নমুনা প্রশ্ন তৈরি করুন!
+              </p>
+              <p className="solaimanlipi font-thin text-xl text-white ">
+                নিচের তথ্যগুলো দিয়ে আপনার প্রশ্ন তৈরি করুন
+              </p>
+            </div>
+          </div>
+
+          <form
+            className="space-y-2 md:space-y-4 mt-10 w-[350px] md:w-[550px] mx-auto pb-8"
+            onSubmit={handleSubmit}
+          >
+            <div>
               <Input
                 size="lg"
-                className="solaimanlipi w-full text-xl hover:border-green-300 transition-colors"
+                className="solaimanlipi w-full text-lg"
                 placeholder="প্রশ্নের টাইটেল লিখুন"
                 isRequired
                 variant="bordered"
@@ -152,11 +158,13 @@ export default function DemoQuestionCreate() {
                 onChange={(e) => handleChange("title", e.target.value)}
                 classNames={{
                   input: "text-xl solaimanlipi",
-                  inputWrapper: "h-16",
+                  inputWrapper: "h-12",
                   label: "text-xl solaimanlipi",
                 }}
               />
+            </div>
 
+            <div className="grid grid-cols-2  gap-4">
               <Select
                 className="max-w-full"
                 isRequired
@@ -164,7 +172,7 @@ export default function DemoQuestionCreate() {
                 onChange={(e) => handleChange("className", e.target.value)}
                 classNames={{
                   trigger:
-                    "min-h-16 text-xl solaimanlipi border-2 border-gray-200 rounded-xl px-4",
+                    "min-h-12 text-xl solaimanlipi border-2 border-gray-200 rounded-xl px-4",
                   value: "text-xl solaimanlipi",
                   listboxWrapper: "max-h-[400px]",
                   popoverContent: "text-xl solaimanlipi",
@@ -190,7 +198,7 @@ export default function DemoQuestionCreate() {
                 onChange={(e) => handleChange("subjectName", e.target.value)}
                 classNames={{
                   label: "text-xl solaimanlipi",
-                  trigger: "min-h-16 text-xl solaimanlipi",
+                  trigger: "min-h-12 text-xl solaimanlipi",
                   value: "text-xl solaimanlipi",
                   listboxWrapper: "max-h-[400px] overflow-y-auto",
                   popoverContent: "text-xl solaimanlipi",
@@ -204,7 +212,7 @@ export default function DemoQuestionCreate() {
                   getAllSubjects
                     ?.filter(
                       (subject) =>
-                        subject?.subjectClassName?._id === formData?.className
+                        subject?.subjectClassName?._id === formData?.className,
                     )
                     .map((subject) => (
                       <SelectItem
@@ -217,7 +225,9 @@ export default function DemoQuestionCreate() {
                     ))
                 )}
               </Select>
+            </div>
 
+            <div>
               <Select
                 className="max-w-full"
                 isRequired
@@ -228,7 +238,7 @@ export default function DemoQuestionCreate() {
                 value={formData?.chapterId}
                 classNames={{
                   label: "text-xl solaimanlipi",
-                  trigger: "min-h-16 text-xl solaimanlipi",
+                  trigger: "min-h-12 text-xl solaimanlipi",
                   value: "text-xl solaimanlipi",
                   listboxWrapper: "max-h-[400px] overflow-y-auto",
                   popoverContent: "text-xl solaimanlipi",
@@ -253,7 +263,9 @@ export default function DemoQuestionCreate() {
                     ))
                 )}
               </Select>
+            </div>
 
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <Select
                 className="max-w-full"
                 isRequired
@@ -262,7 +274,7 @@ export default function DemoQuestionCreate() {
                 onChange={(e) => handleChange("examType", e.target.value)}
                 classNames={{
                   label: "text-xl solaimanlipi",
-                  trigger: "min-h-16 text-xl solaimanlipi",
+                  trigger: "min-h-12 text-xl solaimanlipi",
                   value: "text-xl solaimanlipi",
                   listboxWrapper: "max-h-[400px]",
                   popoverContent: "text-xl solaimanlipi",
@@ -287,7 +299,7 @@ export default function DemoQuestionCreate() {
                 onChange={(e) => handleChange("examCategory", e.target.value)}
                 classNames={{
                   label: "text-xl solaimanlipi",
-                  trigger: "min-h-16 text-xl solaimanlipi",
+                  trigger: "min-h-12 text-xl solaimanlipi",
                   value: "text-xl solaimanlipi",
                   listboxWrapper: "max-h-[400px]",
                   popoverContent: "text-xl solaimanlipi",
@@ -318,11 +330,12 @@ export default function DemoQuestionCreate() {
                 minLength={30}
                 classNames={{
                   input: "text-xl solaimanlipi h-16",
-                  inputWrapper: "h-16",
+                  inputWrapper: "h-12",
                   label: "text-xl solaimanlipi",
                 }}
               />
             </div>
+
             <Button
               className="mt-5 p-3 solaimanlipi bg-[#024645] w-full text-white text-xl font-bold hover:bg-[#003338] hover:text-white"
               radius="lg"

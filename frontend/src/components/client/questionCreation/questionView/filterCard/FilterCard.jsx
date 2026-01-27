@@ -296,15 +296,14 @@ export default function FilterCard({
             transition={{ type: "spring", stiffness: 100, damping: 20 }}
             className="fixed top-0 right-0 h-full w-4/5 sm:w-[350px] bg-white shadow-2xl z-50 overflow-y-auto"
           >
-            <div className="flex justify-end p-3">
-            <Button
-  onClick={() => setOpen(false)}
-  variant="ghost"
-  size="icon"
-  className="!rounded-full bg-red-600 text-white p-2"
->
-  ✕
-</Button>
+            <div className="flex justify-between items-center p-4 border-b bg-[#024645] text-white">
+              <h2 className="text-xl font-bold">ফিল্টার</h2>
+              <Button
+                onClick={() => setOpen(false)}
+                className="bg-white text-[#024645] rounded-full min-w-8 h-8 p-0"
+              >
+                ✕
+              </Button>
             </div>
             {cardContent}
           </motion.div>
@@ -313,3 +312,325 @@ export default function FilterCard({
     </>
   );
 }
+
+// import {
+//   Button,
+//   Card,
+//   Checkbox,
+//   cn,
+//   Input,
+//   Select,
+//   SelectItem,
+// } from "@heroui/react";
+// import { AnimatePresence, motion } from "framer-motion";
+// import { useEffect, useState } from "react";
+// import ClearIcon from "../../../../../assets/ClearIcon";
+// import SearchIcon from "../../../../../assets/SearchIcon";
+
+// export default function FilterCard({
+//   searchKeyword,
+//   setSearchKeyword,
+//   getAnUserExamSets,
+//   selectedExamSets,
+//   handleExamSetToggle,
+//   allTopics,
+//   selectedTopics,
+//   setSelectedTopics,
+//   searchType,
+//   selectedTypes,
+//   handleTypeChange,
+//   filteredChapters,
+//   selectedChapters,
+//   handleChapterToggle,
+//   years,
+//   selectedYears,
+//   setSelectedYears,
+//   allBoard,
+//   selectedBoards,
+//   setSelectedBoards,
+//   SCHOOL_OPTIONS,
+//   selectedSchools,
+//   setSelectedSchools,
+//   open,
+//   setOpen,
+// }) {
+//   const [width, setWidth] = useState(0);
+
+//   useEffect(() => {
+//     setWidth(window.innerWidth);
+//     const handleResize = () => setWidth(window.innerWidth);
+//     window.addEventListener("resize", handleResize);
+//     return () => window.removeEventListener("resize", handleResize);
+//   }, []);
+
+//   const isMobile = width <= 600;
+
+//   const handleClearSearch = () => {
+//     setSearchKeyword("");
+//   };
+
+//   const cardContent = (
+//     <Card className="w-full lg:w-[350px] bg-white shadow-lg p-5 h-full overflow-y-auto scrollbar-hide hover:scrollbar-thin hover:scrollbar-thumb-gray-500 hover:scrollbar-track-gray-200">
+//       <Button className="p-5 text-2xl" radius="none" variant="bordered">
+//         অ্যাডভান্স ফিল্টার মেনু
+//       </Button>
+
+//       {/* সার্চ ইনপুট */}
+//       <div className="mt-5 flex flex-row gap-2">
+//         <Input
+//           size="lg"
+//           radius="sm"
+//           className="text-3xl w-full"
+//           placeholder="সার্চ করুন"
+//           type="text"
+//           value={searchKeyword}
+//           onChange={(e) => setSearchKeyword(e.target.value)}
+//         />
+//         <Button
+//           onPress={handleClearSearch}
+//           className="bg-[#024645]"
+//           radius="sm"
+//           isIconOnly
+//           size="lg"
+//         >
+//           {searchKeyword ? (
+//             <ClearIcon size="20px" color="#ffffff" />
+//           ) : (
+//             <SearchIcon className="text-xl" />
+//           )}
+//         </Button>
+//       </div>
+
+//       {/* স্মার্ট ফিল্টার */}
+//       <div className="mt-6 mb-4 border-1 border-[#024645] rounded-lg p-5 bg-[#dbfce7] text-black">
+//         <p className="text-xl md:text-3xl font-bold text-center">স্মার্ট ফিল্টার</p>
+//         <p className="text-center text-base md:text-xl mt-2">
+//           পূর্বের প্রশ্ন বাদ দিয়ে নতুন প্রশ্ন তৈরি করুন
+//         </p>
+//         {getAnUserExamSets?.examSets
+//           ?.slice(-3)
+//           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+//           .slice(0, 3)
+//           ?.map((examSet) => (
+//             <div key={examSet?._id} className="mt-3 mb-3">
+//               <Checkbox
+//                 lineThrough
+//                 className="mt-3 mb-3"
+//                 color="success"
+//                 classNames={{
+//                   base: cn(
+//                     "inline-flex w-full max-w-md bg-content1",
+//                     "hover:bg-content2 items-center justify-start",
+//                     "cursor-pointer rounded-lg gap-2 p-4 border-1 border-transparent",
+//                     "data-[selected=true]:border-[#024645]"
+//                   ),
+//                   label: "w-full",
+//                 }}
+//                 isSelected={selectedExamSets.some(
+//                   (set) => set.examSetId === examSet._id
+//                 )}
+//                 onValueChange={() =>
+//                   handleExamSetToggle(examSet._id, examSet.questionIds)
+//                 }
+//               >
+//                 <div className="w-full flex justify-between gap-2">
+//                   <div className="flex flex-col items-end gap-1">
+//                     <span className="solaimanlipi text-md text-default-700">
+//                       {examSet.title}
+//                     </span>
+//                   </div>
+//                 </div>
+//               </Checkbox>
+//             </div>
+//           ))}
+//       </div>
+
+//       {/* স্মার্ট অনুসন্ধান */}
+//       <p className="text-xl font-bold">স্মার্ট অনুসন্ধান</p>
+//       <div className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
+//         {searchType?.map((type) => (
+//           <div key={type.key}>
+//             <Checkbox
+//               color="success"
+//               isSelected={selectedTypes?.includes(type.key)}
+//               onChange={() => handleTypeChange(type.key)}
+//             >
+//               <p className="text-xl">{type.label}</p>
+//             </Checkbox>
+//           </div>
+//         ))}
+//       </div>
+
+//       {/* বোর্ড প্রশ্ন */}
+//       <div>
+//         <p className="text-xl mt-3 font-bold">বোর্ড প্রশ্ন</p>
+//         <div className="ps-3 pe-3 mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
+//           <Select
+//             mode="multiple"
+//             placeholder="সাল সিলেক্ট করুন"
+//             className="solaimanlipi text-xl"
+//             items={years}
+//             selectedKeys={selectedYears}
+//             onSelectionChange={(keys) => setSelectedYears(Array.from(keys))}
+//             style={{
+//               width: "100%",
+//               marginTop: "20px",
+//               fontFamily: "SolaimanLipi",
+//               fontSize: "20px",
+//               padding: "10px",
+//               borderRadius: "5px",
+//             }}
+//             size="large"
+//           >
+//             {(year) => (
+//               <SelectItem key={year.key} textValue={year.label}>
+//                 <p className="solaimanlipi text-xl">{year.label}</p>
+//               </SelectItem>
+//             )}
+//           </Select>
+
+//           <div className="flex flex-col">
+//             {allBoard?.map((board) => (
+//               <div key={board.key}>
+//                 <Checkbox
+//                   color="success"
+//                   isSelected={selectedBoards.includes(board.key)}
+//                   onChange={() =>
+//                     setSelectedBoards((prev) =>
+//                       prev.includes(board.key)
+//                         ? prev.filter((b) => b !== board.key)
+//                         : [...prev, board.key]
+//                     )
+//                   }
+//                 >
+//                   <p className="text-xl">{board.label}</p>
+//                 </Checkbox>
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* টপিক ফিল্টার */}
+//       <p className="text-xl font-bold">টপিক অনুযায়ী ফিল্টার</p>
+//       <div className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
+//         {allTopics?.length > 0 ? (
+//           <Select
+//             label={<p className="text-lg">একটি টপিকস নির্বাচন করুন</p>}
+//             selectionMode="multiple"
+//             selectedKeys={selectedTopics}
+//             onSelectionChange={(keys) => setSelectedTopics([...keys])}
+//             className="w-full"
+//             color="success"
+//           >
+//             {allTopics.map((topic) => (
+//               <SelectItem key={topic} value={topic}>
+//                 {topic}
+//               </SelectItem>
+//             ))}
+//           </Select>
+//         ) : (
+//           <p className="p-2 text-gray-500">কোন টপিক পাওয়া যায়নি</p>
+//         )}
+//       </div>
+
+//       {/* অধ্যায় ফিল্টার */}
+//       <div>
+//         <p className="text-xl mt-3 font-bold">অধ্যায় ভিত্তিক ফিল্টারিং প্রশ্ন</p>
+//         {filteredChapters?.map((chapter) => (
+//           <div
+//             key={chapter?._id}
+//             className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black"
+//           >
+//             <Checkbox
+//               color="success"
+//               isSelected={selectedChapters.includes(chapter._id.toString())}
+//               onChange={() => handleChapterToggle(chapter._id.toString())}
+//             >
+//               <p className="text-xl">{chapter?.chapterName}</p>
+//             </Checkbox>
+//           </div>
+//         ))}
+//       </div>
+
+//       {/* স্কুল ফিল্টার */}
+//       <div>
+//         <p className="text-xl mt-3 font-bold">শীর্ষস্থানীয় স্কুল</p>
+//         <div className="ps-3 pe-3 mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
+//           {SCHOOL_OPTIONS?.map((school) => (
+//             <div key={school.key}>
+//               <Checkbox
+//                 color="success"
+//                 isSelected={selectedSchools?.includes(school.key)}
+//                 onChange={() =>
+//                   setSelectedSchools((prev) =>
+//                     prev.includes(school.key)
+//                       ? prev.filter((s) => s !== school.key)
+//                       : [...prev, school.key]
+//                   )
+//                 }
+//               >
+//                 <p className="text-xl">{school.label}</p>
+//               </Checkbox>
+//             </div>
+//           ))}
+
+//           {SCHOOL_OPTIONS?.length === 0 && (
+//             <p className="text-gray-500 text-center py-2">
+//               কোনো স্কুলের তথ্য পাওয়া যায়নি
+//             </p>
+//           )}
+//         </div>
+//       </div>
+//     </Card>
+//   );
+
+//   return (
+//     <>
+//       {/* ডেস্কটপ ভিউ - স্টিকি সাইডবার */}
+//       {!isMobile && (
+//         <div className="sticky top-5 h-fit">
+//           {cardContent}
+//         </div>
+//       )}
+
+//       {/* মোবাইল প্যানেল */}
+//       <AnimatePresence>
+//         {open && isMobile && (
+//           <>
+//             {/* ব্ল্যাক ওভারলে */}
+//             <motion.div
+//               initial={{ opacity: 0 }}
+//               animate={{ opacity: 1 }}
+//               exit={{ opacity: 0 }}
+//               className="fixed inset-0 bg-black bg-opacity-50 z-50"
+//               onClick={() => setOpen(false)}
+//             />
+
+//             {/* স্লাইডার প্যানেল */}
+//             <motion.div
+//               initial={{ x: "100%" }}
+//               animate={{ x: 0 }}
+//               exit={{ x: "100%" }}
+//               transition={{ type: "tween", duration: 0.3 }}
+//               className="fixed top-0 right-0 h-full w-4/6 max-w-sm bg-white shadow-2xl z-50"
+//             >
+//               <div className="flex justify-between items-center p-4 border-b bg-[#024645] text-white">
+//                 <h2 className="text-xl font-bold">ফিল্টার</h2>
+//                 <Button
+//                   onClick={() => setOpen(false)}
+//                   className="bg-white text-[#024645] rounded-full min-w-8 h-8 p-0"
+//                 >
+//                   ✕
+//                 </Button>
+//               </div>
+//               <div className="h-[calc(100%-64px)] overflow-y-auto">
+//                 {cardContent}
+//               </div>
+//             </motion.div>
+//           </>
+//         )}
+//       </AnimatePresence>
+//     </>
+//   );
+// }

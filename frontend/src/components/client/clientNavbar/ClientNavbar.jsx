@@ -101,14 +101,14 @@ export default function ClientNavbar() {
     },
   ];
   return (
-    <div className="w-full fixed top-0 z-10  print:hidden">
+    <div className="w-full fixed top-0 z-10   print:hidden">
       <header className="">
         <nav
-          className="bg-white client_navbar_wrapper"
+          className="bg-white client_navbar_wrapper "
           style={{ padding: "19px" }}
         >
           <div className="flex flex-wrap justify-between items-center">
-            <div className="" style={{ marginLeft: "255px" }}>
+            <div >
               {/* <Clock /> */}
             </div>
             <div className="flex items-center lg:order-2 gap-3">

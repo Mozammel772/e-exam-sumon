@@ -64,10 +64,10 @@ export default function QuestionCreation() {
     return <ClientLoader />;
   }
   return (
-    <div className="solaimanlipi md:ms-[265px] md:me-[20px] flex justify-center items-center h-screen">
-      <Card className="w-[480px] md:w-3/4">
+    <div className="solaimanlipi md:ms-[265px] md:me-[20px] flex justify-center items-center h-screen p-2">
+      <Card className="w-full md:w-[550px] lg:w-[950px] ">
         <CardBody className="flex justify-center items-center pt-5 ps-3 pe-3 pb-5">
-          <p className="text-2xl font-bold">
+          <p className="text-xl md:text-2xl font-bold">
             {
               getExamSetWithAnUserCredentials?.userProfile?.addresses
                 ?.organizations
@@ -75,36 +75,36 @@ export default function QuestionCreation() {
           </p>
 
           {getClass?.map((sub) => (
-            <p key={sub?._id} className="text-2xl font-bold">
+            <p key={sub?._id} className="text-xl md:text-2xl font-bold">
               {sub?.className} শ্রেণী
             </p>
           ))}
-          <p className="text-xl font-light">
+          <p className="text-base md:text-xl font-light">
             {getExamSetWithAnUserCredentials?.examSet?.examType}
           </p>
           {getSubject?.map((sub) => (
-            <p key={sub?._id} className="text-xl font-light">
+            <p key={sub?._id} className="text-base md:text-xl font-light">
               {sub?.subjectName}
             </p>
           ))}
           {getExam?.map((sub) => (
-            <p key={sub?._id} className="text-xl font-bold">
+            <p key={sub?._id} className="text-base md:text-xl font-bold">
               {sub?.examName}
             </p>
           ))}
           <div className="flex justify-between w-full mt-1 mb-1">
-            <p className="text-xl font-light">সময়: ০০ মিনিট</p>
-            <p className="text-xl font-light">পূর্ণমাণ: ০০</p>
+            <p className="text-base md:text-xl font-light">সময়: ০০ মিনিট</p>
+            <p className="text-base md:text-xl font-light">পূর্ণমাণ: ০০</p>
           </div>
           <Divider />
-          <p className="text-xl font-light mt-1 mb-1">
+          <p className="text-base md:text-xl font-light mt-1 mb-1">
             প্রশ্নপত্রে কোনো প্রকার দাগ/চিহ্ন দেয়া যাবেনা।
           </p>
           <div className="mt-20 mb-20 flex justify-center items-center flex-col">
             <p className="text-center text-3xl font-bold text-[#024645]">
               ✔প্রশ্নসেট তৈরী হয়েছে!
             </p>
-            <p className="text-center text-xl font-lighter">
+            <p className="text-center text-base md:text-xl font-lighter">
               নিচের বাটনে ক্লিক করে ডেটাবেজ থেকে প্রশ্ন যুক্ত করুন
             </p>
             {getExam?.map(
@@ -112,7 +112,7 @@ export default function QuestionCreation() {
                 sub?.examName === "বহুনির্বাচনি" && (
                   <Button
                     key={sub?._id}
-                    className="bg-[#024645] text-white text-2xl mt-5 mb-5"
+                    className="bg-[#024645] text-white text-xl md:text-2xl mt-5 mb-5"
                     size="lg"
                     onPress={handleClick}
                     radius="full"
@@ -127,7 +127,7 @@ export default function QuestionCreation() {
                   <Button
                     color="secondary"
                     key={sub?._id}
-                    className="text-white text-2xl mt-5 mb-5"
+                    className="text-white text-xl md:text-2xl mt-5 mb-5"
                     size="lg"
                     onPress={handleCqQuestion}
                     radius="full"
@@ -142,7 +142,7 @@ export default function QuestionCreation() {
                   <Button
                     color="warning"
                     key={sub?._id}
-                    className="text-white text-2xl mt-5 mb-5"
+                    className="text-white text-xl md:text-2xl mt-5 mb-5"
                     size="lg"
                     onPress={handleShortQuestion}
                     radius="full"

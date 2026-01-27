@@ -2589,13 +2589,22 @@ export default function ShortQusView() {
           >
             {/* Close button for mobile only */}
             {size?.width <= 600 && (
-              <Button
-                onPress={() => setIsOpen(false)}
-                isIconOnly
-                className="absolute top-2 right-2 text-gray-600 hover:text-black"
-              >
-                ✕
-              </Button>
+              // <Button
+              //   onPress={() => setIsOpen(false)}
+              //   isIconOnly
+              //   className="absolute top-2 right-2 text-gray-600 hover:text-black"
+              // >
+              //   ✕
+              // </Button>
+               <div className="flex justify-between items-center p-4 border-b bg-[#024645] text-white">
+                            <h2 className="text-xl font-bold">ফিল্টার</h2>
+                            <Button
+                              onClick={() => setIsOpen(false)}
+                              className="bg-white text-[#024645] rounded-full min-w-8 h-8 p-0"
+                            >
+                              ✕
+                            </Button>
+                          </div>
             )}
 
             {/* Single content section - same for both mobile and desktop */}

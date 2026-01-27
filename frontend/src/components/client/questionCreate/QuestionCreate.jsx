@@ -524,7 +524,6 @@
 //   );
 // }
 
-
 // import { Button, Card, Input, Select, SelectItem } from "@heroui/react";
 // import { useWindowSize } from "@uidotdev/usehooks";
 // import { useEffect, useState } from "react";
@@ -1205,7 +1204,6 @@
 //   );
 // }
 
-
 import { Button, Card, Input, Select, SelectItem } from "@heroui/react";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { useEffect, useState } from "react";
@@ -1246,34 +1244,31 @@ export default function QuestionCreate() {
   // Fetch data
   const { data: classes, isLoading: classLoader } = useGetAllClassesQuery();
   const { data: exams } = useGetAllExamsQuery();
-  const { data: subscriptionData, isLoading: subscriptionLoader } = 
+  const { data: subscriptionData, isLoading: subscriptionLoader } =
     useGetASubscriptionInfoOfAnUserQuery(email);
-  const { data: subjectData, isLoading: subjectLoader } =
-    useGetASubjectQuery(changeSubjectId, { skip: !changeSubjectId });
+  const { data: subjectData, isLoading: subjectLoader } = useGetASubjectQuery(
+    changeSubjectId,
+    { skip: !changeSubjectId },
+  );
   const [createAExamSet, { isLoading }] = useCreateAExamSetMutation();
-
-
 
   /* ---------- CORRECTED ELIGIBILITY ---------- */
   // প্রথমে সব প্রপার্টি আলাদাভাবে সংজ্ঞায়িত করি
   const isUserVerified = subscriptionData?.user?.isVerified;
   const hasSubscription = subscriptionData?.user?.subscription;
-  
+
   // বিভিন্ন জায়গায় isApproved চেক করি
-  const isSubscriptionApproved = 
-    subscriptionData?.user?.isSubscriptionApproved || 
+  const isSubscriptionApproved =
+    subscriptionData?.user?.isSubscriptionApproved ||
     subscriptionData?.subscriptions?.[0]?.isApproved ||
     subscriptionData?.user?.subscription?.isApproved ||
     true; // যদি API তে এই ফিল্ড না থাকে তবে default true ধরি
-  
+
   const hasPackages = subscriptionData?.packages?.length > 0;
 
   // Boolean হিসেবে convert করি
   const isEligible = Boolean(
-    isUserVerified && 
-    hasSubscription && 
-    isSubscriptionApproved && 
-    hasPackages
+    isUserVerified && hasSubscription && isSubscriptionApproved && hasPackages,
   );
 
   /* ---------- FILTER CLASSES ---------- */
@@ -1285,25 +1280,23 @@ export default function QuestionCreate() {
 
     // Filter unique classes from packages
     const uniqueClassesMap = new Map();
-    
+
     subscriptionData.packages.forEach((pkg, index) => {
-    
       const classId = pkg.subjectClassName?._id;
       if (classId) {
-        const classInfo = classes.find(c => c._id === classId);
+        const classInfo = classes.find((c) => c._id === classId);
         if (classInfo) {
           if (!uniqueClassesMap.has(classId)) {
             const subjectsInThisClass = subscriptionData.packages.filter(
-              p => p.subjectClassName?._id === classId
+              (p) => p.subjectClassName?._id === classId,
             );
             uniqueClassesMap.set(classId, {
               _id: classId,
               className: classInfo.className,
               subjectCount: subjectsInThisClass.length,
               // Debug info
-              subjects: subjectsInThisClass.map(s => s.subjectName)
+              subjects: subjectsInThisClass.map((s) => s.subjectName),
             });
-       
           }
         } else {
           console.log(`Class not found for ID: ${classId}`);
@@ -1314,7 +1307,7 @@ export default function QuestionCreate() {
     });
 
     const uniqueClasses = Array.from(uniqueClassesMap.values());
-   
+
     setClassFilteredPackages(uniqueClasses);
   }, [subscriptionData, classes]);
 
@@ -1323,44 +1316,43 @@ export default function QuestionCreate() {
     if (!formData.className || !subscriptionData?.packages) {
       return [];
     }
-    
+
     const subjects = subscriptionData.packages.filter(
-      pkg => pkg.subjectClassName?._id === formData.className
+      (pkg) => pkg.subjectClassName?._id === formData.className,
     );
-    
-   
-    
+
     return subjects;
   };
 
   /* ---------- HANDLERS ---------- */
   const handleChange = (field, value) => {
     console.log(`Changing ${field} to:`, value);
-    
+
     if (field === "className") {
       // Reset subject when class changes
       setChangeSubjectId(null);
-      setFormData(prev => ({ 
-        ...prev, 
+      setFormData((prev) => ({
+        ...prev,
         [field]: value,
-        chapterId: []
+        chapterId: [],
       }));
     } else if (field === "chapterId") {
-      setFormData(prev => ({ 
-        ...prev, 
-        [field]: Array.isArray(value) ? value : [value] 
+      setFormData((prev) => ({
+        ...prev,
+        [field]: Array.isArray(value) ? value : [value],
       }));
     } else {
-      setFormData(prev => ({ ...prev, [field]: value }));
+      setFormData((prev) => ({ ...prev, [field]: value }));
     }
   };
 
   const handleSubjectSelect = (subjectId) => {
-
     setChangeSubjectId(subjectId);
-    
+
     // Also update formData
-    const selectedSubject = getSubjectsForSelectedClass().find(s => s._id === subjectId);
+    const selectedSubject = getSubjectsForSelectedClass().find(
+      (s) => s._id === subjectId,
+    );
     if (selectedSubject) {
       console.log("Selected subject:", selectedSubject.subjectName);
     }
@@ -1368,8 +1360,6 @@ export default function QuestionCreate() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-  
 
     if (!isEligible) {
       Swal.fire({
@@ -1380,15 +1370,15 @@ export default function QuestionCreate() {
             <p>প্রশ্ন তৈরি করতে আপনাকে সাবস্ক্রাইব করতে হবে</p>
             <p class="text-sm text-gray-600 mt-2">স্ট্যাটাস:</p>
             <ul class="text-sm text-gray-600 text-right">
-              <li>ভেরিফাইড: ${isUserVerified ? '✅' : '❌'}</li>
-              <li>সাবস্ক্রিপশন: ${hasSubscription ? '✅' : '❌'}</li>
-              <li>অনুমোদিত: ${isSubscriptionApproved ? '✅' : '❌'}</li>
-              <li>প্যাকেজ: ${hasPackages ? '✅' : '❌'}</li>
+              <li>ভেরিফাইড: ${isUserVerified ? "✅" : "❌"}</li>
+              <li>সাবস্ক্রিপশন: ${hasSubscription ? "✅" : "❌"}</li>
+              <li>অনুমোদিত: ${isSubscriptionApproved ? "✅" : "❌"}</li>
+              <li>প্যাকেজ: ${hasPackages ? "✅" : "❌"}</li>
             </ul>
           </div>
         `,
         showConfirmButton: true,
-        confirmButtonText: "বুঝেছি"
+        confirmButtonText: "বুঝেছি",
       });
       return;
     }
@@ -1404,8 +1394,14 @@ export default function QuestionCreate() {
     }
 
     // Validate form
-    if (!formData.title || !formData.className || !formData.examType || 
-        !formData.examCategory || !formData.marks || formData.chapterId.length === 0) {
+    if (
+      !formData.title ||
+      !formData.className ||
+      !formData.examType ||
+      !formData.examCategory ||
+      !formData.marks ||
+      formData.chapterId.length === 0
+    ) {
       Swal.fire({
         icon: "error",
         title: "ফর্ম অসম্পূর্ণ",
@@ -1425,9 +1421,8 @@ export default function QuestionCreate() {
         examType: formData.examType,
         marks: Number(formData.marks),
         email: email,
-        questionIds: []
+        questionIds: [],
       };
-
 
       const res = await createAExamSet(payload);
 
@@ -1476,24 +1471,10 @@ export default function QuestionCreate() {
   const errorMessage = getErrorMessage();
 
   return (
-    <div className={`me-3 ${size?.width <= 600 ? "ms-3 mt-20" : "ms-72 me-8"}`}>
+    <div className={`me-3 ${size?.width <= 600 ? "ms-3 mt-5" : "ms-72 me-8"}`}>
       <div className="flex justify-center items-center w-full min-h-screen flex-col space-y-4 max-w-3xl mx-auto">
         <Card className="w-full mt-16 mb-10 bg-white">
-          <div className="rounded-t-xl border border-gray-200">
-            {/* Top colored buttons bar */}
-            <div className="flex items-center justify-between px-4 py-2 bg-gray-100 rounded-t-xl border-b">
-              <div className="flex items-center gap-2">
-                <span className="w-4 h-4 bg-red-500 rounded-full"></span>
-                <span className="w-4 h-4 bg-yellow-400 rounded-full"></span>
-                <span className="w-4 h-4 bg-green-500 rounded-full"></span>
-              </div>
-              <div>
-                <h2 className="text-gray-400 text-sm font-medium">৩.৫২</h2>
-              </div>
-            </div>
-          </div>
-
-          <div className="text-center space-y-2 bg-[#024645] h-42 md:min-h-56 p-5">
+          <div className="text-center space-y-2 bg-[#024645] h-42 md:min-h-52 p-5">
             <div className="mb-5 md:mb-10">
               <p className="solaimanlipi text-2xl md:text-4xl text-white drop-shadow-sm">
                 ১ ক্লিকে আপনার প্রশ্ন তৈরি করুন!
@@ -1501,66 +1482,13 @@ export default function QuestionCreate() {
               <p className="solaimanlipi font-thin text-xl text-white ">
                 নিচের তথ্যগুলো দিয়ে আপনার প্রশ্ন তৈরি করুন
               </p>
-              
-              {/* Subscription Status */}
-              {subscriptionData && (
-                <div className="mt-4 p-3 bg-white/10 rounded-lg">
-                  <p className="text-white solaimanlipi text-lg">
-                    সাবস্ক্রিপশন স্ট্যাটাস: <span className={isEligible ? "text-green-300" : "text-yellow-300"}>
-                      {isEligible ? "✅ সক্রিয়" : "❌ সমস্যা"}
-                    </span>
-                  </p>
-                  
-                  <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
-                    <div className="text-left">
-                      <span className={isUserVerified ? "text-green-300" : "text-red-300"}>
-                        {isUserVerified ? "✓" : "✗"}
-                      </span> ভেরিফাইড
-                    </div>
-                    <div className="text-left">
-                      <span className={hasSubscription ? "text-green-300" : "text-red-300"}>
-                        {hasSubscription ? "✓" : "✗"}
-                      </span> সাবস্ক্রিপশন
-                    </div>
-                    <div className="text-left">
-                      <span className={isSubscriptionApproved ? "text-green-300" : "text-yellow-300"}>
-                        {isSubscriptionApproved ? "✓" : "?"}
-                      </span> অনুমোদিত
-                    </div>
-                    <div className="text-left">
-                      <span className={hasPackages ? "text-green-300" : "text-red-300"}>
-                        {hasPackages ? "✓" : "✗"}
-                      </span> প্যাকেজ ({subscriptionData.packages?.length || 0})
-                    </div>
-                  </div>
-                  
-                  {!isEligible && errorMessage && (
-                    <p className="text-yellow-300 solaimanlipi mt-2">
-                      {errorMessage}
-                    </p>
-                  )}
-                </div>
-              )}
             </div>
-            
-            {!isEligible ? (
-              <a 
-                href="/" 
-                className="inline-block bg-white text-gray-700 px-6 py-2 text-lg md:text-xl  font-bold rounded-full hover:bg-gray-100 transition-colors"
-              >
-                Subscribe Now!
-              </a>
-            ) : (
-              <div className="inline-block bg-green-500 text-white px-6 py-2 text-base md:text-xl font-bold rounded-full">
-                সাবস্ক্রাইবড
-              </div>
-            )}
           </div>
 
           {/* FORM */}
           <form
             onSubmit={handleSubmit}
-            className="space-y-4 mt-10 w-[400px] md:w-[550px] mx-auto pb-8"
+            className="space-y-2 md:space-y-4 mt-10 w-[350px] md:w-[550px] mx-auto pb-8"
           >
             {/* Title */}
             <div>
@@ -1585,7 +1513,9 @@ export default function QuestionCreate() {
               <Select
                 className="solaimanlipi"
                 isRequired
-                placeholder={isEligible ? "শ্রেণী নির্বাচন করুন" : "সাবস্ক্রিপশন প্রয়োজন"}
+                placeholder={
+                  isEligible ? "শ্রেণী নির্বাচন করুন" : "সাবস্ক্রিপশন প্রয়োজন"
+                }
                 selectedKeys={formData.className ? [formData.className] : []}
                 onSelectionChange={(keys) => {
                   const key = Array.from(keys)[0];
@@ -1611,8 +1541,14 @@ export default function QuestionCreate() {
                     </SelectItem>
                   ))
                 ) : (
-                  <SelectItem key="no-classes" isDisabled className="solaimanlipi">
-                    {isEligible ? "কোন ক্লাস পাওয়া যায়নি" : "সাবস্ক্রিপশন প্রয়োজন"}
+                  <SelectItem
+                    key="no-classes"
+                    isDisabled
+                    className="solaimanlipi"
+                  >
+                    {isEligible
+                      ? "কোন ক্লাস পাওয়া যায়নি"
+                      : "সাবস্ক্রিপশন প্রয়োজন"}
                   </SelectItem>
                 )}
               </Select>
@@ -1621,9 +1557,13 @@ export default function QuestionCreate() {
               <Select
                 className="solaimanlipi"
                 isRequired
-                placeholder={!isEligible ? "সাবস্ক্রিপশন প্রয়োজন" : 
-                           !formData.className ? "প্রথমে শ্রেণী নির্বাচন করুন" : 
-                           "বিষয় নির্বাচন করুন"}
+                placeholder={
+                  !isEligible
+                    ? "সাবস্ক্রিপশন প্রয়োজন"
+                    : !formData.className
+                      ? "প্রথমে শ্রেণী নির্বাচন করুন"
+                      : "বিষয় নির্বাচন করুন"
+                }
                 selectedKeys={changeSubjectId ? [changeSubjectId] : []}
                 onSelectionChange={(keys) => {
                   const key = Array.from(keys)[0];
@@ -1645,13 +1585,23 @@ export default function QuestionCreate() {
                       </SelectItem>
                     ))
                   ) : (
-                    <SelectItem key="no-subjects" isDisabled className="solaimanlipi">
+                    <SelectItem
+                      key="no-subjects"
+                      isDisabled
+                      className="solaimanlipi"
+                    >
                       এই ক্লাসে কোনো বিষয় নেই
                     </SelectItem>
                   )
                 ) : (
-                  <SelectItem key="disabled" isDisabled className="solaimanlipi">
-                    {!isEligible ? "সাবস্ক্রিপশন প্রয়োজন" : "প্রথমে শ্রেণী নির্বাচন করুন"}
+                  <SelectItem
+                    key="disabled"
+                    isDisabled
+                    className="solaimanlipi"
+                  >
+                    {!isEligible
+                      ? "সাবস্ক্রিপশন প্রয়োজন"
+                      : "প্রথমে শ্রেণী নির্বাচন করুন"}
                   </SelectItem>
                 )}
               </Select>
@@ -1662,9 +1612,13 @@ export default function QuestionCreate() {
               <Select
                 className="solaimanlipi w-full"
                 isRequired
-                placeholder={!isEligible ? "সাবস্ক্রিপশন প্রয়োজন" :
-                           !changeSubjectId ? "প্রথমে বিষয় নির্বাচন করুন" :
-                           "অধ্যায় নির্বাচন করুন"}
+                placeholder={
+                  !isEligible
+                    ? "সাবস্ক্রিপশন প্রয়োজন"
+                    : !changeSubjectId
+                      ? "প্রথমে বিষয় নির্বাচন করুন"
+                      : "অধ্যায় নির্বাচন করুন"
+                }
                 selectionMode="multiple"
                 selectedKeys={new Set(formData.chapterId)}
                 onSelectionChange={(keys) => {
@@ -1690,13 +1644,23 @@ export default function QuestionCreate() {
                       </SelectItem>
                     ))
                   ) : (
-                    <SelectItem key="no-chapters" isDisabled className="solaimanlipi">
+                    <SelectItem
+                      key="no-chapters"
+                      isDisabled
+                      className="solaimanlipi"
+                    >
                       এই বিষয়ে কোনো অধ্যায় নেই
                     </SelectItem>
                   )
                 ) : (
-                  <SelectItem key="disabled" isDisabled className="solaimanlipi">
-                    {!isEligible ? "সাবস্ক্রিপশন প্রয়োজন" : "প্রথমে বিষয় নির্বাচন করুন"}
+                  <SelectItem
+                    key="disabled"
+                    isDisabled
+                    className="solaimanlipi"
+                  >
+                    {!isEligible
+                      ? "সাবস্ক্রিপশন প্রয়োজন"
+                      : "প্রথমে বিষয় নির্বাচন করুন"}
                   </SelectItem>
                 )}
               </Select>
@@ -1708,7 +1672,9 @@ export default function QuestionCreate() {
               <Select
                 className="solaimanlipi"
                 isRequired
-                placeholder={!isEligible ? "সাবস্ক্রিপশন প্রয়োজন" : "পরীক্ষার ধরন"}
+                placeholder={
+                  !isEligible ? "সাবস্ক্রিপশন প্রয়োজন" : "পরীক্ষার ধরন"
+                }
                 selectedKeys={formData.examType ? [formData.examType] : []}
                 onSelectionChange={(keys) => {
                   const key = Array.from(keys)[0];
@@ -1729,7 +1695,11 @@ export default function QuestionCreate() {
                     </SelectItem>
                   ))
                 ) : (
-                  <SelectItem key="disabled" isDisabled className="solaimanlipi">
+                  <SelectItem
+                    key="disabled"
+                    isDisabled
+                    className="solaimanlipi"
+                  >
                     সাবস্ক্রিপশন প্রয়োজন
                   </SelectItem>
                 )}
@@ -1739,8 +1709,12 @@ export default function QuestionCreate() {
               <Select
                 className="solaimanlipi"
                 isRequired
-                placeholder={!isEligible ? "সাবস্ক্রিপশন প্রয়োজন" : "প্রশ্নের ধরণ"}
-                selectedKeys={formData.examCategory ? [formData.examCategory] : []}
+                placeholder={
+                  !isEligible ? "সাবস্ক্রিপশন প্রয়োজন" : "প্রশ্নের ধরণ"
+                }
+                selectedKeys={
+                  formData.examCategory ? [formData.examCategory] : []
+                }
                 onSelectionChange={(keys) => {
                   const key = Array.from(keys)[0];
                   if (key) handleChange("examCategory", key);
@@ -1751,9 +1725,10 @@ export default function QuestionCreate() {
               >
                 {isEligible && exams ? (
                   exams.map((exam) => {
-                    const displayName = exam.examName === "সংক্ষিপ্ত প্রশ্ন" 
-                      ? "সমন্বিত প্রশ্ন" 
-                      : exam.examName;
+                    const displayName =
+                      exam.examName === "সংক্ষিপ্ত প্রশ্ন"
+                        ? "সমন্বিত প্রশ্ন"
+                        : exam.examName;
                     return (
                       <SelectItem
                         key={exam._id}
@@ -1765,7 +1740,11 @@ export default function QuestionCreate() {
                     );
                   })
                 ) : (
-                  <SelectItem key="disabled" isDisabled className="solaimanlipi">
+                  <SelectItem
+                    key="disabled"
+                    isDisabled
+                    className="solaimanlipi"
+                  >
                     সাবস্ক্রিপশন প্রয়োজন
                   </SelectItem>
                 )}
@@ -1792,8 +1771,8 @@ export default function QuestionCreate() {
               <Button
                 type="submit"
                 className={`w-full solaimanlipi text-lg h-12 ${
-                  isEligible 
-                    ? "bg-[#024645] hover:bg-[#003338] text-white" 
+                  isEligible
+                    ? "bg-[#024645] hover:bg-[#003338] text-white"
                     : "bg-gray-300 text-gray-500 cursor-not-allowed"
                 }`}
                 radius="lg"

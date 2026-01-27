@@ -1,10 +1,10 @@
 import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
   useDraggable,
 } from "@heroui/react";
 import { Divider } from "antd";
@@ -32,7 +32,7 @@ export default function ExplainModal({
           {(onClose) => (
             <>
               <ModalHeader {...moveProps} className="flex flex-col gap-1">
-                <p className="text-center font-6xl solaimanlipi">
+                <p className="text-center text-xl md:text-2xl solaimanlipi">
                   প্রশ্নের ব্যাখ্যা/উত্তর
                 </p>
               </ModalHeader>
