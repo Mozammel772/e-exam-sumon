@@ -40,7 +40,7 @@ export const searchType = [
   { key: "চিত্রযুক্ত", label: "চিত্রযুক্ত" },
   { key: "বহুপদী", label: "বহুপদী" },
   { key: "অভিন্ন তথ্যভিত্তিক", label: "অভিন্ন তথ্যভিত্তিক" },
-  { key: "রিপিটেড স্কুল", label: "রিপিটেড স্কুল" },
+  { key: "রিপিটেড স্কুল", label: "রিপিটেড বোর্ড" },
   { key: "তত্ত্বীয়", label: "তত্ত্বীয়" },
   { key: "গাণিতিক", label: "গাণিতিক" },
 ];
@@ -60,6 +60,7 @@ export const questionLevel = [
 ];
 
 export const years = [
+  { key: "২০২৬", label: "২০২৬" },
   { key: "২০২৫", label: "২০২৫" },
   { key: "২০২৪", label: "২০২৪" },
   { key: "২০২৩", label: "২০২৩" },
@@ -904,20 +905,54 @@ export default function CqQuestionView() {
                 );
               })}
             </div>
-
-            <p className="text-xl font-bold">প্রশ্নের ধরন</p>
-            <div className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
-              {questionTypes.map((type) => (
-                <div key={type.key}>
-                  <Checkbox
-                    color="success"
-                    isSelected={selectedQuestionTypes?.includes(type.key)}
-                    onChange={() => handleQuestionTypeChange(type.key)}
-                  >
-                    <p className="text-xl">{type.label}</p>
-                  </Checkbox>
+   <div>
+              <p className="text-lg mt-3 font-bold">
+                অধ্যায় ভিত্তিক ফিল্টারিং প্রশ্ন
+              </p>
+              {getDesireQuestionsData?.chapters?.map((chapter) => (
+                <div
+                  key={chapter?._id}
+                  className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black"
+                >
+                  <div>
+                    <Checkbox
+                      color="success"
+                      isSelected={selectedChapters.includes(
+                        chapter._id.toString(),
+                      )}
+                      onChange={() =>
+                        handleChapterToggle(chapter._id.toString())
+                      }
+                    >
+                      <p className="text-base">{chapter?.chapterName}</p>
+                    </Checkbox>
+                  </div>
                 </div>
               ))}
+            </div>
+            <p className="text-lg font-bold">টপিক অনুযায়ী ফিল্টার</p>
+            <div className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
+              {allTopics?.length > 0 ? (
+                <Select
+                  label="Select Topics"
+                  placeholder="Choose topics"
+                  selectionMode="multiple"
+                  selectedKeys={selectedTopics}
+                  onSelectionChange={(keys) => setSelectedTopics([...keys])}
+                  className="w-full"
+                  color="success"
+                >
+                  {allTopics.map((topic) => (
+                    <SelectItem key={topic} value={topic}>
+                      {topic}
+                    </SelectItem>
+                  ))}
+                </Select>
+              ) : (
+                <p className="p-2 text-gray-500 text-sm">
+                  কোন টপিক পাওয়া যায়নি
+                </p>
+              )}
             </div>
   <div>
               <p className="text-lg mt-3 font-bold">বোর্ড প্রশ্ন</p>
@@ -969,89 +1004,10 @@ export default function CqQuestionView() {
                 </div>
               </div>
             </div>
-            {/* Other filter sections */}
-            <p className="text-lg font-bold">টপিক অনুযায়ী ফিল্টার</p>
-            <div className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
-              {allTopics?.length > 0 ? (
-                <Select
-                  label="Select Topics"
-                  placeholder="Choose topics"
-                  selectionMode="multiple"
-                  selectedKeys={selectedTopics}
-                  onSelectionChange={(keys) => setSelectedTopics([...keys])}
-                  className="w-full"
-                  color="success"
-                >
-                  {allTopics.map((topic) => (
-                    <SelectItem key={topic} value={topic}>
-                      {topic}
-                    </SelectItem>
-                  ))}
-                </Select>
-              ) : (
-                <p className="p-2 text-gray-500 text-sm">
-                  কোন টপিক পাওয়া যায়নি
-                </p>
-              )}
-            </div>
-
-            {/* FIXED: Chapter filtering section */}
-            <div>
-              <p className="text-lg mt-3 font-bold">
-                অধ্যায় ভিত্তিক ফিল্টারিং প্রশ্ন
-              </p>
-              {getDesireQuestionsData?.chapters?.map((chapter) => (
-                <div
-                  key={chapter?._id}
-                  className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black"
-                >
-                  <div>
-                    <Checkbox
-                      color="success"
-                      isSelected={selectedChapters.includes(
-                        chapter._id.toString(),
-                      )}
-                      onChange={() =>
-                        handleChapterToggle(chapter._id.toString())
-                      }
-                    >
-                      <p className="text-base">{chapter?.chapterName}</p>
-                    </Checkbox>
-                  </div>
-                </div>
-              ))}
-            </div>
-
+           
           
 
-            <div>
-              <p className="text-lg mt-3 font-bold">শীর্ষস্থানীয় স্কুল</p>
-              <div className="ps-2 pe-2 mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
-                {SCHOOL_OPTIONS.map((school) => (
-                  <div key={school.key}>
-                    <Checkbox
-                      color="success"
-                      isSelected={selectedSchools?.includes(school.key)}
-                      onChange={() =>
-                        setSelectedSchools((prev) =>
-                          prev?.includes(school.key)
-                            ? prev?.filter((s) => s !== school.key)
-                            : [...prev, school.key],
-                        )
-                      }
-                    >
-                      <p className="text-base">{school.label}</p>
-                    </Checkbox>
-                  </div>
-                ))}
-
-                {SCHOOL_OPTIONS.length === 0 && (
-                  <p className="text-gray-500 text-center py-2 text-sm">
-                    কোনো স্কুলের তথ্য পাওয়া যায়নি
-                  </p>
-                )}
-              </div>
-            </div>
+         
           </div>
         </>
       )}

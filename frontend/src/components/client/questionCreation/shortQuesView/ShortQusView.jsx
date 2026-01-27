@@ -1460,7 +1460,7 @@ export const searchType = [
   { key: "চিত্রযুক্ত", label: "চিত্রযুক্ত" },
   { key: "বহুপদী", label: "বহুপদী" },
   { key: "অভিন্ন তথ্যভিত্তিক", label: "অভিন্ন তথ্যভিত্তিক" },
-  { key: "রিপিটেড স্কুল", label: "রিপিটেড স্কুল" },
+  { key: "রিপিটেড স্কুল", label: "রিপিটেড বোর্ড" },
   { key: "তত্ত্বীয়", label: "তত্ত্বীয়" },
   { key: "গাণিতিক", label: "গাণিতিক" },
 ];
@@ -1476,6 +1476,7 @@ export const questionLevel = [
 ];
 
 export const years = [
+  { key: "২০২৬", label: "২০২৬" },
   { key: "২০২৫", label: "২০২৫" },
   { key: "২০২৪", label: "২০২৪" },
   { key: "২০২৩", label: "২০২৩" },
@@ -2684,6 +2685,25 @@ export default function ShortQusView() {
                   ))}
               </div>
 
+
+    <p className="text-xl font-bold">সার্চ টাইপ</p>
+              <div className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
+                {searchType?.map((type) => {
+                  return (
+                    <div key={type.key}>
+                      <Checkbox
+                        color="success"
+                        isSelected={selectedTypes.includes(type.key)}
+                        onChange={() => handleTypeChange(type.key)}
+                      >
+                        <p className="text-xl">{type.label}</p>
+                      </Checkbox>
+                    </div>
+                  );
+                })}
+              </div>
+
+
               {/* Question Type Filter Section */}
               <div className="">
                 <p className="text-xl font-bold">প্রশ্নের ধরন</p>
@@ -2711,6 +2731,55 @@ export default function ShortQusView() {
                     </Button>
                   )}
                 </div>
+              </div>
+
+               <div>
+                <p className="text-xl mt-3 font-bold">
+                  অধ্যায় ভিত্তিক ফিল্টারিং প্রশ্ন
+                </p>
+
+                {filteredChapters?.map((chapter) => (
+                  <div
+                    key={chapter?._id}
+                    className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black"
+                  >
+                    <div>
+                      <Checkbox
+                        color="success"
+                        isSelected={selectedChapters.includes(
+                          chapter._id.toString(),
+                        )}
+                        onChange={() =>
+                          handleChapterToggle(chapter._id.toString())
+                        }
+                      >
+                        <p className="text-xl">{chapter?.chapterName}</p>
+                      </Checkbox>
+                    </div>
+                  </div>
+                ))}
+              </div>
+                  <p className="text-xl font-bold">টপিক অনুযায়ী ফিল্টার</p>
+              <div className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
+                {allTopics?.length > 0 ? (
+                  <Select
+                    label="Select Topics"
+                    placeholder="Choose topics"
+                    selectionMode="multiple"
+                    selectedKeys={selectedTopics}
+                    onSelectionChange={(keys) => setSelectedTopics([...keys])}
+                    className="w-full"
+                    color="success"
+                  >
+                    {allTopics.map((topic) => (
+                      <SelectItem key={topic} value={topic}>
+                        {topic}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                ) : (
+                  <p className="p-2 text-gray-500">কোন টপিক পাওয়া যায়নি</p>
+                )}
               </div>
               <div>
                 <p className="text-xl mt-3 font-bold">বোর্ড প্রশ্ন</p>
@@ -2762,157 +2831,15 @@ export default function ShortQusView() {
                   </div>
                 </div>
               </div>
-              {availableChapters.length > 0 && (
-                <div className="mt-6 bg-[#dbfce7] rounded-lg p-4">
-                  <p className="text-xl font-light mb-2">অধ্যায় ফিল্টার</p>
+             
 
-                  {/* Select All Button */}
-                  <div className="mb-3">
-                    <Checkbox
-                      color="success"
-                      isSelected={
-                        selectedChaptersFilter.length ===
-                          availableChapters.length &&
-                        availableChapters.length > 0
-                      }
-                      isIndeterminate={
-                        selectedChaptersFilter.length > 0 &&
-                        selectedChaptersFilter.length < availableChapters.length
-                      }
-                      onChange={handleSelectAllChapters}
-                    >
-                      <p className="text-base md:text-xl font-semibold">
-                        সব অধ্যায় নির্বাচন করুন
-                      </p>
-                    </Checkbox>
-                  </div>
+          
 
-                  {/* Chapter List */}
-                  <div className="space-y-2 max-h-40 overflow-y-auto">
-                    {availableChapters.map((chapter) => (
-                      <div key={chapter.key}>
-                        <Checkbox
-                          color="success"
-                          isSelected={selectedChaptersFilter.includes(
-                            chapter.key,
-                          )}
-                          onChange={() =>
-                            handleChapterFilterToggle(chapter.key)
-                          }
-                        >
-                          <p className="text-base md:text-xl">
-                            {chapter.label}
-                          </p>
-                        </Checkbox>
-                      </div>
-                    ))}
-                  </div>
+          
 
-                  {/* Filter Status */}
-                  {selectedChaptersFilter.length > 0 && (
-                    <div className="mt-3 p-2 bg-green-100 rounded border border-green-300">
-                      <p className="text-sm text-green-800 text-center">
-                        {selectedChaptersFilter.length} টি অধ্যায় নির্বাচিত
-                      </p>
-                    </div>
-                  )}
-                </div>
-              )}
-              <p className="text-xl font-bold">টপিক অনুযায়ী ফিল্টার</p>
-              <div className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
-                {allTopics?.length > 0 ? (
-                  <Select
-                    label="Select Topics"
-                    placeholder="Choose topics"
-                    selectionMode="multiple"
-                    selectedKeys={selectedTopics}
-                    onSelectionChange={(keys) => setSelectedTopics([...keys])}
-                    className="w-full"
-                    color="success"
-                  >
-                    {allTopics.map((topic) => (
-                      <SelectItem key={topic} value={topic}>
-                        {topic}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                ) : (
-                  <p className="p-2 text-gray-500">কোন টপিক পাওয়া যায়নি</p>
-                )}
-              </div>
+             
 
-              <p className="text-xl font-bold">সার্চ টাইপ</p>
-              <div className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
-                {searchType?.map((type) => {
-                  return (
-                    <div key={type.key}>
-                      <Checkbox
-                        color="success"
-                        isSelected={selectedTypes.includes(type.key)}
-                        onChange={() => handleTypeChange(type.key)}
-                      >
-                        <p className="text-xl">{type.label}</p>
-                      </Checkbox>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div>
-                <p className="text-xl mt-3 font-bold">
-                  অধ্যায় ভিত্তিক ফিল্টারিং প্রশ্ন
-                </p>
-
-                {filteredChapters?.map((chapter) => (
-                  <div
-                    key={chapter?._id}
-                    className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black"
-                  >
-                    <div>
-                      <Checkbox
-                        color="success"
-                        isSelected={selectedChapters.includes(
-                          chapter._id.toString(),
-                        )}
-                        onChange={() =>
-                          handleChapterToggle(chapter._id.toString())
-                        }
-                      >
-                        <p className="text-xl">{chapter?.chapterName}</p>
-                      </Checkbox>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div>
-                <p className="text-xl mt-3 font-bold">শীর্ষস্থানীয় স্কুল</p>
-                <div className="ps-3 pe-3 mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
-                  {SCHOOL_OPTIONS.map((school) => (
-                    <div key={school.key}>
-                      <Checkbox
-                        color="success"
-                        isSelected={selectedSchools?.includes(school.key)}
-                        onChange={() =>
-                          setSelectedSchools((prev) =>
-                            prev?.includes(school.key)
-                              ? prev?.filter((s) => s !== school.key)
-                              : [...prev, school.key],
-                          )
-                        }
-                      >
-                        <p className="text-xl">{school.label}</p>
-                      </Checkbox>
-                    </div>
-                  ))}
-
-                  {SCHOOL_OPTIONS.length === 0 && (
-                    <p className="text-gray-500 text-center py-2">
-                      কোনো স্কুলের তথ্য পাওয়া যায়নি
-                    </p>
-                  )}
-                </div>
-              </div>
+            
             </div>
           </div>
         </>

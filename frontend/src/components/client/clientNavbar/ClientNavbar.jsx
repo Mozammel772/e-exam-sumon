@@ -110,8 +110,9 @@ export default function ClientNavbar() {
           <div className="flex flex-wrap justify-between items-center">
             <div >
               {/* <Clock /> */}
+              {/* lg:order-2 */}
             </div>
-            <div className="flex items-center lg:order-2 gap-3">
+            <div className="flex items-center  gap-3">
               <Tooltip title="Create a question">
                 <Link to="/user/question-create">
                   <Button

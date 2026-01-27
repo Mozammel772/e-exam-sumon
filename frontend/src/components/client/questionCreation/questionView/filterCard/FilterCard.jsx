@@ -142,6 +142,50 @@ export default function FilterCard({
           );
         })}
       </div>
+
+ <div>
+        <p className="text-xl mt-3 font-bold">
+          অধ্যায় ভিত্তিক ফিল্টারিং প্রশ্ন
+        </p>
+
+        {filteredChapters?.map((chapter) => (
+          <div
+            key={chapter?._id}
+            className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black"
+          >
+            <div>
+              <Checkbox
+                color="success"
+                isSelected={selectedChapters.includes(chapter._id.toString())}
+                onChange={() => handleChapterToggle(chapter._id.toString())}
+              >
+                <p className="text-xl">{chapter?.chapterName}</p>
+              </Checkbox>
+            </div>
+          </div>
+        ))}
+      </div>
+  <p className="text-xl font-bold">টপিক অনুযায়ী ফিল্টার</p>
+      <div className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
+        {allTopics?.length > 0 ? (
+          <Select
+            label={<p className="text-lg">একটি টপিকস নির্বাচন করুন</p>}
+            selectionMode="multiple" // allows multiple selections like your checkboxes
+            selectedKeys={selectedTopics}
+            onSelectionChange={(keys) => setSelectedTopics([...keys])}
+            className="w-full"
+            color="success"
+          >
+            {allTopics.map((topic) => (
+              <SelectItem key={topic} value={topic}>
+                {topic}
+              </SelectItem>
+            ))}
+          </Select>
+        ) : (
+          <p className="p-2 text-gray-500">কোন টপিক পাওয়া যায়নি</p>
+        )}
+      </div>
       <div>
         <p className="text-xl mt-3 font-bold">বোর্ড প্রশ্ন</p>
         <div className="ps-3 pe-3 mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
@@ -191,79 +235,11 @@ export default function FilterCard({
         </div>
       </div>
 
-      <p className="text-xl font-bold">টপিক অনুযায়ী ফিল্টার</p>
-      <div className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
-        {allTopics?.length > 0 ? (
-          <Select
-            label={<p className="text-lg">একটি টপিকস নির্বাচন করুন</p>}
-            selectionMode="multiple" // allows multiple selections like your checkboxes
-            selectedKeys={selectedTopics}
-            onSelectionChange={(keys) => setSelectedTopics([...keys])}
-            className="w-full"
-            color="success"
-          >
-            {allTopics.map((topic) => (
-              <SelectItem key={topic} value={topic}>
-                {topic}
-              </SelectItem>
-            ))}
-          </Select>
-        ) : (
-          <p className="p-2 text-gray-500">কোন টপিক পাওয়া যায়নি</p>
-        )}
-      </div>
+    
 
-      <div>
-        <p className="text-xl mt-3 font-bold">
-          অধ্যায় ভিত্তিক ফিল্টারিং প্রশ্ন
-        </p>
+     
 
-        {filteredChapters?.map((chapter) => (
-          <div
-            key={chapter?._id}
-            className="mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black"
-          >
-            <div>
-              <Checkbox
-                color="success"
-                isSelected={selectedChapters.includes(chapter._id.toString())}
-                onChange={() => handleChapterToggle(chapter._id.toString())}
-              >
-                <p className="text-xl">{chapter?.chapterName}</p>
-              </Checkbox>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div>
-        <p className="text-xl mt-3 font-bold">শীর্ষস্থানীয় স্কুল</p>
-        <div className="ps-3 pe-3 mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
-          {SCHOOL_OPTIONS?.map((school) => (
-            <div key={school.key}>
-              <Checkbox
-                color="success"
-                isSelected={selectedSchools?.includes(school.key)}
-                onChange={() =>
-                  setSelectedSchools((prev) =>
-                    prev?.includes(school.key)
-                      ? prev?.filter((s) => s !== school.key)
-                      : [...prev, school.key],
-                  )
-                }
-              >
-                <p className="text-xl">{school.label}</p>
-              </Checkbox>
-            </div>
-          ))}
-
-          {SCHOOL_OPTIONS?.length === 0 && (
-            <p className="text-gray-500 text-center py-2">
-              কোনো স্কুলের তথ্য পাওয়া যায়নি
-            </p>
-          )}
-        </div>
-      </div>
+     
     </Card>
   );
 

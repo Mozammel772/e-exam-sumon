@@ -770,7 +770,7 @@
 //         <p className="mt-3 mb-2 text-base md:text-2xl font-bold">
 //           টাইটেল: {getUserCredentialsProfile?.examSet?.title}
 //         </p>
-       
+
 //         {filteringChapters?.length > 0 ? (
 //           <div className="bg-gray-200 p-5 rounded-lg">
 //             <div className="bg-gray-200 p-5 rounded-lg">
@@ -1177,7 +1177,7 @@
 //                                 {/* Action Buttons */}
 //                                 {/* <div className="mt-6 flex flex-wrap gap-3 justify-between items-center">
 //                                   <div className="flex flex-wrap gap-2">
-                                   
+
 //                                     <Tooltip
 //                                       content="প্রশ্নের ব্যাখ্যা দেখতে ক্লিক করুন"
 //                                       showArrow={true}
@@ -1226,7 +1226,6 @@
 //                                     </Tooltip>
 //                                   </div>
 
-                             
 //                                   <div className="flex flex-wrap gap-1">
 //                                     {question?.searchType?.map(
 //                                       (type, typeIndex) => (
@@ -1241,7 +1240,7 @@
 //                                         </Chip>
 //                                       ),
 //                                     )}
-                                   
+
 //                                     {question?.boardExamList?.length > 0 && (
 //                                       <small>
 //                                         {question.boardExamList.join(", ")}
@@ -1250,14 +1249,12 @@
 //                                   </div>
 //                                 </div> */}
 
-
-
 // <div className="mt-6 flex flex-wrap gap-3 justify-between items-center">
 //   {/* ================= Buttons ================= */}
 //   <div className="flex flex-wrap gap-2">
 
 //     {/* ---------- Explanation Button ---------- */}
-   
+
 //       {/* span is IMPORTANT for AntD Tooltip */}
 //       <span className="inline-block">
 //         <Button
@@ -1272,10 +1269,9 @@
 //           ব্যাখ্যা
 //         </Button>
 //       </span>
- 
 
 //     {/* ---------- Report Button ---------- */}
-    
+
 //       <span className="inline-block">
 //         <Button
 //           size="sm"
@@ -1285,7 +1281,6 @@
 //           রিপোর্ট
 //         </Button>
 //       </span>
-   
 
 //   </div>
 
@@ -1310,9 +1305,6 @@
 //     )}
 //   </div>
 // </div>
-
-
-
 
 //                               </div>
 //                             </div>
@@ -1437,7 +1429,7 @@ export const searchType = [
   { key: "চিত্রযুক্ত", label: "চিত্রযুক্ত" },
   { key: "বহুপদী", label: "বহুপদী" },
   { key: "অভিন্ন তথ্যভিত্তিক", label: "অভিন্ন তথ্যভিত্তিক" },
-  { key: "রিপিটেড স্কুল", label: "রিপিটেড স্কুল" },
+  { key: "রিপিটেড স্কুল", label: "রিপিটেড বোর্ড" },
   { key: "তত্ত্বীয়", label: "তত্ত্বীয়" },
   { key: "গাণিতিক", label: "গাণিতিক" },
 ];
@@ -1452,6 +1444,7 @@ export const questionLevel = [
 ];
 
 export const years = [
+  { key: "২০২৬", label: "২০২৬" },
   { key: "২০২৫", label: "২০২৫" },
   { key: "২০২৪", label: "২০২৪" },
   { key: "২০২৩", label: "২০২৩" },
