@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const subscriptionSlice = createApi({
   reducerPath: "subscription",
   baseQuery: fetchBaseQuery({
-    // baseUrl: "http://localhost:5555/api",
+    // baseUrl: "https://api.eexamapp.com/api",
     baseUrl: import.meta.env.VITE_main_url,
   }),
   tagTypes: ["subscription"],

@@ -13,10 +13,10 @@ const app = express();
 // ========================
 const allowedOrigins = [
   "http://localhost:5173",
-  "http://localhost:5555",      // optional if Next.js local
+  "https://api.eexamapp.com",      // optional if Next.js local
   "https://eexamapp.com",       // frontend
   "https://www.eexamapp.com",   // frontend www version
-  "http://localhost:5555",   // backend api domain
+  "https://api.eexamapp.com",   // backend api domain
 ];
 
 const corsOptions = {

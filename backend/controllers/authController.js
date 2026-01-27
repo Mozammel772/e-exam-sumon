@@ -23,7 +23,7 @@ const sendVerificationEmail = async (user) => {
   user.verificationToken = verificationToken;
   await user.save();
 
-  const verificationUrl = `http://localhost:5555/api/auth/verify/${verificationToken}`;
+  const verificationUrl = `https://api.eexamapp.com/api/auth/verify/${verificationToken}`;
 
   const mailOptions = {
     from: process.env.EMAIL_USERNAME,
