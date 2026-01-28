@@ -938,8 +938,54 @@ export default function ShortQuestionPaper() {
               key={question._id}
               className="relative z-10 w-full h-full ps-2 solaimanlipi question-container print-safe break-inside-avoid"
             >
-              {/* Question Text */}
-              <div className="text-md font-light flex items-baseline gap-0">
+
+
+
+
+              
+              <div className="flex items-start gap-3 text-md font-light leading-relaxed">
+  {/* Question number */}
+  <span className="shrink-0">
+    {toBanglaNumber(index + 1)}.
+  </span>
+
+  {/* Question content */}
+  <div className="prose max-w-none whitespace-pre-line">
+    {renderLatexContent(
+      sanitizeHtml(
+        (question?.questionName || "")
+          .replace(/i\./g, "\ni.")
+          .replace(/ii\./g, "\nii.")
+          .replace(/iii\./g, "\niii.")
+          .replace(/iv\./g, "\niv."),
+        {
+          allowedTags: [
+            "p",
+            "img",
+            "span",
+            "b",
+            "i",
+            "u",
+            "strong",
+            "em",
+            "br",
+          ],
+          allowedAttributes: {
+            img: ["src", "alt", "width", "height", "loading"],
+            "*": ["style"],
+          },
+        }
+      )
+    )}
+  </div>
+</div>
+
+
+
+
+
+
+              {/* <div className="text-md font-light flex items-baseline gap-0">
                 <span className="shrink-0 me-3">
                   {toBanglaNumber(index + 1)}.
                 </span>
@@ -962,7 +1008,7 @@ export default function ShortQuestionPaper() {
                     },
                   }),
                 )}
-              </div>
+              </div> */}
 
               {/* Options */}
               <div className="grid grid-cols-2 gap-y-2 mt-2 text-md ms-5">

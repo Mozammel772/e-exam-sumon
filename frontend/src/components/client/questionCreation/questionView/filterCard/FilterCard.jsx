@@ -270,12 +270,12 @@ export default function FilterCard({
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", stiffness: 100, damping: 20 }}
-            className="fixed top-0 right-0 h-full w-4/5 sm:w-[350px] bg-white shadow-2xl z-50 overflow-y-auto"
+            className="fixed top-0 right-0 h-full w-[280px] md:w-[350px] bg-white shadow-2xl z-50 overflow-y-auto"
           >
             <div className="flex justify-between items-center p-4 border-b bg-[#024645] text-white">
               <h2 className="text-xl font-bold">ফিল্টার</h2>
               <Button
-                onClick={() => setOpen(false)}
+                onPress={() => setOpen(false)}
                 className="bg-white text-[#024645] rounded-full min-w-8 h-8 p-0"
               >
                 ✕

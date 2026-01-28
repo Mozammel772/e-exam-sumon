@@ -129,9 +129,9 @@ export default function DemoQuestionCreate() {
     return <ClientLoader />;
   }
   return (
-    <div className={`me-3 ${size?.width <= 600 ? "ms-3 mt-5" : "ms-72 me-8"}`}>
+  <div className="px-3 md:ml-72 md:mr-8 mt-5">
       <div className="flex justify-center items-center w-full min-h-screen flex-col space-y-4 max-w-3xl mx-auto">
-        <Card className="w-full mt-16 mb-10 bg-white">
+        <Card className="w-full mt-8 md:mt-16 mb-10 bg-white">
           <div className="text-center space-y-2 bg-[#024645] h-42 md:min-h-52 p-5">
             <div className="mb-5 md:mb-10">
               <p className="solaimanlipi text-2xl md:text-4xl text-white drop-shadow-sm">
@@ -144,7 +144,7 @@ export default function DemoQuestionCreate() {
           </div>
 
           <form
-            className="space-y-2 md:space-y-4 mt-10 w-[350px] md:w-[550px] mx-auto pb-8"
+            className="space-y-3 md:space-y-4 mt-6 w-full max-w-md md:max-w-xl mx-auto px-3 pb-8"
             onSubmit={handleSubmit}
           >
             <div>

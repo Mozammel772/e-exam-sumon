@@ -529,19 +529,19 @@ export default function CqQuestionView() {
     (windowSize.width > 768 && shouldShowSidebar);
 
   return (
-    <div className="solaimanlipi flex flex-col md:flex-row ms-0 md:ms-[255px] mt-[85px] me-0 md:me-[20px] p-2 md:p-5 gap-2 md:gap-5">
+    <div className="solaimanlipi flex flex-col md:flex-row ms-0 md:ms-[255px] mt-[85px] me-0 md:me-[20px] p-2 md:p-5 gap-2 md:gap-5 ">
       {/* Main content (left side) */}
       <Card
         className={`flex-1 max-h-[100vh] overflow-y-auto relative p-2 md:p-4 transition-all duration-300 bg-transparent shadow-none ${
-          isSidebarVisible ? "md:me-[350px]" : "md:me-0"
+          isSidebarVisible ? "md:me-[350px]" : "w-[365px]"
         }`}
       >
         {/* FIXED: Button alignment - all buttons in same row */}
-        <div className="sticky top-0 z-20 p-2 flex flex-row justify-between items-center gap-3 shadow-md rounded-xl backdrop-blur-lg">
-          <div className="flex items-center gap-3">
+        <div className="sticky top-0 z-20 p-1 flex flex-row justify-between items-center gap-3 shadow-md rounded-xl backdrop-blur-lg">
+          <div className="flex items-center gap-1">
             <Button
               size="sm"
-              onClick={() => setIsSidebarOpen(true)}
+              onPress={() => setIsSidebarOpen(true)}
               startContent={<FilterIcon className="size-4" />}
               className="bg-[#024645] text-white md:hidden"
             >
@@ -549,7 +549,7 @@ export default function CqQuestionView() {
             </Button>
             <Chip className="bg-[#024645] text-white" variant="shadow">
               <h3 className="text-sm sm:text-base">
-                Selected: {foundIds?.length}/
+                Select: {foundIds?.length}/
                 {getUserCredentialsProfile?.examSet?.marks}
               </h3>
             </Chip>
@@ -557,7 +557,7 @@ export default function CqQuestionView() {
             {/* Filter button for mobile */}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             {/* Filter button for desktop */}
 
             <Button
@@ -807,7 +807,7 @@ export default function CqQuestionView() {
               <h2 className="text-xl font-bold">অ্যাডভান্স ফিল্টার মেনু</h2>
               <Button
                 isIconOnly
-                onClick={() =>
+                onPress={() =>
                   windowSize.width <= 768
                     ? setIsSidebarOpen(false)
                     : setShouldShowSidebar(false)

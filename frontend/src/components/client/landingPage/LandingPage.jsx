@@ -72,7 +72,7 @@ export default function LandingPage() {
             fontSize: "20px",
           }}
         >
-          <Card className="relative mt-5 flex flex-col items-center text-center p-5 border-1 border-[#024645] overflow-hidden">
+          <Card className="relative mt-5 flex flex-col items-center text-center p-2 md:p-5 border-1 border-[#024645] overflow-hidden">
             {/* Content */}
             <div className="relative z-10">
               <p
@@ -125,7 +125,7 @@ export default function LandingPage() {
                   marginBottom: "20px",
                   color: "#ed1c24",
                 }}
-                className="solaimanlipi text-4xl font-bold"
+                className="solaimanlipi text-2xl md:text-4xl font-bold"
               >
                 বিজ্ঞান, মানবিক ও ব্যবসা বিভাগ!
               </p>
