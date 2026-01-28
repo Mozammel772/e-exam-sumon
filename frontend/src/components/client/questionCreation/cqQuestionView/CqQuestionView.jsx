@@ -11,7 +11,6 @@ import {
 } from "@heroui/react";
 import "katex/dist/katex.min.css";
 import { useEffect, useMemo, useRef, useState } from "react";
-import Latex from "react-latex";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import ClearIcon from "../../../../assets/ClearIcon";
@@ -26,14 +25,18 @@ import {
 } from "../../../../redux/api/slices/examSetSlice";
 import { useGetAllExamsQuery } from "../../../../redux/api/slices/examSlice";
 
+import "katex/dist/katex.min.css";
 import { CheckIcon, FilterIcon, X } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
-import EyeOpenIcon from "../../../../assets/EyeOpenIcon";
 
+import EyeOpenIcon from "../../../../assets/EyeOpenIcon";
 const toBanglaNumber = (number) => {
   const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
   return number?.toString().replace(/\d/g, (digit) => banglaDigits[digit]);
 };
+
+import "katex/dist/katex.min.css";
+import Latex from "react-latex-next";
 
 export const searchType = [
   { key: "অনুশীলনী", label: "অনুশীলনী" },
@@ -905,7 +908,7 @@ export default function CqQuestionView() {
                 );
               })}
             </div>
-   <div>
+            <div>
               <p className="text-lg mt-3 font-bold">
                 অধ্যায় ভিত্তিক ফিল্টারিং প্রশ্ন
               </p>
@@ -954,7 +957,7 @@ export default function CqQuestionView() {
                 </p>
               )}
             </div>
-  <div>
+            <div>
               <p className="text-lg mt-3 font-bold">বোর্ড প্রশ্ন</p>
               <div className="ps-2 pe-2 mt-2 mb-2 border-1 border-[#024645] rounded-lg text-black">
                 <Select
@@ -1004,10 +1007,6 @@ export default function CqQuestionView() {
                 </div>
               </div>
             </div>
-           
-          
-
-         
           </div>
         </>
       )}
