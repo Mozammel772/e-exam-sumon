@@ -54,7 +54,7 @@ const renderLatexContent = (content) => {
   // Check for LaTeX or chemical equations
   const hasLatex = /\\\(.*\\\)|\$.*\$|\\\[.*\\\]|`.*`/.test(cleanContent);
   const hasChemical = /[A-Z][a-z]?\d*\+[A-Z][a-z]?\d*→[A-Z][a-z]?\d*/.test(
-    cleanContent
+    cleanContent,
   );
 
   if (hasLatex || hasChemical) {
@@ -124,7 +124,7 @@ const CustomSwitch = ({ label, isSelected, onValueChange }) => (
       base: cn(
         "inline-flex flex-row-reverse w-full max-w-md bg-[#dbfce7] hover:bg-content2 items-center",
         "justify-between cursor-pointer rounded-lg gap-2 p-2 border-2 border-transparent",
-        "data-[selected=true]:border-[#024645]"
+        "data-[selected=true]:border-[#024645]",
       ),
       wrapper: "p-0 h-4 overflow-visible",
       thumb: cn(
@@ -132,7 +132,7 @@ const CustomSwitch = ({ label, isSelected, onValueChange }) => (
         "group-data-[hover=true]:border-[#024645]",
         "group-data-[selected=true]:ms-6",
         "group-data-[pressed=true]:w-7",
-        "group-data-[selected]:group-data-[pressed]:ms-4"
+        "group-data-[selected]:group-data-[pressed]:ms-4",
       ),
     }}
   >
@@ -147,10 +147,11 @@ const OptionStyleButtons = ({ options, currentStyle, onChange }) => (
     {options?.map((option, index) => (
       <button
         key={index}
-        className={`w-12 h-12 flex items-center justify-center border border-gray-300 rounded-lg text-xl font-bold transition-all ${currentStyle === option
-          ? "bg-green-700 text-white border-green-700"
-          : "bg-white hover:bg-gray-200"
-          }`}
+        className={`w-12 h-12 flex items-center justify-center border border-gray-300 rounded-lg text-xl font-bold transition-all ${
+          currentStyle === option
+            ? "bg-green-700 text-white border-green-700"
+            : "bg-white hover:bg-gray-200"
+        }`}
         onClick={() => onChange(option)}
       >
         {option}
@@ -189,7 +190,7 @@ export default function CqQuestionPaper() {
   const [imageSize, setImageSize] = useState(50);
   const [opacity, setOpacity] = useState(0.5);
   const [imageUrl, setImageUrl] = useState(
-    localStorage.getItem("waterMarkImage") || ""
+    localStorage.getItem("waterMarkImage") || "",
   );
   const [uploading, setUploading] = useState(false);
 
@@ -208,7 +209,7 @@ export default function CqQuestionPaper() {
     try {
       const res = await axios.post(
         `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-        formData
+        formData,
       );
 
       const uploadedUrl = res.data.secure_url;
@@ -231,25 +232,25 @@ export default function CqQuestionPaper() {
   };
 
   const [instructorNameToggle, setInstructorNameToggole] = useState(() =>
-    getInitialSetting("instructorNameToggle", false)
+    getInitialSetting("instructorNameToggle", false),
   );
   const [instructorProfileToggle, setInstructorProfileToggole] = useState(() =>
-    getInitialSetting("instructorProfileToggle", false)
+    getInitialSetting("instructorProfileToggle", false),
   );
   const [lectureNumberToggle, setLectureNumberToggle] = useState(() =>
-    getInitialSetting("lectureNumberToggle", 1)
+    getInitialSetting("lectureNumberToggle", 1),
   );
   const [lectureTopicToggle, setLectureTopicToggle] = useState(() =>
-    getInitialSetting("lectureTopicToggle", false)
+    getInitialSetting("lectureTopicToggle", false),
   );
   const [dataToggle, setDataToggle] = useState(() =>
-    getInitialSetting("dataToggle", true)
+    getInitialSetting("dataToggle", true),
   );
   const [bgColor, setBgColor] = useState(() =>
-    getInitialSetting("bgColor", "#ffffff")
+    getInitialSetting("bgColor", "#ffffff"),
   );
   const [textColor, setTextColor] = useState(() =>
-    getInitialSetting("textColor", "#000000")
+    getInitialSetting("textColor", "#000000"),
   );
   useEffect(() => {
     const style = document.createElement("style");
@@ -316,19 +317,19 @@ export default function CqQuestionPaper() {
 
   // Derived data
   const getClass = getAllClasses?.filter(
-    (cls) => cls?._id === getASingleAllQuestionSets?.className
+    (cls) => cls?._id === getASingleAllQuestionSets?.className,
   );
 
   const getSubject = getAllSubjects?.filter(
-    (sub) => sub?._id === getASingleAllQuestionSets?.subjectName
+    (sub) => sub?._id === getASingleAllQuestionSets?.subjectName,
   );
 
   const getExam = getAllExamData?.filter(
-    (sub) => sub?._id === getASingleAllQuestionSets?.examCategory
+    (sub) => sub?._id === getASingleAllQuestionSets?.examCategory,
   );
 
   const findExam = getAllExamData?.find(
-    (sub) => sub?._id === getASingleAllQuestionSets?.examCategory
+    (sub) => sub?._id === getASingleAllQuestionSets?.examCategory,
   );
 
   // Handlers
@@ -363,7 +364,6 @@ export default function CqQuestionPaper() {
   }
 
   const cqTypeQuestions = shuffledQuestions?.filter((t) => t?.type === "CQ");
-
 
   return (
     <div
@@ -637,16 +637,17 @@ export default function CqQuestionPaper() {
         </div>
         {/* Header Information */}
         <div
-          className={`text-center p-2 print-colored ${sheetMode ? "mb-2" : "mb-3"
-            }`}
+          className={`text-center p-2 print-colored ${
+            sheetMode ? "mb-2" : "mb-3"
+          }`}
           style={
             sheetMode
               ? {
-                backgroundColor: bgColor || "transparent",
-                color: textColor || "#000000",
-                ["--bg-color"]: bgColor,
-                ["--text-color"]: textColor,
-              }
+                  backgroundColor: bgColor || "transparent",
+                  color: textColor || "#000000",
+                  ["--bg-color"]: bgColor,
+                  ["--text-color"]: textColor,
+                }
               : {}
           }
         >
@@ -773,7 +774,7 @@ export default function CqQuestionPaper() {
               <p className="text-md font-light">
                 সময়:{" "}
                 {toBanglaNumber(
-                  getASingleAllQuestionSets?.questionIds?.length * 15
+                  getASingleAllQuestionSets?.questionIds?.length * 15,
                 )}{" "}
                 মিনিট
               </p>
@@ -787,7 +788,7 @@ export default function CqQuestionPaper() {
               <p className="text-md font-light">
                 পূর্ণমাণ:{" "}
                 {toBanglaNumber(
-                  getASingleAllQuestionSets?.questionIds?.length * 10
+                  getASingleAllQuestionSets?.questionIds?.length * 10,
                 )}
               </p>
             </div>
@@ -811,12 +812,13 @@ export default function CqQuestionPaper() {
         <div className="solaimanlipi" contentEditable={editingMode}>
           {[1, 2, 3].includes(columnNumber) && (
             <div
-              className={`${columnNumber === 1
-                ? "columns-1"
-                : columnNumber === 2
-                  ? "columns-2"
-                  : "columns-3"
-                } gap-4 relative`}
+              className={`${
+                columnNumber === 1
+                  ? "columns-1"
+                  : columnNumber === 2
+                    ? "columns-2"
+                    : "columns-3"
+              } gap-4 relative`}
             >
               {isWaterMark && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
@@ -827,16 +829,17 @@ export default function CqQuestionPaper() {
               )}
 
               {isWaterMarkImage && imageUrl && (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+                <div className="absolute inset-0 pointer-events-none z-0 overflow-visible">
                   <img
                     src={imageUrl}
                     alt="Watermark"
-                    className="object-contain select-none"
+                    className="select-none transition-transform duration-300"
                     style={{
-                      opacity: opacity,
-                      width: `${imageSize}%`,
-                      maxWidth: "80%",
-                      maxHeight: "80%",
+                      opacity,
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: `translate(-50%, -50%) scale(${Number(imageSize) / 100})`,
                     }}
                   />
                 </div>
@@ -853,8 +856,7 @@ export default function CqQuestionPaper() {
                       <span className="shrink-0 me-3">
                         {toBanglaNumber(index + 1)}.
                       </span>
-                      <div
-                        className="text-black leading-none"                      >
+                      <div className="text-black leading-none">
                         {renderLatexContent(question.cqDetails.mainQuestion)}
                       </div>
                     </div>
@@ -865,10 +867,7 @@ export default function CqQuestionPaper() {
                       <div className="flex justify-between items-start text-gray-800 ms-6">
                         <div className="flex items-start flex-1">
                           <span className="shrink-0 me-1 leading-none">ক.</span>
-                          <div
-                            className="text-black leading-none flex-1"
-
-                          >
+                          <div className="text-black leading-none flex-1">
                             {renderLatexContent(question.cqDetails.question1)}
                           </div>
                         </div>
@@ -881,10 +880,7 @@ export default function CqQuestionPaper() {
                       <div className="flex justify-between items-start text-gray-800 ms-6">
                         <div className="flex items-start flex-1">
                           <span className="shrink-0 me-1 leading-none">খ.</span>
-                          <div
-                            className="text-black leading-none"
-
-                          >
+                          <div className="text-black leading-none">
                             {renderLatexContent(question.cqDetails.question2)}
                           </div>
                         </div>
@@ -897,11 +893,10 @@ export default function CqQuestionPaper() {
                       {question.cqDetails.question3 && (
                         <div className="flex justify-between items-start text-gray-800 ms-6">
                           <div className="flex items-start flex-1">
-                            <span className="shrink-0 me-1 leading-none">গ.</span>
-                            <div
-                              className="text-black leading-none flex-1"
-
-                            >
+                            <span className="shrink-0 me-1 leading-none">
+                              গ.
+                            </span>
+                            <div className="text-black leading-none flex-1">
                               {renderLatexContent(question.cqDetails.question3)}
                             </div>
                           </div>
@@ -915,11 +910,10 @@ export default function CqQuestionPaper() {
                       {question.cqDetails.question4 && (
                         <div className="flex justify-between items-start text-gray-800 ms-6">
                           <div className="flex items-start flex-1">
-                            <span className="shrink-0 me-1 leading-none">ঘ.</span>
-                            <div
-                              className="text-black leading-none flex-1"
-
-                            >
+                            <span className="shrink-0 me-1 leading-none">
+                              ঘ.
+                            </span>
+                            <div className="text-black leading-none flex-1">
                               {renderLatexContent(question.cqDetails.question4)}
                             </div>
                           </div>
@@ -986,7 +980,7 @@ export default function CqQuestionPaper() {
                                   }}
                                 >
                                   {renderLatexContent(
-                                    question.cqDetails.answer3
+                                    question.cqDetails.answer3,
                                   )}
                                 </div>
                               </div>
@@ -1006,7 +1000,7 @@ export default function CqQuestionPaper() {
                                   }}
                                 >
                                   {renderLatexContent(
-                                    question.cqDetails.answer4
+                                    question.cqDetails.answer4,
                                   )}
                                 </div>
                               </div>

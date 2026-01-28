@@ -575,7 +575,7 @@ export default function QuestionPaper() {
               )}
 
               {/* Watermark Image */}
-              {isWaterMarkImage && imageUrl && (
+              {/* {isWaterMarkImage && imageUrl && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
                   <img
                     src={imageUrl}
@@ -589,7 +589,24 @@ export default function QuestionPaper() {
                     }}
                   />
                 </div>
-              )}
+              )} */}
+
+              {isWaterMarkImage && imageUrl && (
+  <div className="absolute inset-0 pointer-events-none z-0 overflow-visible">
+    <img
+      src={imageUrl}
+      alt="Watermark"
+      className="select-none transition-transform duration-300"
+      style={{
+        opacity,
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: `translate(-50%, -50%) scale(${Number(size) / 100})`,
+      }}
+    />
+  </div>
+)}
 
               {/* Questions */}
 

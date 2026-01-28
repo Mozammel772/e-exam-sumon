@@ -368,7 +368,8 @@ export default function ShortQuestionPaper() {
 
   // Constants
   const columnOptions = [1, 2, 3];
-
+  const options = ["○", ".", "( )", ")"];
+  const [optionsStyle, setOptionsStyle] = useState("○");
   // Loading state
   if (
     singleUserAllQSetLoader ||
@@ -907,7 +908,7 @@ export default function ShortQuestionPaper() {
               </h1>
             </div>
           )}
-          {isWaterMarkImage && imageUrl && (
+          {/* {isWaterMarkImage && imageUrl && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
               <img
                 src={imageUrl}
@@ -921,10 +922,27 @@ export default function ShortQuestionPaper() {
                 }}
               />
             </div>
-          )}
+          )} */}
 
+
+{isWaterMarkImage && imageUrl && (
+  <div className="absolute inset-0 pointer-events-none z-0 overflow-visible">
+    <img
+      src={imageUrl}
+      alt="Watermark"
+      className="select-none transition-transform duration-300"
+      style={{
+        opacity,
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: `translate(-50%, -50%) scale(${Number(imageSize) / 100})`,
+      }}
+    />
+  </div>
+)}
           {mcqQuestions?.length > 0 && (
-           <p className="col-span-full font-semibold text-md flex justify-between">
+            <p className="col-span-full font-semibold text-md flex justify-between">
               <span>বহুনির্বাচনি প্রশ্ন: মান - </span>
               <span>
                 {toBanglaNumber(mcqQuestions?.length)} x ১ ={" "}
@@ -938,77 +956,40 @@ export default function ShortQuestionPaper() {
               key={question._id}
               className="relative z-10 w-full h-full ps-2 solaimanlipi question-container print-safe break-inside-avoid"
             >
-
-
-
-
-              
               <div className="flex items-start gap-3 text-md font-light leading-relaxed">
-  {/* Question number */}
-  <span className="shrink-0">
-    {toBanglaNumber(index + 1)}.
-  </span>
+                {/* Question number */}
+                <span className="shrink-0">{toBanglaNumber(index + 1)}.</span>
 
-  {/* Question content */}
-  <div className="prose max-w-none whitespace-pre-line">
-    {renderLatexContent(
-      sanitizeHtml(
-        (question?.questionName || "")
-          .replace(/i\./g, "\ni.")
-          .replace(/ii\./g, "\nii.")
-          .replace(/iii\./g, "\niii.")
-          .replace(/iv\./g, "\niv."),
-        {
-          allowedTags: [
-            "p",
-            "img",
-            "span",
-            "b",
-            "i",
-            "u",
-            "strong",
-            "em",
-            "br",
-          ],
-          allowedAttributes: {
-            img: ["src", "alt", "width", "height", "loading"],
-            "*": ["style"],
-          },
-        }
-      )
-    )}
-  </div>
-</div>
-
-
-
-
-
-
-              {/* <div className="text-md font-light flex items-baseline gap-0">
-                <span className="shrink-0 me-3">
-                  {toBanglaNumber(index + 1)}.
-                </span>
-
-                {renderLatexContent(
-                  sanitizeHtml(question?.questionName || "", {
-                    allowedTags: [
-                      "p",
-                      "img",
-                      "span",
-                      "b",
-                      "i",
-                      "u",
-                      "strong",
-                      "em",
-                    ],
-                    allowedAttributes: {
-                      img: ["src", "alt", "width", "height", "loading"],
-                      "*": ["style"],
-                    },
-                  }),
-                )}
-              </div> */}
+                {/* Question content */}
+                <div className="prose max-w-none whitespace-pre-line">
+                  {renderLatexContent(
+                    sanitizeHtml(
+                      (question?.questionName || "")
+                        .replace(/i\./g, "\ni.")
+                        .replace(/ii\./g, "\nii.")
+                        .replace(/iii\./g, "\niii.")
+                        .replace(/iv\./g, "\niv."),
+                      {
+                        allowedTags: [
+                          "p",
+                          "img",
+                          "span",
+                          "b",
+                          "i",
+                          "u",
+                          "strong",
+                          "em",
+                          "br",
+                        ],
+                        allowedAttributes: {
+                          img: ["src", "alt", "width", "height", "loading"],
+                          "*": ["style"],
+                        },
+                      },
+                    ),
+                  )}
+                </div>
+              </div>
 
               {/* Options */}
               <div className="grid grid-cols-2 gap-y-2 mt-2 text-md ms-5">
@@ -1019,38 +1000,32 @@ export default function ShortQuestionPaper() {
                   { label: "ঘ", text: question?.option4 },
                 ].map((option, i) => (
                   <div key={i} className="break-inside-avoid text-md">
-                    <p className="flex items-center">
-                      <span className="flex items-center justify-center w-4 h-4 me-2 border border-black rounded-full">
-                        {option.label}
+                    <p className="flex items-start">
+                      {/* option marker */}
+                      <span className="me-2 shrink-0">
+                        {optionsStyle === "○" && (
+                          <span className="inline-flex items-center justify-center w-5 h-5 border border-black rounded-full text-sm">
+                            {option.label}
+                          </span>
+                        )}
+                        {optionsStyle === "." && <span>{option.label}.</span>}
+                        {optionsStyle === "( )" && (
+                          <span>({option.label})</span>
+                        )}
+                        {optionsStyle === ")" && <span>{option.label})</span>}
                       </span>
-                      {renderLatexContent(
-                        sanitizeHtml(
-                          (option.text || "").replace(/\n/g, "<br/>"),
-                          {
-                            allowedTags: [
-                              "p",
-                              "img",
-                              "span",
-                              "b",
-                              "i",
-                              "u",
-                              "strong",
-                              "em",
-                            ],
-                            allowedAttributes: {
-                              img: [
-                                "src",
-                                "alt",
-                                "width",
-                                "height",
-                                "loading",
-                                "style",
-                              ],
-                              "*": ["style"],
-                            },
-                          },
-                        ),
-                      )}
+
+                      {/* option text (label removed) */}
+                      <span>
+                        {renderLatexContent(
+                          sanitizeHtml(
+                            (option.text || "")
+                              .replace(/^[ক-ঘ]\)\s*/, "") // ক) remove
+                              .replace(/\n/g, "<br/>"),
+                            sanitizeConfig,
+                          ),
+                        )}
+                      </span>
                     </p>
                   </div>
                 ))}
@@ -1447,6 +1422,15 @@ export default function ShortQuestionPaper() {
             >
               <ChangeIcon />
             </Button>
+          </div>
+
+          <div className="bg-[#dbfce7] rounded-lg p-4">
+            <p className="text-xl font-light mb-2">অপশন স্টাইল</p>
+            <OptionStyleButtons
+              options={options}
+              currentStyle={optionsStyle}
+              onChange={setOptionsStyle}
+            />
           </div>
 
           <div className="bg-[#dbfce7] rounded-lg p-4">
