@@ -37,6 +37,9 @@ import {
 import { useGetAllExamsQuery } from "../../../../redux/api/slices/examSlice";
 import ExplainModal from "../questionView/explainModal/ExplainModal";
 
+
+
+
 const toBanglaNumber = (number) => {
   const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
   return number?.toString().replace(/\d/g, (digit) => banglaDigits[digit]);
@@ -317,6 +320,107 @@ export const questionTypes = [
 
 
 
+// // Strong / b / span unwrap
+// const unwrapStrongTags = (html) =>
+//   html
+//     .replace(/<strong[^>]*>/gi, "")
+//     .replace(/<\/strong>/gi, "")
+//     .replace(/<b[^>]*>/gi, "")
+//     .replace(/<\/b>/gi, "")
+//     .replace(/<\/?span[^>]*>/gi, "");
+
+// // LatexRenderer Component
+// const LatexRenderer = ({ content, displayMode = false }) => {
+//   if (!content) return null;
+
+//   try {
+//     // ১. Strong / B / Span আনর্যাপ
+//     let formattedContent = unwrapStrongTags(content);
+
+//     // ২. i., ii., iii., iv. line break
+//     formattedContent = formattedContent
+//       .replace(/\bi\./g, "\ni.")
+//       .replace(/\bii\./g, "\nii.")
+//       .replace(/\biii\./g, "\niii.")
+//       .replace(/\biv\./g, "\niv.");
+
+//     // ৩. sanitize
+//     const sanitized = sanitizeHtml(formattedContent, {
+//       allowedTags: [
+//         "img", "br", "table", "thead", "tbody", "tfoot",
+//         "tr", "th", "td", "caption", "b", "i", "u", "em"
+//       ],
+//       allowedAttributes: {
+//         img: ["src", "alt", "width", "height", "style"],
+//         table: ["style"],
+//         "*": ["style"],
+//       },
+//     });
+
+//     // ৪. check if image present
+//     const hasImage = /<img\s/i.test(sanitized);
+
+//     // ✅ যদি image থাকে এবং LaTeX না থাকে → normal HTML render
+//     const latexRegex = /(\$\$[\s\S]+?\$\$|\$[^$]+\$)/g;
+//     const hasLatex = latexRegex.test(sanitized);
+
+//     if (hasImage && !hasLatex) {
+//       return (
+//         <div
+//           className="leading-relaxed"
+//           dangerouslySetInnerHTML={{ __html: sanitized }}
+//         />
+//       );
+//     }
+
+//     // ৫. যদি LaTeX না থাকে → normal text render
+//     if (!hasLatex) {
+//       return (
+//         <div className="leading-relaxed whitespace-pre-line text-xl">
+//           {sanitized}
+//         </div>
+//       );
+//     }
+
+//     // ৬. LaTeX rendering
+//     const parts = sanitized.split(latexRegex);
+
+//     return (
+//       <div className="leading-relaxed whitespace-pre-line text-xl">
+//         {parts.map((part, index) => {
+//           if (!part) return null;
+
+//           // Block math
+//           if (part.startsWith("$$") && part.endsWith("$$")) {
+//             return <BlockMath key={index} math={part.slice(2, -2)} />;
+//           }
+
+//           // Inline math
+//           if (part.startsWith("$") && part.endsWith("$")) {
+//             return <InlineMath key={index} math={part.slice(1, -1)} />;
+//           }
+
+//           // Normal text
+//           return <span key={index}>{part}</span>;
+//         })}
+//       </div>
+//     );
+//   } catch (err) {
+//     console.error(err);
+//     return <div>{content}</div>;
+//   }
+// };
+
+
+
+
+
+
+
+
+
+
+
 // Strong / b / span unwrap
 const unwrapStrongTags = (html) =>
   html
@@ -331,17 +435,15 @@ const LatexRenderer = ({ content, displayMode = false }) => {
   if (!content) return null;
 
   try {
-    // ১. Strong / B / Span আনর্যাপ
     let formattedContent = unwrapStrongTags(content);
 
-    // ২. i., ii., iii., iv. line break
+    // i., ii., iii., iv. line break
     formattedContent = formattedContent
       .replace(/\bi\./g, "\ni.")
       .replace(/\bii\./g, "\nii.")
       .replace(/\biii\./g, "\niii.")
       .replace(/\biv\./g, "\niv.");
 
-    // ৩. sanitize
     const sanitized = sanitizeHtml(formattedContent, {
       allowedTags: [
         "img", "br", "table", "thead", "tbody", "tfoot",
@@ -349,16 +451,15 @@ const LatexRenderer = ({ content, displayMode = false }) => {
       ],
       allowedAttributes: {
         img: ["src", "alt", "width", "height", "style"],
-        table: ["style"],
+        table: ["style", "border", "cellpadding", "cellspacing", "width"],
+        th: ["rowspan", "colspan", "align", "style"],
+        td: ["rowspan", "colspan", "align", "style"],
         "*": ["style"],
       },
     });
 
-    // ৪. check if image present
     const hasImage = /<img\s/i.test(sanitized);
-
-    // ✅ যদি image থাকে এবং LaTeX না থাকে → normal HTML render
-    const latexRegex = /(\$\$[\s\S]+?\$\$|\$[^$]+\$)/g;
+    const latexRegex = /(\$\$[\s\S]+?\$\$|\$[^$]+\$|\\\([^\)]+\\\)|\\\[[^\]]+\\\])/g;
     const hasLatex = latexRegex.test(sanitized);
 
     if (hasImage && !hasLatex) {
@@ -370,16 +471,16 @@ const LatexRenderer = ({ content, displayMode = false }) => {
       );
     }
 
-    // ৫. যদি LaTeX না থাকে → normal text render
     if (!hasLatex) {
       return (
-        <div className="leading-relaxed whitespace-pre-line text-xl">
-          {sanitized}
-        </div>
+        <div
+          className="leading-relaxed whitespace-pre-line text-xl"
+          dangerouslySetInnerHTML={{ __html: sanitized }}
+        />
       );
     }
 
-    // ৬. LaTeX rendering
+    // LaTeX handling
     const parts = sanitized.split(latexRegex);
 
     return (
@@ -387,26 +488,38 @@ const LatexRenderer = ({ content, displayMode = false }) => {
         {parts.map((part, index) => {
           if (!part) return null;
 
-          // Block math
-          if (part.startsWith("$$") && part.endsWith("$$")) {
-            return <BlockMath key={index} math={part.slice(2, -2)} />;
+          if (
+            (part.startsWith("$$") && part.endsWith("$$")) ||
+            (part.startsWith("\\[") && part.endsWith("\\]"))
+          ) {
+            return <BlockMath key={index} math={part.replace(/\$\$|\\\[|\\\]/g, "")} />;
           }
 
-          // Inline math
-          if (part.startsWith("$") && part.endsWith("$")) {
-            return <InlineMath key={index} math={part.slice(1, -1)} />;
+          if (
+            (part.startsWith("$") && part.endsWith("$")) ||
+            (part.startsWith("\\(") && part.endsWith("\\)"))
+          ) {
+            return <InlineMath key={index} math={part.replace(/\$|\\\(|\\\)/g, "")} />;
           }
 
-          // Normal text
           return <span key={index}>{part}</span>;
         })}
       </div>
     );
   } catch (err) {
     console.error(err);
-    return <div>{content}</div>;
+    return <div dangerouslySetInnerHTML={{ __html: content }} />;
   }
 };
+
+
+
+
+
+
+
+
+
 
 
 export default function ShortQusView() {
