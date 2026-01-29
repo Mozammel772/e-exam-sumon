@@ -180,88 +180,78 @@ export const questionTypes = [
 // };
 
 
+// const LatexRenderer = ({ content, displayMode = false }) => {
+//   if (!content) return null;
 
+//   try {
+//     const formattedContent = unwrapStrongTags(
+//       content
+//           .replace(/\biv\./g, "\niv.")
+//     .replace(/\biii\./g, "\niii.")
+//     .replace(/\bii\./g, "\nii.")
+//     .replace(/\bi\./g, "\ni.")
+//     );
 
-const unwrapStrongTags = (html) =>
-  html
-   .replace(/<strong[^>]*>/gi, "")
-    .replace(/<\/strong>/gi, "")
-    .replace(/<b[^>]*>/gi, "")
-    .replace(/<\/b>/gi, "")
-    .replace(/<\/?span[^>]*>/gi, "");
+//     const latexRegex =
+//       /\\\[(.*?)\\\]|\\\((.*?)\\\)|\$(.*?)\$|`(.*?)`/g;
 
-const LatexRenderer = ({ content, displayMode = false }) => {
-  if (!content) return null;
+//     const hasLatex = latexRegex.test(formattedContent);
 
-  try {
-    const formattedContent = unwrapStrongTags(
-      content
-          .replace(/\biv\./g, "\niv.")
-    .replace(/\biii\./g, "\niii.")
-    .replace(/\bii\./g, "\nii.")
-    .replace(/\bi\./g, "\ni.")
-    );
+//     const sanitizedContent = sanitizeHtml(formattedContent, {
+//       allowedTags: [
+//         "img",
+//         "table",
+//         "thead",
+//         "tbody",
+//         "tfoot",
+//         "tr",
+//         "th",
+//         "td",
+//         "caption",
+//         "b",
+//         "i",
+//         "u",
+//         "em",
+//       ],
+//       allowedAttributes: {
+//         img: ["src", "alt", "width", "height", "style"],
+//         table: ["border", "cellpadding", "cellspacing", "width", "style"],
+//         th: ["rowspan", "colspan", "align", "style"],
+//         td: ["rowspan", "colspan", "align", "style"],
+//         "*": ["style"],
+//       },
+//     });
 
-    const latexRegex =
-      /\\\[(.*?)\\\]|\\\((.*?)\\\)|\$(.*?)\$|`(.*?)`/g;
+//     if (!hasLatex) {
+//       return (
+//         <div className="leading-relaxed whitespace-pre-line">
+//           {sanitizedContent}
+//         </div>
+//       );
+//     }
 
-    const hasLatex = latexRegex.test(formattedContent);
+//     const parts = sanitizedContent.split(latexRegex);
 
-    const sanitizedContent = sanitizeHtml(formattedContent, {
-      allowedTags: [
-        "img",
-        "table",
-        "thead",
-        "tbody",
-        "tfoot",
-        "tr",
-        "th",
-        "td",
-        "caption",
-        "b",
-        "i",
-        "u",
-        "em",
-      ],
-      allowedAttributes: {
-        img: ["src", "alt", "width", "height", "style"],
-        table: ["border", "cellpadding", "cellspacing", "width", "style"],
-        th: ["rowspan", "colspan", "align", "style"],
-        td: ["rowspan", "colspan", "align", "style"],
-        "*": ["style"],
-      },
-    });
-
-    if (!hasLatex) {
-      return (
-        <div className="leading-relaxed whitespace-pre-line">
-          {sanitizedContent}
-        </div>
-      );
-    }
-
-    const parts = sanitizedContent.split(latexRegex);
-
-    return (
-      <div className="leading-relaxed whitespace-pre-line">
-        {parts.map((part, index) =>
-          index % 5 !== 0 && part ? (
-            displayMode ? (
-              <BlockMath key={index} math={part} />
-            ) : (
-              <InlineMath key={index} math={part} />
-            )
-          ) : (
-            <span key={index}>{part}</span>
-          )
-        )}
-      </div>
-    );
-  } catch (err) {
-    console.error(err);
-    return <div>{content}</div>;
-  }
-};
+//     return (
+//       <div className="leading-relaxed whitespace-pre-line">
+//         {parts.map((part, index) =>
+//           index % 5 !== 0 && part ? (
+//             displayMode ? (
+//               <BlockMath key={index} math={part} />
+//             ) : (
+//               <InlineMath key={index} math={part} />
+//             )
+//           ) : (
+//             <span key={index}>{part}</span>
+//           )
+//         )}
+//       </div>
+//     );
+//   } catch (err) {
+//     console.error(err);
+//     return <div>{content}</div>;
+//   }
+// };
 
 
 
@@ -323,6 +313,100 @@ const LatexRenderer = ({ content, displayMode = false }) => {
 //   }
 // };
 
+
+
+
+
+// Strong / b / span unwrap
+const unwrapStrongTags = (html) =>
+  html
+    .replace(/<strong[^>]*>/gi, "")
+    .replace(/<\/strong>/gi, "")
+    .replace(/<b[^>]*>/gi, "")
+    .replace(/<\/b>/gi, "")
+    .replace(/<\/?span[^>]*>/gi, "");
+
+// LatexRenderer Component
+const LatexRenderer = ({ content, displayMode = false }) => {
+  if (!content) return null;
+
+  try {
+    // ১. Strong / B / Span আনর্যাপ
+    let formattedContent = unwrapStrongTags(content);
+
+    // ২. i., ii., iii., iv. line break
+    formattedContent = formattedContent
+      .replace(/\bi\./g, "\ni.")
+      .replace(/\bii\./g, "\nii.")
+      .replace(/\biii\./g, "\niii.")
+      .replace(/\biv\./g, "\niv.");
+
+    // ৩. sanitize
+    const sanitized = sanitizeHtml(formattedContent, {
+      allowedTags: [
+        "img", "br", "table", "thead", "tbody", "tfoot",
+        "tr", "th", "td", "caption", "b", "i", "u", "em"
+      ],
+      allowedAttributes: {
+        img: ["src", "alt", "width", "height", "style"],
+        table: ["style"],
+        "*": ["style"],
+      },
+    });
+
+    // ৪. check if image present
+    const hasImage = /<img\s/i.test(sanitized);
+
+    // ✅ যদি image থাকে এবং LaTeX না থাকে → normal HTML render
+    const latexRegex = /(\$\$[\s\S]+?\$\$|\$[^$]+\$)/g;
+    const hasLatex = latexRegex.test(sanitized);
+
+    if (hasImage && !hasLatex) {
+      return (
+        <div
+          className="leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: sanitized }}
+        />
+      );
+    }
+
+    // ৫. যদি LaTeX না থাকে → normal text render
+    if (!hasLatex) {
+      return (
+        <div className="leading-relaxed whitespace-pre-line text-xl">
+          {sanitized}
+        </div>
+      );
+    }
+
+    // ৬. LaTeX rendering
+    const parts = sanitized.split(latexRegex);
+
+    return (
+      <div className="leading-relaxed whitespace-pre-line text-xl">
+        {parts.map((part, index) => {
+          if (!part) return null;
+
+          // Block math
+          if (part.startsWith("$$") && part.endsWith("$$")) {
+            return <BlockMath key={index} math={part.slice(2, -2)} />;
+          }
+
+          // Inline math
+          if (part.startsWith("$") && part.endsWith("$")) {
+            return <InlineMath key={index} math={part.slice(1, -1)} />;
+          }
+
+          // Normal text
+          return <span key={index}>{part}</span>;
+        })}
+      </div>
+    );
+  } catch (err) {
+    console.error(err);
+    return <div>{content}</div>;
+  }
+};
 
 
 export default function ShortQusView() {
@@ -1593,16 +1677,7 @@ export default function ShortQusView() {
                     ))}
                   </div>
                 </div>
-              </div>
-             
-
-          
-
-          
-
-             
-
-            
+              </div>          
             </div>
           </div>
         </>
