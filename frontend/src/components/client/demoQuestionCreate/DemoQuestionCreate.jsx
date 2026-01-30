@@ -52,8 +52,10 @@ export default function DemoQuestionCreate() {
 
   const { data: getAllExam } = useGetAllExamsQuery();
 
-  const { data: getASubjectData, isLoading: chapterLoading } =
-    useGetASubjectQuery(changeSubjectId);
+const { data: getASubjectData, isLoading: chapterLoading } =
+  useGetASubjectQuery(changeSubjectId, {
+    skip: !changeSubjectId, // 🔥 MUST
+  });
 
   const handleChange = (field, value) => {
     if (field === "chapterId") {
@@ -190,41 +192,54 @@ export default function DemoQuestionCreate() {
                 ))}
               </Select>
 
-              <Select
-                className="max-w-full"
-                isRequired
-                variant="bordered"
-                placeholder="বিষয় নির্বাচন করুন"
-                onChange={(e) => handleChange("subjectName", e.target.value)}
-                classNames={{
-                  label: "text-xl solaimanlipi",
-                  trigger: "min-h-12 text-xl solaimanlipi",
-                  value: "text-xl solaimanlipi",
-                  listboxWrapper: "max-h-[400px] overflow-y-auto",
-                  popoverContent: "text-xl solaimanlipi",
-                }}
-              >
-                {subjectsLoader ? (
-                  <SelectItem key="loading" isDisabled textValue="Loading...">
-                    <p className="text-xl animate-pulse">লোড হচ্ছে...</p>
-                  </SelectItem>
-                ) : (
-                  getAllSubjects
-                    ?.filter(
-                      (subject) =>
-                        subject?.subjectClassName?._id === formData?.className,
-                    )
-                    .map((subject) => (
-                      <SelectItem
-                        key={subject._id}
-                        onClick={() => setChangeSubjectId(subject._id)}
-                        textValue={subject.subjectName}
-                      >
-                        <p className="text-xl">{subject.subjectName}</p>
-                      </SelectItem>
-                    ))
-                )}
-              </Select>
+            <Select
+  className="max-w-full"
+  isRequired
+  variant="bordered"
+  placeholder="বিষয় নির্বাচন করুন"
+
+  /* ✅ MOBILE SAFE */
+  onSelectionChange={(keys) => {
+    const selectedId = Array.from(keys)[0];
+
+    setChangeSubjectId(selectedId);
+
+    setFormData((prev) => ({
+      ...prev,
+      subjectName: selectedId,
+      chapterId: [], // subject change হলে chapter reset
+    }));
+  }}
+
+  classNames={{
+    label: "text-xl solaimanlipi",
+    trigger: "min-h-12 text-xl solaimanlipi",
+    value: "text-xl solaimanlipi",
+    listboxWrapper: "max-h-[50vh] overflow-y-auto",
+    popoverContent: "text-xl solaimanlipi",
+  }}
+>
+  {subjectsLoader ? (
+    <SelectItem key="loading" isDisabled>
+      লোড হচ্ছে...
+    </SelectItem>
+  ) : (
+    getAllSubjects
+      ?.filter(
+        (subject) =>
+          subject?.subjectClassName?._id === formData?.className
+      )
+      .map((subject) => (
+        <SelectItem
+          key={subject._id}
+          textValue={subject.subjectName}
+        >
+          {subject.subjectName}
+        </SelectItem>
+      ))
+  )}
+</Select>
+
             </div>
 
             {/* <div>
@@ -267,53 +282,46 @@ export default function DemoQuestionCreate() {
 
 
             <div>
-  <Select
-    className="max-w-full"
-    isRequired
-    variant="bordered"
-    selectionMode="multiple"
-    placeholder="অধ্যায় সিলেক্ট করুন"
-    onChange={(e) => handleChange("chapterId", e.target.value)}
-    value={formData?.chapterId}
+<Select
+  className="max-w-full"
+  isRequired
+  variant="bordered"
+  selectionMode="multiple"
+  placeholder="অধ্যায় সিলেক্ট করুন"
+  isDisabled={!changeSubjectId}   // 🔥 important
+  onChange={(e) => handleChange("chapterId", e.target.value)}
+  value={formData?.chapterId}
+  popoverProps={{
+    shouldBlockScroll: true,
+    className: "z-[9999]",
+  }}
+  classNames={{
+    label: "text-xl solaimanlipi",
+    trigger: "min-h-12 text-xl solaimanlipi",
+    value: "text-xl solaimanlipi",
+    listboxWrapper: "max-h-[60vh] overflow-y-auto",
+    popoverContent: "text-xl solaimanlipi",
+  }}
+>
+  {chapterLoading ? (
+    <SelectItem key="loading" isDisabled>
+      লোড হচ্ছে...
+    </SelectItem>
+  ) : (
+    getASubjectData?.chapters
+      ?.filter((item) => item?.status == false)
+      .map((item) => (
+        <SelectItem
+          key={item._id}
+          value={item._id}
+          textValue={item.chapterName}
+        >
+          {item.chapterName}
+        </SelectItem>
+      ))
+  )}
+</Select>
 
-    /* 🔥 MOBILE FIX (NEW) */
-    popoverProps={{
-      placement: "bottom",
-      shouldBlockScroll: true,
-      className: "z-[9999]",
-    }}
-
-    classNames={{
-      label: "text-xl solaimanlipi",
-      trigger: "min-h-12 text-xl solaimanlipi",
-      value: "text-xl solaimanlipi",
-
-      /* 🔥 mobile height safe */
-      listboxWrapper: "max-h-[60vh] overflow-y-auto",
-
-      popoverContent: "text-xl solaimanlipi",
-    }}
-  >
-    {chapterLoading ? (
-      <SelectItem key="loading" isDisabled textValue="লোড হচ্ছে...">
-        <span className="text-xl animate-pulse">লোড হচ্ছে...</span>
-      </SelectItem>
-    ) : (
-      getASubjectData?.chapters
-        /* 🔥 SAFE FILTER (mobile/api mismatch fix) */
-        ?.filter((item) => item?.status == false)
-        .map((item) => (
-          <SelectItem
-            key={item?._id}
-            value={item?._id}
-            className="text-xl solaimanlipi px-4 py-2"
-            textValue={item?.chapterName}
-          >
-            <span className="text-xl">{item?.chapterName}</span>
-          </SelectItem>
-        ))
-    )}
-  </Select>
 </div>
 
 
