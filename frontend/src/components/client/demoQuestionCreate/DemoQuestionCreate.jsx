@@ -130,7 +130,7 @@ export default function DemoQuestionCreate() {
   }
   return (
   <div className="px-3 md:ml-72 md:mr-8 mt-5">
-      <div className="flex justify-center items-center w-full min-h-screen flex-col space-y-4 max-w-3xl mx-auto">
+     <div className="flex justify-center items-center w-full min-h-screen flex-col space-y-4 max-w-3xl mx-auto overflow-visible">
         <Card className="w-full mt-8 md:mt-16 mb-10 bg-white">
           <div className="text-center space-y-2 bg-[#024645] h-42 md:min-h-52 p-5">
             <div className="mb-5 md:mb-10">
@@ -174,7 +174,7 @@ export default function DemoQuestionCreate() {
                   trigger:
                     "min-h-12 text-xl solaimanlipi border-2 border-gray-200 rounded-xl px-4",
                   value: "text-xl solaimanlipi",
-                  listboxWrapper: "max-h-[400px]",
+                  listboxWrapper: "max-h-[50vh] overflow-y-auto",
                   popoverContent: "text-xl solaimanlipi",
                   label: "text-xl solaimanlipi",
                 }}
@@ -227,7 +227,7 @@ export default function DemoQuestionCreate() {
               </Select>
             </div>
 
-            <div>
+            {/* <div>
               <Select
                 className="max-w-full"
                 isRequired
@@ -263,7 +263,59 @@ export default function DemoQuestionCreate() {
                     ))
                 )}
               </Select>
-            </div>
+            </div> */}
+
+
+            <div>
+  <Select
+    className="max-w-full"
+    isRequired
+    variant="bordered"
+    selectionMode="multiple"
+    placeholder="অধ্যায় সিলেক্ট করুন"
+    onChange={(e) => handleChange("chapterId", e.target.value)}
+    value={formData?.chapterId}
+
+    /* 🔥 MOBILE FIX (NEW) */
+    popoverProps={{
+      placement: "bottom",
+      shouldBlockScroll: true,
+      className: "z-[9999]",
+    }}
+
+    classNames={{
+      label: "text-xl solaimanlipi",
+      trigger: "min-h-12 text-xl solaimanlipi",
+      value: "text-xl solaimanlipi",
+
+      /* 🔥 mobile height safe */
+      listboxWrapper: "max-h-[60vh] overflow-y-auto",
+
+      popoverContent: "text-xl solaimanlipi",
+    }}
+  >
+    {chapterLoading ? (
+      <SelectItem key="loading" isDisabled textValue="লোড হচ্ছে...">
+        <span className="text-xl animate-pulse">লোড হচ্ছে...</span>
+      </SelectItem>
+    ) : (
+      getASubjectData?.chapters
+        /* 🔥 SAFE FILTER (mobile/api mismatch fix) */
+        ?.filter((item) => item?.status == false)
+        .map((item) => (
+          <SelectItem
+            key={item?._id}
+            value={item?._id}
+            className="text-xl solaimanlipi px-4 py-2"
+            textValue={item?.chapterName}
+          >
+            <span className="text-xl">{item?.chapterName}</span>
+          </SelectItem>
+        ))
+    )}
+  </Select>
+</div>
+
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <Select
